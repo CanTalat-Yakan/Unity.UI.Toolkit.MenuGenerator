@@ -7,8 +7,7 @@ namespace UnityEssentials
     public class UIMenuGeneratorData : ScriptableObject
     {
         [Space]
-        public VisualTreeAsset OverlayLeftPaneTemplate;
-        public VisualTreeAsset OverlayFullScreenTemplate;
+        public VisualTreeAsset OverlayTemplate;
 
         [Space]
         public VisualTreeAsset BreadcrumbTemplate;

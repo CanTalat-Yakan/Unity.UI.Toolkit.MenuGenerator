@@ -62,8 +62,8 @@ namespace UnityEssentials
 
             var image = element.Q<VisualElement>("Image");
 
-            //if (Profile.ColorPickerDataDictionary.TryGetValue(group.Reference, out Color color))
-            //    image.SetBackgroundColor(color);
+            if (Profile.ColorPickerDataDictionary.TryGetValue(group.Reference, out Color color))
+                image.SetBackgroundColor(color);
         }
 
         private void ConfigureColorPickerButtonInteraction(VisualElement element, ColorPickerDataGroup group)
@@ -83,12 +83,13 @@ namespace UnityEssentials
             foreach (var colorPickerData in group.ColorPickerData)
                 overlay.Q<GroupBox>("GroupBox").Add(CreateColorPicker(colorPickerData, callback));
 
-            _root.LinkedElement.Add(overlay);
+            Root.LinkedElement.Add(overlay);
         }
 
         private VisualElement CreateColorPicker(ColorPickerData data, Action<string, Color> callback)
         {
             var picker = UIGeneratorData.ColorPickerTemplate.CloneTree();
+
             ConfigureColorSliders(picker, data, callback);
             ConfigureColorPresets(picker, data, callback);
 
@@ -104,14 +105,14 @@ namespace UnityEssentials
 
             picker.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
-            //if (Profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out Color color))
-            //{
-            //    Color.RGBToHSV(color, out float h, out float s, out float v);
-            //    hueSlider.value = (int)(h * 360);
-            //    satSlider.value = (int)(s * 100);
-            //    valSlider.value = (int)(v * 100);
-            //    alphaSlider.value = (int)(color.a * 100);
-            //}
+            if (Profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out Color color))
+            {
+                Color.RGBToHSV(color, out float h, out float s, out float v);
+                hueSlider.value = (int)(h * 360);
+                satSlider.value = (int)(s * 100);
+                valSlider.value = (int)(v * 100);
+                alphaSlider.value = (int)(color.a * 100);
+            }
 
             Action updateColor = () =>
             {
@@ -123,7 +124,7 @@ namespace UnityEssentials
 
                 callback(data.Reference, newColor);
 
-                //Profile.OnColorPickerChange(data.Reference, newColor);
+                Profile.OnColorPickerChange(data.Reference, newColor);
             };
 
             hueSlider.RegisterValueChangedCallback(_ => updateColor());
@@ -160,7 +161,7 @@ namespace UnityEssentials
 
                     callback(data.Reference, updatedColor);
 
-                    //Profile.OnColorPickerChange(data.Reference, updatedColor);
+                    Profile.OnColorPickerChange(data.Reference, updatedColor);
                 };
             }
         }
@@ -170,7 +171,7 @@ namespace UnityEssentials
             {
                 element.Q<VisualElement>("Image").SetBackgroundColor(color);
 
-                //Profile.OnColorPickerChange(reference, color);
+                Profile.OnColorPickerChange(reference, color);
             };
     }
 }

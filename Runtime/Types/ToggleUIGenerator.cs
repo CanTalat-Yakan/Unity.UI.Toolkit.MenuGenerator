@@ -35,16 +35,16 @@ namespace UnityEssentials
             label.text = data.Name.ToUpper();
 
             var toggle = element.Q<Toggle>("Toggle");
-            //if (Profile.ToggleDataDictionary.TryGetValue(data.Reference, out bool value))
-            //    toggle.value = value;
+            if (Profile.ToggleDataDictionary.TryGetValue(data.Reference, out bool value))
+                toggle.value = value;
         }
 
         private void ConfigureToggleInteraction(VisualElement element, ToggleData data)
         {
             var toggle = element.Q<Toggle>("Toggle");
-            toggle.RegisterValueChangedCallback(e =>
+            toggle.RegisterValueChangedCallback(evt =>
             {
-                //Profile.OnToggleChange(data.Reference, e.newValue);
+                Profile.OnToggleChange(data.Reference, evt.newValue);
             });
         }
     }

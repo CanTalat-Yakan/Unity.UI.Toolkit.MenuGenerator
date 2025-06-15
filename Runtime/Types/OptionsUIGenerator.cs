@@ -41,18 +41,18 @@ namespace UnityEssentials
 
             var dropdown = element.Q<DropdownField>("Options");
 
-            //Profile.OptionsDataDictionary.TryGetValue(data.Reference, out var dropDownindex);
-            //dropdown.choices = data.Options.ToList();
-            //dropdown.index = dropDownindex;
-            //dropdown.value = data.Options[dropDownindex];
+            Profile.OptionsDataDictionary.TryGetValue(data.Reference, out var dropDownindex);
+            dropdown.choices = data.Options.ToList();
+            dropdown.index = dropDownindex;
+            dropdown.value = data.Options[dropDownindex];
         }
 
         private void ConfigureOptionsInteraction(VisualElement element, OptionsData data)
         {
             var dropdownField = element.Q<DropdownField>("Options");
-            dropdownField.RegisterValueChangedCallback(e =>
+            dropdownField.RegisterValueChangedCallback(evt =>
             {
-                //Profile.OnOptionsChange(data.Reference, dropdownField.index);
+                Profile.OnOptionsChange(data.Reference, dropdownField.index);
             });
 
             var buttonLeft = element.Q<Button>("Left");
@@ -61,10 +61,10 @@ namespace UnityEssentials
                 var length = data.Options.Length;
 
                 var index = 0;
-                //Profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
+                Profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
 
                 index = ProcessIndex(!data.Reverse ? index - 1 : index + 1, length);
-                //Profile.OnOptionsChange(data.Reference, ProcessIndex(index, length));
+                Profile.OnOptionsChange(data.Reference, ProcessIndex(index, length));
 
                 dropdownField.index = index;
             };
@@ -75,10 +75,10 @@ namespace UnityEssentials
                 var length = data.Options.Length;
 
                 var index = 0;
-                //Profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
+                Profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
 
                 index = ProcessIndex(!data.Reverse ? index + 1 : index - 1, length);
-                //Profile.OnOptionsChange(data.Reference, index);
+                Profile.OnOptionsChange(data.Reference, index);
 
                 dropdownField.index = index;
             };

@@ -36,8 +36,8 @@ namespace UnityEssentials
 
             var inputField = element.Q<TextField>("Input");
 
-            string input = "";
-            //Profile.InputDataDictionary.TryGetValue(data.Reference, out input);
+            string input = string.Empty;
+            Profile.InputDataDictionary.TryGetValue(data.Reference, out input);
 
             inputField.value = input;
         }
@@ -45,9 +45,9 @@ namespace UnityEssentials
         private void ConfigureInputInteraction(VisualElement element, InputData data)
         {
             var textField = element.Q<TextField>("Input");
-            textField.RegisterValueChangedCallback((e) =>
+            textField.RegisterValueChangedCallback((evt) =>
             {
-                //Profile.OnInputChange(data.Reference, e.newValue);
+                Profile.OnInputChange(data.Reference, evt.newValue);
             });
         }
     }

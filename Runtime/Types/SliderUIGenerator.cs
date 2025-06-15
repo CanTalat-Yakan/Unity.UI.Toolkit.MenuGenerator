@@ -41,7 +41,7 @@ namespace UnityEssentials
             label.text = data.Name.ToUpper();
 
             float value = 0;
-            //Profile.SliderDataDictionary.TryGetValue(data.Reference, out value);
+            Profile.SliderDataDictionary.TryGetValue(data.Reference, out value);
 
             if (data.Float)
             {
@@ -60,17 +60,17 @@ namespace UnityEssentials
             if (data.Float)
             {
                 var slider = element.Q<Slider>("Slider");
-                slider.RegisterValueChangedCallback(e =>
+                slider.RegisterValueChangedCallback(evt =>
                 {
-                    //Profile.OnSliderChange(data.Reference, e.newValue);
+                    Profile.OnSliderChange(data.Reference, evt.newValue);
                 });
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
-                sliderInt.RegisterValueChangedCallback(e =>
+                sliderInt.RegisterValueChangedCallback(evt =>
                 {
-                    //Profile.OnSliderChange(data.Reference, (float)e.newValue);
+                    Profile.OnSliderChange(data.Reference, (float)evt.newValue);
                 });
             }
         }

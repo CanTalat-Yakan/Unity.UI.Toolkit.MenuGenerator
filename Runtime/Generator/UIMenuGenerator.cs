@@ -8,34 +8,95 @@ namespace UnityEssentials
     {
         [Header("Data Configuration")]
         public UIMenuGeneratorData UIGeneratorData;
+        [OnValueChanged("UIGeneratorData")] public void OnDataValueChange() => Initialize();
 
         [Space]
         public DataProfile Profile;
 
-        [Header("UI Containers")]
-        [SerializeField] private UIElementLink _breadcrumbs;
-        [SerializeField] private UIElementLink _scrollView;
-        [SerializeField] private UIElementLink _root;
+        [HideInInspector] public UIDocument Document;
+        [HideInInspector] public UIElementLink Root;
+        [HideInInspector] public UIElementLink Breadcrumbs;
+        [HideInInspector] public UIElementLink ScrollView;
 
         public string CurrentCategory { get; private set; }
         public string PreviousCategory { get; private set; }
 
-        private Action _redraw;
+        public Action Redraw;
+
+        public void Initialize()
+        {
+            Debug.Log("Initializing UIMenuGenerator...");
+            Cleanup();
+            InitializeDocument();
+            InitializeData();
+        }
+
+        public void Cleanup()
+        {
+            if (Document != null)
+            {
+                if (Application.isEditor)
+                    for (int i = 0; i <= Document.transform.childCount; i++)
+                        DestroyImmediate(Document.transform.GetChild(0).gameObject);
+                else for (int i = 0; i <= Document.transform.childCount; i++)
+                        Destroy(Document.transform.GetChild(0).gameObject);
+            }
+            UIGeneratorData = null;
+            Document = null;
+            Root = null;
+        }
+
+        public void InitializeDocument()
+        {
+            var prefab = ResourceLoader.InstantiatePrefab("UnityEssentials_Prefab_DefaultUI", "UI Document", transform);
+            if (prefab != null)
+            {
+                Document = prefab.GetComponent<UIDocument>();
+                Root = prefab.transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
+            }
+        }
+
+        public void InitializeData(UIMenuGeneratorData data = null)
+        {
+            UIGeneratorData = data ??= ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
+
+            Root.LinkedElement.Add(UIGeneratorData.OverlayTemplate.CloneTree());
+
+            var breadcrumbsElement = Document.rootVisualElement.Q<GroupBox>("Breadcrumbs");
+            if(breadcrumbsElement != null)
+            {
+                Breadcrumbs = new GameObject("Breadcrumbs").AddComponent<UIElementLink>();
+                Breadcrumbs.transform.parent = Document.transform;
+                Breadcrumbs.SetElementPath(breadcrumbsElement);
+            }
+
+            var scrollViewElement = Document.rootVisualElement.Q<ScrollView>("ScrollView");
+            if (scrollViewElement != null)
+            {
+                ScrollView = new GameObject("ScrollView").AddComponent<UIElementLink>();
+                ScrollView.transform.parent = Document.transform;
+                ScrollView.SetElementPath(scrollViewElement);
+            }
+            
+            Debug.Log(
+                $"Root: {Root}, " +
+                $"LinkedElement: {Root?.LinkedElement}, " +
+                $"OverlayTemplate: {UIGeneratorData?.OverlayTemplate}, " +
+                $"RootElementChildCount: {Root?.LinkedElement?.childCount ?? -1}");
+        }
 
         public bool ValidateDependencies() =>
             UIGeneratorData != null &&
-            _breadcrumbs != null &&
-            _scrollView != null &&
-            _root != null;
+            Breadcrumbs != null &&
+            ScrollView != null &&
+            Root != null;
     }
 
     // UI Management
     public partial class UIMenuGenerator : MonoBehaviour
     {
-        public void RedrawUI()
-        {
-            _redraw?.Invoke();
-        }
+        public void RedrawUI() =>
+            Redraw?.Invoke();
 
         internal void ResetUI()
         {
@@ -45,21 +106,21 @@ namespace UnityEssentials
 
         private void ClearUI()
         {
-            if (_scrollView.LinkedElement is ScrollView scrollView)
+            if (ScrollView.LinkedElement is ScrollView scrollView)
                 scrollView.Clear();
         }
 
         private void AddElementToScrollView(VisualElement element)
         {
-            if (_scrollView.LinkedElement is ScrollView scrollView)
+            if (ScrollView.LinkedElement is ScrollView scrollView)
                 scrollView.Add(element);
         }
 
         private VisualElement CreateOverlay(string name)
         {
-            var overlay = UIGeneratorData.OverlayLeftPaneTemplate.CloneTree();
+            var overlay = UIGeneratorData.OverlayTemplate.CloneTree();
             overlay.Q<Button>("Label").text = name.ToUpper();
-            overlay.Q<Button>("Back").clicked += () => _root.LinkedElement.Remove(overlay);
+            overlay.Q<Button>("Back").clicked += () => Root.LinkedElement.Remove(overlay);
 
             return overlay;
         }
@@ -111,7 +172,7 @@ namespace UnityEssentials
                 case ToggleData toggle:
                     AddToggle(toggle);
                     break;
-                    
+
                 case InputData input:
                     AddInput(input);
                     break;
@@ -119,7 +180,7 @@ namespace UnityEssentials
                 case OptionsData options:
                     AddOptions(options);
                     break;
-                    
+
                 case SliderData slider:
                     AddSlider(slider);
                     break;
@@ -143,7 +204,7 @@ namespace UnityEssentials
     {
         private void AddBreadcrumb(string label, bool includePrefix, ScriptableObject[] collectionCache)
         {
-            if (!(_breadcrumbs.LinkedElement is GroupBox breadcrumbContainer))
+            if (!(Breadcrumbs.LinkedElement is GroupBox breadcrumbContainer))
                 return;
 
             var breadcrumb = CreateBreadcrumbElement(label, includePrefix);
@@ -165,7 +226,7 @@ namespace UnityEssentials
         private void ConfigureBreadcrumbInteraction(VisualElement breadcrumb, int breadcrumbIndex, bool includePrefix, string originalLabel, ScriptableObject[] collectionCache)
         {
             var button = breadcrumb.Q<Button>();
-            button.clicked += _redraw = () =>
+            button.clicked += Redraw = () =>
             {
                 ClearBreadcrumbsFromIndex(breadcrumbIndex);
                 PopulateHierarchy(originalLabel, includePrefix, collectionCache);
@@ -174,7 +235,7 @@ namespace UnityEssentials
 
         private void ClearBreadcrumbsFromIndex(int startIndex)
         {
-            if (_breadcrumbs.LinkedElement is GroupBox groupBox)
+            if (Breadcrumbs.LinkedElement is GroupBox groupBox)
                 while (groupBox.childCount > startIndex)
                     groupBox.RemoveAt(groupBox.childCount - 1);
         }

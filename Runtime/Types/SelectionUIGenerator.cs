@@ -69,15 +69,15 @@ namespace UnityEssentials
             var image = element.Q<VisualElement>("Image");
             var label = element.Q<Label>("Label");
 
-            //if (Profile.SelectionDataDictionary.TryGetValue(group.Reference, out int index))
-            //{
-            //    var selectionData = group.GetSelectionData(index);
-            //    if (selectionData == null)
-            //        return;
+            if (Profile.SelectionDataDictionary.TryGetValue(group.Reference, out int index))
+            {
+                var selectionData = group.GetSelectionData(index);
+                if (selectionData == null)
+                    return;
 
-            //    image.SetImage(selectionData.Texture);
-            //    label.text = selectionData.Name;
-            //}
+                image.SetBackgroundImage(selectionData.Texture);
+                label.text = selectionData.Name;
+            }
         }
 
         private void ConfigureSelectionCategoryInteraction(VisualElement element, SelectionDataCollectionGroup group)
@@ -112,7 +112,7 @@ namespace UnityEssentials
 
             overlay.Add(CreateSpacer(0));
 
-            _root.LinkedElement.Add(overlay);
+            Root.LinkedElement.Add(overlay);
         }
 
         private List<VisualElement> PopulateSelectionContent(ScriptableObject[] collection, Action<SelectionData> callback)
@@ -146,7 +146,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Image").SetBackgroundImage(selectionData.Texture);
                 element.Q<Label>().text = selectionData.Name;
 
-                //Profile.OnSelectionChange(reference, selectionData.ID);
+                Profile.OnSelectionChange(reference, selectionData.ID);
             };
     }
 }
