@@ -1,0 +1,7 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UnityEssentials/UI/UnityUIMenuGenerator/Resources/Templates/UI%20USS.uss?fileID=7433441132597879392&amp;guid=0fba8d249946f55479ddb7e31b6afd1f&amp;type=3#UI USS" />
+    <engine:GroupBox class="unity-button" style="flex-direction: row; justify-content: space-between; background-color: rgba(0, 0, 0, 0.5); margin-top: 5px; margin-right: 0; margin-bottom: 15px; margin-left: 0; padding-top: 0; padding-right: 20px; padding-bottom: 0; padding-left: 20px; height: 40px; max-width: none; min-width: 550px; flex-wrap: wrap; overflow: hidden; width: 0; align-items: center;">
+        <engine:Label text="Label" name="Label" class="unity-button--primary" style="position: relative; top: 0; max-width: 222px; font-size: 22px;" />
+        <engine:Slider value="34" high-value="100" name="Slider" show-input-field="true" fill="true" style="width: 250px; height: 40px; min-height: auto;" />
+    </engine:GroupBox>
+</engine:UXML>

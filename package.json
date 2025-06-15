@@ -1,0 +1,27 @@
+{
+  "name": "com.unityessentials.uimenugenerator",
+  "version": "1.0.0",
+  "displayName": "UnityEssentials UIMenuGenerator",
+  "description": "This is a part of the UnityEssentials Ecosystem",
+  "unity": "2022.1",
+  "unityRelease": null,
+  "dependencies": {
+    "com.unityessentials.core": "1.0.0",
+    "com.unityessentials.uitoolkitextensions": "1.0.0",
+    "com.unityessentials.uielementlinker": "1.0.0",
+    "com.unity.vectorgraphics": "2.0.0-preview.25",
+    "com.unityessentials.buttonattribute": "1.0.0",
+    "com.unityessentials.serializeddictionarydrawer": "1.0.0"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Unity Essentials",
+    "email": null,
+    "url": null
+  },
+  "documentationUrl": null,
+  "changelogUrl": null,
+  "licensesUrl": null,
+  "samples": [],
+  "hideInEditor": true
+}

@@ -1,0 +1,19 @@
+{
+    "name": "UnityEssentials.UIMenuGenerator",
+    "rootNamespace": "UnityEssentials",
+    "references": [
+        "GUID:52cfcc800872b5a42beb3d0feda1d60c",
+        "GUID:3274dc8bfffe62c4191ff7300b9071c8",
+        "GUID:e652dc2b5a5451045a50f217499425ea",
+        "GUID:aa09701d312bf8847977605b156e47cc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
