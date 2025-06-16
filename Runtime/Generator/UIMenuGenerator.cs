@@ -33,17 +33,18 @@ namespace UnityEssentials
 
         public void Cleanup()
         {
-            if (Document != null)
-            {
-                if (Application.isEditor)
-                    for (int i = 0; i <= Document.transform.childCount; i++)
-                        DestroyImmediate(Document.transform.GetChild(0).gameObject);
-                else for (int i = 0; i <= Document.transform.childCount; i++)
-                        Destroy(Document.transform.GetChild(0).gameObject);
-            }
+            DestroyAllChildren();
             UIGeneratorData = null;
             Document = null;
             Root = null;
+        }
+
+        private void DestroyAllChildren()
+        {
+            while (transform.childCount > 0)
+                if (Application.isEditor)
+                    DestroyImmediate(transform.GetChild(0).gameObject);
+                else Destroy(transform.GetChild(0).gameObject);
         }
 
         public void InitializeDocument()
@@ -63,7 +64,7 @@ namespace UnityEssentials
             Root.LinkedElement.Add(UIGeneratorData.OverlayTemplate.CloneTree());
 
             var breadcrumbsElement = Document.rootVisualElement.Q<GroupBox>("Breadcrumbs");
-            if(breadcrumbsElement != null)
+            if (breadcrumbsElement != null)
             {
                 Breadcrumbs = new GameObject("Breadcrumbs").AddComponent<UIElementLink>();
                 Breadcrumbs.transform.parent = Document.transform;
@@ -77,7 +78,7 @@ namespace UnityEssentials
                 ScrollView.transform.parent = Document.transform;
                 ScrollView.SetElementPath(scrollViewElement);
             }
-            
+
             Debug.Log(
                 $"Root: {Root}, " +
                 $"LinkedElement: {Root?.LinkedElement}, " +
