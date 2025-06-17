@@ -61,29 +61,6 @@ namespace UnityEssentials
         {
             UIGeneratorData = data ??= ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
 
-            Root.LinkedElement.Add(UIGeneratorData.OverlayTemplate.CloneTree());
-
-            var breadcrumbsElement = Document.rootVisualElement.Q<GroupBox>("Breadcrumbs");
-            if (breadcrumbsElement != null)
-            {
-                Breadcrumbs = new GameObject("Breadcrumbs").AddComponent<UIElementLink>();
-                Breadcrumbs.transform.parent = Document.transform;
-                Breadcrumbs.SetElementPath(breadcrumbsElement);
-            }
-
-            var scrollViewElement = Document.rootVisualElement.Q<ScrollView>("ScrollView");
-            if (scrollViewElement != null)
-            {
-                ScrollView = new GameObject("ScrollView").AddComponent<UIElementLink>();
-                ScrollView.transform.parent = Document.transform;
-                ScrollView.SetElementPath(scrollViewElement);
-            }
-
-            Debug.Log(
-                $"Root: {Root}, " +
-                $"LinkedElement: {Root?.LinkedElement}, " +
-                $"OverlayTemplate: {UIGeneratorData?.OverlayTemplate}, " +
-                $"RootElementChildCount: {Root?.LinkedElement?.childCount ?? -1}");
         }
 
         public bool ValidateDependencies() =>
@@ -117,9 +94,9 @@ namespace UnityEssentials
                 scrollView.Add(element);
         }
 
-        private VisualElement CreateOverlay(string name)
+        private VisualElement CreatePopup(string name)
         {
-            var overlay = UIGeneratorData.OverlayTemplate.CloneTree();
+            var overlay = UIGeneratorData.PopupPanelTemplate.CloneTree();
             overlay.Q<Button>("Label").text = name.ToUpper();
             overlay.Q<Button>("Back").clicked += () => Root.LinkedElement.Remove(overlay);
 

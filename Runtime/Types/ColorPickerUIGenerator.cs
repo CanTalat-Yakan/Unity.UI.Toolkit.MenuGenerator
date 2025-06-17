@@ -78,7 +78,7 @@ namespace UnityEssentials
     {
         private void ShowColorPickerOverlay(ColorPickerDataGroup group, Action<string, Color> callback)
         {
-            var overlay = CreateOverlay(group.Name);
+            var overlay = CreatePopup(group.Name);
 
             foreach (var colorPickerData in group.ColorPickerData)
                 overlay.Q<GroupBox>("GroupBox").Add(CreateColorPicker(colorPickerData, callback));

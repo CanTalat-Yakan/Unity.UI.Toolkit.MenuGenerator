@@ -92,7 +92,7 @@ namespace UnityEssentials
     {
         private void ShowSelectionOverlay(SelectionDataCollectionGroup group, Action<SelectionData> callback)
         {
-            var overlay = CreateOverlay(group.Name);
+            var overlay = CreatePopup(group.Name);
 
             foreach (var colorData in group.Colors)
                 switch (colorData)

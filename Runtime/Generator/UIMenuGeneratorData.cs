@@ -7,18 +7,24 @@ namespace UnityEssentials
     public class UIMenuGeneratorData : ScriptableObject
     {
         [Space]
-        public VisualTreeAsset OverlayTemplate;
-
-        [Space]
-        public VisualTreeAsset BreadcrumbTemplate;
+        // Fullscreen settings UI with top-level tabs, side navigation, central content, and contextual help.
+        public VisualTreeAsset TabbedMenuTemplate;
+        // Single-panel settings UI with back navigation, breadcrumb hierarchy, and drill-down structure through nested categories.
+        public VisualTreeAsset HierarchicalMenuTemplate;
+        // Dialog-based settings UI with modal windows, header, content, and action buttons are standard structure for modal dialogs..
+        public VisualTreeAsset ModelDialogTemplate;
+        // Popup panels for quick settings access, content area.
+        public VisualTreeAsset PopupPanelTemplate;
 
         [Space]
         public VisualTreeAsset HeaderTemplate;
         public VisualTreeAsset SpacerTemplate;
 
         [Space]
-        public VisualTreeAsset CategoryTemplate;
+        public VisualTreeAsset BreadcrumbTemplate;
 
+        [Space]
+        public VisualTreeAsset CategoryTemplate;
 
         [Space]
         public VisualTreeAsset InputTemplate;
