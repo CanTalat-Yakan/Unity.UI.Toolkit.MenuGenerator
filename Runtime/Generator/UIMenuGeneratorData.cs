@@ -12,7 +12,7 @@ namespace UnityEssentials
         // Single-panel settings UI with back navigation, breadcrumb hierarchy, and drill-down structure through nested categories.
         public VisualTreeAsset HierarchicalMenuTemplate;
         // Dialog-based settings UI with modal windows, header, content, and action buttons are standard structure for modal dialogs..
-        public VisualTreeAsset ModelDialogTemplate;
+        public VisualTreeAsset ModalDialogTemplate;
         // Popup panels for quick settings access, content area.
         public VisualTreeAsset PopupPanelTemplate;
 
