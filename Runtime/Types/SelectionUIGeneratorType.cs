@@ -42,26 +42,19 @@ namespace UnityEssentials
         }
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddSelectionCategory(SelectionDataCollectionGroup group)
+        public static VisualElement CreateSelectionCategory(UIMenuGenerator menu, SelectionDataCollectionGroup group)
         {
-            var element = CreateSelectionCategory(group);
+            var element = menu.UIGeneratorData.SelectionCategoryTemplate.CloneTree();
 
-            AddElementToScrollView(element);
-        }
-        
-        private VisualElement CreateSelectionCategory(SelectionDataCollectionGroup group)
-        {
-            var element = UIGeneratorData.SelectionCategoryTemplate.CloneTree();
-
-            ConfigureSelectionCategoryVisuals(element, group);
-            ConfigureSelectionCategoryInteraction(element, group);
+            ConfigureSelectionCategoryVisuals(menu.Profile, element, group);
+            ConfigureSelectionCategoryInteraction(menu, element, group);
 
             return element;
         }
 
-        private void ConfigureSelectionCategoryVisuals(VisualElement element, SelectionDataCollectionGroup group)
+        private static void ConfigureSelectionCategoryVisuals(UIMenuDataProfile profile, VisualElement element, SelectionDataCollectionGroup group)
         {
             var button = element.Q<Button>("Button");
             button.text = group.Name.ToUpper();
@@ -69,7 +62,7 @@ namespace UnityEssentials
             var image = element.Q<VisualElement>("Image");
             var label = element.Q<Label>("Label");
 
-            if (Profile.SelectionDataDictionary.TryGetValue(group.Reference, out int index))
+            if (profile.SelectionDataDictionary.TryGetValue(group.Reference, out int index))
             {
                 var selectionData = group.GetSelectionData(index);
                 if (selectionData == null)
@@ -80,59 +73,59 @@ namespace UnityEssentials
             }
         }
 
-        private void ConfigureSelectionCategoryInteraction(VisualElement element, SelectionDataCollectionGroup group)
+        private static void ConfigureSelectionCategoryInteraction(UIMenuGenerator menu, VisualElement element, SelectionDataCollectionGroup group)
         {
             var button = element.Q<Button>();
-            button.clicked += () => ShowSelectionOverlay(group, UpdateSelectionVisuals(element, group.Reference));
+            button.clicked += () => 
+                ShowSelectionOverlay(menu, group, callback:
+                    UpdateSelectionVisuals(menu.Profile, element, group.Reference));
         }
     }
 
     // Overlay Management - Selection
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void ShowSelectionOverlay(SelectionDataCollectionGroup group, Action<SelectionData> callback)
+        private static void ShowSelectionOverlay(UIMenuGenerator menu, SelectionDataCollectionGroup group, Action<SelectionData> callback)
         {
-            var overlay = CreatePopup(group.Name);
+            var overlay = menu.CreatePopup(group.Name);
 
             foreach (var colorData in group.Colors)
                 switch (colorData)
                 {
                     case ColorSliderData colorSliderData:
-                        overlay.Q<GroupBox>("GroupBox").Add(CreateColorSlider(colorSliderData));
+                        overlay.Q<GroupBox>("GroupBox").Add(CreateColorSlider(menu, colorSliderData));
                         break;
                     case ColorPickerData colorPickerData:
-                        overlay.Q<GroupBox>("GroupBox").Add(CreateColorPickerButton(colorPickerData.Name, colorPickerData.Reference));
+                        overlay.Q<GroupBox>("GroupBox").Add(CreateColorPickerButton(menu,colorPickerData.Name, colorPickerData.Reference));
                         break;
                     default: break;
                 }
 
-            var content = PopulateSelectionContent(group.Collections, callback);
+            var content = PopulateSelectionContent(menu, group.Collections, callback);
             foreach (var item in content)
                 overlay.Q<GroupBox>("GroupBox").Add(item);
 
-            overlay.Add(CreateSpacer(0));
-
-            Root.LinkedElement.Add(overlay);
+            menu.AddElementToRoot(overlay);
         }
 
-        private List<VisualElement> PopulateSelectionContent(ScriptableObject[] collection, Action<SelectionData> callback)
+        private static List<VisualElement> PopulateSelectionContent(UIMenuGenerator menu, ScriptableObject[] collection, Action<SelectionData> callback)
         {
             var content = new List<VisualElement>();
             foreach (var data in collection)
             {
                 if (data is SelectionDataCollection collectionData)
                     foreach (var item in collectionData.Data)
-                        content.Add(CreateSelectionTile(item, callback));
+                        content.Add(CreateSelectionTile(menu, item, callback));
                 else if (data is SelectionData selectionData)
-                    content.Add(CreateSelectionTile(selectionData, callback));
+                    content.Add(CreateSelectionTile(menu, selectionData, callback));
             }
 
             return content;
         }
 
-        private VisualElement CreateSelectionTile(SelectionData data, Action<SelectionData> callback)
+        private static VisualElement CreateSelectionTile(UIMenuGenerator menu, SelectionData data, Action<SelectionData> callback)
         {
-            var tile = UIGeneratorData.SelectionTileTemplate.CloneTree();
+            var tile = menu.UIGeneratorData.SelectionTileTemplate.CloneTree();
             tile.Q<Label>().text = data.Name;
             tile.Q<VisualElement>("Image").SetBackgroundImage(data.Texture);
             tile.Q<Button>().clicked += () => callback(data);
@@ -140,13 +133,13 @@ namespace UnityEssentials
             return tile;
         }
 
-        private Action<SelectionData> UpdateSelectionVisuals(VisualElement element, string reference) =>
+        private static Action<SelectionData> UpdateSelectionVisuals(UIMenuDataProfile profile, VisualElement element, string reference) =>
             selectionData =>
             {
                 element.Q<VisualElement>("Image").SetBackgroundImage(selectionData.Texture);
                 element.Q<Label>().text = selectionData.Name;
 
-                Profile.OnSelectionChange(reference, selectionData.ID);
+                profile.OnSelectionChange(reference, selectionData.ID);
             };
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "UIGeneratorData", menuName = "UI/Templates Provider", order = 1)]
+    [CreateAssetMenu(fileName = "UIGeneratorData", menuName = "UI/Templates Provider", order = 100)]
     public class UIMenuGeneratorData : ScriptableObject
     {
         [Space]
@@ -25,6 +25,7 @@ namespace UnityEssentials
 
         [Space]
         public VisualTreeAsset CategoryTemplate;
+        public VisualTreeAsset ButtonTemplate;
 
         [Space]
         public VisualTreeAsset InputTemplate;

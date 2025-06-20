@@ -27,41 +27,34 @@ namespace UnityEssentials
         public ColorSliderData[] ColorSliderData;
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddColorSlider(ColorSliderData data)
+        public static VisualElement CreateColorSlider(UIMenuGenerator menu, ColorSliderData data)
         {
-            var element = CreateColorSlider(data);
+            var element = menu.UIGeneratorData.ColorSliderTemplate.CloneTree();
 
-            AddElementToScrollView(element);
-        }
-
-        private VisualElement CreateColorSlider(ColorSliderData data)
-        {
-            var element = UIGeneratorData.ColorSliderTemplate.CloneTree();
-
-            ConfigureSliderVisuals(element, data);
-            ConfigureSliderInteraction(element, data);
+            ConfigureSliderVisuals(menu.Profile, element, data);
+            ConfigureSliderInteraction(menu.Profile, element, data);
 
             return element;
         }
 
-        private void ConfigureSliderVisuals(VisualElement element, ColorSliderData data)
+        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, ColorSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
             var value = 0;
-            Profile.ColorSliderDataDictionary.TryGetValue(data, out value);
+            profile.ColorSliderDataDictionary.TryGetValue(data, out value);
 
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
 
-            var slider = element.Q<SliderInt>();
-            SetSliderRange(slider, (0, 100), value);
+            var slider = element.Q<SliderInt>(); 
+            (slider.lowValue, slider.highValue) = (0, 100);
         }
 
-        private void ConfigureSliderInteraction(VisualElement element, ColorSliderData data)
+        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, ColorSliderData data)
         {
             var icon = element.Q<VisualElement>("Icon");
             var slider = element.Q<SliderInt>();
@@ -69,7 +62,7 @@ namespace UnityEssentials
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(e.newValue / 100f));
 
-                Profile.OnColorSliderChange(data, e.newValue);
+                profile.OnColorSliderChange(data, e.newValue);
             });
         }
     }

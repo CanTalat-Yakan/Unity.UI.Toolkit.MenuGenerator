@@ -1,6 +1,8 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEssentials.UIMenuGeneratorType;
 
 namespace UnityEssentials
 {
@@ -8,10 +10,9 @@ namespace UnityEssentials
     {
         [Header("Data Configuration")]
         public UIMenuGeneratorData UIGeneratorData;
-        [OnValueChanged("UIGeneratorData")] public void OnDataValueChange() => Initialize();
 
         [Space]
-        public DataProfile Profile;
+        public UIMenuDataProfile Profile;
 
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public UIElementLink Root;
@@ -25,7 +26,6 @@ namespace UnityEssentials
 
         public void Initialize()
         {
-            Debug.Log("Initializing UIMenuGenerator...");
             Cleanup();
             InitializeDocument();
             InitializeData();
@@ -60,7 +60,6 @@ namespace UnityEssentials
         public void InitializeData(UIMenuGeneratorData data = null)
         {
             UIGeneratorData = data ??= ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
-
         }
 
         public bool ValidateDependencies() =>
@@ -76,25 +75,37 @@ namespace UnityEssentials
         public void RedrawUI() =>
             Redraw?.Invoke();
 
-        internal void ResetUI()
+        public void ResetUI()
         {
             CurrentCategory = null;
             ClearBreadcrumbsFromIndex(0);
         }
 
-        private void ClearUI()
+        public void ClearUI()
         {
             if (ScrollView.LinkedElement is ScrollView scrollView)
                 scrollView.Clear();
         }
 
-        private void AddElementToScrollView(VisualElement element)
+        public void AddElementToScrollView(VisualElement element)
         {
+            if(element == null) 
+                return;
+
             if (ScrollView.LinkedElement is ScrollView scrollView)
                 scrollView.Add(element);
         }
 
-        private VisualElement CreatePopup(string name)
+        public void AddElementToRoot(VisualElement element)
+        {
+            if (element == null)
+                return;
+
+            if (Root.LinkedElement is VisualElement root)
+                root.Add(element);
+        }
+
+        public VisualElement CreatePopup(string name)
         {
             var overlay = UIGeneratorData.PopupPanelTemplate.CloneTree();
             overlay.Q<Button>("Label").text = name.ToUpper();
@@ -118,8 +129,6 @@ namespace UnityEssentials
 
             foreach (var data in collection)
                 ProcessDataItem(data);
-
-            AddSpacer(0);
         }
 
         private void UpdateCategoryHistory(string newCategory)
@@ -130,50 +139,23 @@ namespace UnityEssentials
 
         private void ProcessDataItem(ScriptableObject data)
         {
-            switch (data)
+            var element = data switch
             {
-                case CategoryData category:
-                    AddCategory(category);
-                    break;
+                CategoryData category => CreateCategory(this, category),
+                HeaderData header => CreateHeader(this, header),
+                SpacerData spacer => CreateSpacer(this, spacer),
+                ButtonData button => CreateButton(this, button),
+                ToggleData toggle => CreateToggle(this, toggle),
+                InputData input => CreateInput(this, input),
+                OptionsData options => CreateOptions(this, options),
+                SliderData slider => CreateSlider(this, slider),
+                SelectionDataCollectionGroup selectionCategory => CreateSelectionCategory(this, selectionCategory),
+                ColorPickerDataGroup colorCategory => CreateColorPickerButton(this, colorCategory),
+                ColorSliderData colorSliderData => CreateColorSlider(this, colorSliderData),
+                _ => null
+            };
 
-                case HeaderData header:
-                    AddHeader(header);
-                    break;
-                case SpacerData spacer:
-                    AddSpacer(spacer);
-                    break;
-
-                case ButtonData button:
-                    AddButton(button);
-                    break;
-
-                case ToggleData toggle:
-                    AddToggle(toggle);
-                    break;
-
-                case InputData input:
-                    AddInput(input);
-                    break;
-
-                case OptionsData options:
-                    AddOptions(options);
-                    break;
-
-                case SliderData slider:
-                    AddSlider(slider);
-                    break;
-
-                case SelectionDataCollectionGroup selectionCategory:
-                    AddSelectionCategory(selectionCategory);
-                    break;
-
-                case ColorPickerDataGroup colorCategory:
-                    AddColorPickerButton(colorCategory);
-                    break;
-                case ColorSliderData colorSliderData:
-                    AddColorSlider(colorSliderData);
-                    break;
-            }
+            AddElementToScrollView(element);
         }
     }
 

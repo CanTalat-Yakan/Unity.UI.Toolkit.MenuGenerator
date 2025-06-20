@@ -13,26 +13,19 @@ namespace UnityEssentials
         public ScriptableObject[] Data;
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddCategory(CategoryData data)
+        public static VisualElement CreateCategory(UIMenuGenerator menu, CategoryData data)
         {
-            var element = CreateCategory(data);
-
-            AddElementToScrollView(element);
-        }
-
-        private VisualElement CreateCategory(CategoryData data)
-        {
-            var element = UIGeneratorData.CategoryTemplate.CloneTree();
+            var element = menu.UIGeneratorData.CategoryTemplate.CloneTree();
 
             ConfigureCategoryVisuals(element, data);
-            ConfigureCategoryInteraction(element, data);
+            ConfigureCategoryInteraction(element, data, menu);
 
             return element;
         }
 
-        private void ConfigureCategoryVisuals(VisualElement element, CategoryData data)
+        private static void ConfigureCategoryVisuals(VisualElement element, CategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -41,10 +34,10 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private void ConfigureCategoryInteraction(VisualElement element, CategoryData data)
+        private static void ConfigureCategoryInteraction(VisualElement element, CategoryData data, UIMenuGenerator menu)
         {
             var button = element.Q<Button>("Button");
-            button.clicked += () => PopulateHierarchy(data.Name, true, data.Data);
+            button.clicked += () => menu.PopulateHierarchy(data.Name, true, data.Data);
         }
     }
 }

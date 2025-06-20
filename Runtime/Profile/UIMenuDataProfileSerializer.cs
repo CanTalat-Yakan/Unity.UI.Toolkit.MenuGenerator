@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
-    public interface DataProfileSerializerInterface { }
+    public interface UIMenuDataProfileSerializerInterface { }
 
-    public partial class DataProfileSerializer : MonoBehaviour
+    public partial class UIMenuDataProfileSerializer : MonoBehaviour
     {
         private static string _serializationFileName = "NewProfile";
 
@@ -17,13 +17,13 @@ namespace UnityEssentials
         public static string GetSerializationFileName() =>
             _serializationFileName;
 
-        public void SerializeData<T>(string path, T data) where T : DataProfileSerializerInterface
+        public void SerializeData<T>(string path, T data) where T : UIMenuDataProfileSerializerInterface
         {
             var json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(path, json);
         }
 
-        public T DeserializeData<T>(string path) where T : DataProfileSerializerInterface
+        public T DeserializeData<T>(string path) where T : UIMenuDataProfileSerializerInterface
         {
             var json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<T>(json);

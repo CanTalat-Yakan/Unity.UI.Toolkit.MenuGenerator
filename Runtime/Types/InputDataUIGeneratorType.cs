@@ -10,26 +10,19 @@ namespace UnityEssentials
         public string Reference;
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddInput(InputData data)
+        public static VisualElement CreateInput(UIMenuGenerator menu, InputData data)
         {
-            var element = CreateInput(data);
+            var element = menu.UIGeneratorData.InputTemplate.CloneTree();
 
-            AddElementToScrollView(element);
-        }
-
-        private VisualElement CreateInput(InputData data)
-        {
-            var element = UIGeneratorData.InputTemplate.CloneTree();
-
-            ConfigureInputVisuals(element, data);
-            ConfigureInputInteraction(element, data);
+            ConfigureInputVisuals(menu.Profile, element, data);
+            ConfigureInputInteraction(menu.Profile, element, data);
 
             return element;
         }
 
-        private void ConfigureInputVisuals(VisualElement element, InputData data)
+        private static void ConfigureInputVisuals(UIMenuDataProfile profile, VisualElement element, InputData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -37,17 +30,17 @@ namespace UnityEssentials
             var inputField = element.Q<TextField>("Input");
 
             string input = string.Empty;
-            Profile.InputDataDictionary.TryGetValue(data.Reference, out input);
+            profile.InputDataDictionary.TryGetValue(data.Reference, out input);
 
             inputField.value = input;
         }
 
-        private void ConfigureInputInteraction(VisualElement element, InputData data)
+        private static void ConfigureInputInteraction(UIMenuDataProfile profile, VisualElement element, InputData data)
         {
             var textField = element.Q<TextField>("Input");
             textField.RegisterValueChangedCallback((evt) =>
             {
-                Profile.OnInputChange(data.Reference, evt.newValue);
+                profile.OnInputChange(data.Reference, evt.newValue);
             });
         }
     }

@@ -15,44 +15,38 @@ namespace UnityEssentials
         public bool Reverse;
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddOptions(OptionsData data)
+        public static VisualElement CreateOptions(UIMenuGenerator menu, OptionsData data)
         {
-            var element = CreateOptions(data);
+            var element = menu.UIGeneratorData.OptionsTemplate.CloneTree();
 
-            AddElementToScrollView(element);
-        }
-
-        private VisualElement CreateOptions(OptionsData data)
-        {
-            var element = UIGeneratorData.OptionsTemplate.CloneTree();
-
-            ConfigureOptionsVisuals(element, data);
-            ConfigureOptionsInteraction(element, data);
+            ConfigureOptionsVisuals(menu.Profile, element, data);
+            ConfigureOptionsInteraction(menu.Profile, element, data);
 
             return element;
         }
 
-        private void ConfigureOptionsVisuals(VisualElement element, OptionsData data)
+        private static void ConfigureOptionsVisuals(UIMenuDataProfile profile, VisualElement element, OptionsData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
             var dropdown = element.Q<DropdownField>("Options");
 
-            Profile.OptionsDataDictionary.TryGetValue(data.Reference, out var dropDownindex);
+            profile.OptionsDataDictionary.TryGetValue(data.Reference, out var dropDownindex);
+
             dropdown.choices = data.Options.ToList();
             dropdown.index = dropDownindex;
             dropdown.value = data.Options[dropDownindex];
         }
 
-        private void ConfigureOptionsInteraction(VisualElement element, OptionsData data)
+        private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, OptionsData data)
         {
             var dropdownField = element.Q<DropdownField>("Options");
             dropdownField.RegisterValueChangedCallback(evt =>
             {
-                Profile.OnOptionsChange(data.Reference, dropdownField.index);
+                profile.OnOptionsChange(data.Reference, dropdownField.index);
             });
 
             var buttonLeft = element.Q<Button>("Left");
@@ -61,10 +55,10 @@ namespace UnityEssentials
                 var length = data.Options.Length;
 
                 var index = 0;
-                Profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
+                profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
 
                 index = ProcessIndex(!data.Reverse ? index - 1 : index + 1, length);
-                Profile.OnOptionsChange(data.Reference, ProcessIndex(index, length));
+                profile.OnOptionsChange(data.Reference, ProcessIndex(index, length));
 
                 dropdownField.index = index;
             };
@@ -75,16 +69,16 @@ namespace UnityEssentials
                 var length = data.Options.Length;
 
                 var index = 0;
-                Profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
+                profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
 
                 index = ProcessIndex(!data.Reverse ? index + 1 : index - 1, length);
-                Profile.OnOptionsChange(data.Reference, index);
+                profile.OnOptionsChange(data.Reference, index);
 
                 dropdownField.index = index;
             };
         }
 
-        private int ProcessIndex(int index, int maxIndex, int minIndex = 0)
+        private static int ProcessIndex(int index, int maxIndex, int minIndex = 0)
         {
             // Ensure the index is within the bounds
             int range = maxIndex - minIndex;

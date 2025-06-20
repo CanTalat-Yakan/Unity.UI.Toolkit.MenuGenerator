@@ -9,25 +9,18 @@ namespace UnityEssentials
         public string Text;
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddHeader(HeaderData data)
+        public static VisualElement CreateHeader(UIMenuGenerator menu, HeaderData data)
         {
-            var element = CreateHeader(data);
-
-            AddElementToScrollView(element);
-        }
-
-        private VisualElement CreateHeader(HeaderData data)
-        {
-            var element = UIGeneratorData.HeaderTemplate.CloneTree();
+            var element = menu.UIGeneratorData.HeaderTemplate.CloneTree();
 
             ConfigureHeaderVisuals(element, data);
 
             return element;
         }
 
-        private void ConfigureHeaderVisuals(VisualElement element, HeaderData data)
+        private static void ConfigureHeaderVisuals(VisualElement element, HeaderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Text.ToUpper();

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public abstract class DataProfile : ScriptableObject
+    public abstract class UIMenuDataProfile : ScriptableObject
     {
         public SerializedDictionary<string, bool> ToggleDataDictionary;
         public SerializedDictionary<string, string> InputDataDictionary;
@@ -13,7 +13,7 @@ namespace UnityEssentials
         public SerializedDictionary<string, Color> ColorPickerDataDictionary;
         public SerializedDictionary<ColorSliderData, int> ColorSliderDataDictionary;
 
-        public void CopyValues<T>(T source) where T : DataProfile
+        public void CopyValues<T>(T source) where T : UIMenuDataProfile
         {
             ToggleDataDictionary.CopyFrom(source.ToggleDataDictionary?.Dictionary);
             InputDataDictionary.CopyFrom(source.InputDataDictionary?.Dictionary);

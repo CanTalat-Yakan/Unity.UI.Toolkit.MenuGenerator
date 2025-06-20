@@ -23,18 +23,11 @@ namespace UnityEssentials
             AltEvent?.Invoke();
     }
 
-    public partial class UIMenuGenerator : MonoBehaviour
+    public static partial class UIMenuGeneratorType
     {
-        private void AddButton(ButtonData data)
+        public static VisualElement CreateButton(UIMenuGenerator menu, ButtonData data)
         {
-            var element = CreateButton(data);
-
-            AddElementToScrollView(element);
-        }
-
-        private VisualElement CreateButton(ButtonData data)
-        {
-            var element = UIGeneratorData.CategoryTemplate.CloneTree();
+            var element = menu.UIGeneratorData.ButtonTemplate.CloneTree();
 
             ConfigureButtonVisuals(element, data);
             ConfigureButtonInteraction(element, data);
@@ -42,7 +35,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private void ConfigureButtonVisuals(VisualElement element, ButtonData data)
+        private static void ConfigureButtonVisuals(VisualElement element, ButtonData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -51,7 +44,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private void ConfigureButtonInteraction(VisualElement element, ButtonData data)
+        private static void ConfigureButtonInteraction(VisualElement element, ButtonData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => data.InvokeEvent();
