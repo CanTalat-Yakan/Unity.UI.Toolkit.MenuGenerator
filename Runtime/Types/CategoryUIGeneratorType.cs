@@ -20,7 +20,7 @@ namespace UnityEssentials
             var element = menu.Data.CategoryTemplate.CloneTree();
 
             ConfigureCategoryVisuals(element, data);
-            ConfigureCategoryInteraction(element, data, menu);
+            ConfigureCategoryInteraction(menu, element, data);
 
             return element;
         }
@@ -34,7 +34,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private static void ConfigureCategoryInteraction(VisualElement element, CategoryData data, UIMenuGenerator menu)
+        private static void ConfigureCategoryInteraction(UIMenuGenerator menu, VisualElement element, CategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => menu.PopulateHierarchy(false, data.Name, data.Data);

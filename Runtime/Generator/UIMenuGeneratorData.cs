@@ -8,13 +8,13 @@ namespace UnityEssentials
     {
         [Space]
         // Fullscreen settings UI with top-level tabs, side navigation, central content, and contextual help.
-        public VisualTreeAsset TabbedMenuTemplate;
+        public GameObject TabbedMenuTemplate;
         // Single-panel settings UI with back navigation, breadcrumb hierarchy, and drill-down structure through nested categories.
-        public VisualTreeAsset HierarchicalMenuTemplate;
+        public GameObject HierarchicalMenuTemplate;
         // Dialog-based settings UI with modal windows, header, content, and action buttons are standard structure for modal dialogs..
-        public VisualTreeAsset ModalDialogTemplate;
+        public GameObject ModalDialogTemplate;
         // Popup panels for quick settings access, content area.
-        public VisualTreeAsset PopupPanelTemplate;
+        public GameObject PopupPanelTemplate;
 
         [Space]
         public VisualTreeAsset HeaderTemplate;

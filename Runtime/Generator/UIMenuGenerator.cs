@@ -10,13 +10,10 @@ namespace UnityEssentials
         public UIMenuGeneratorData Data;
         public UIMenuDataProfile Profile;
 
-        public UIDocument Document;
-        public UIElementLink Root;
-        public UIElementLink Breadcrumbs;
-        public UIElementLink ScrollView;
-
-        public string CurrentCategory { get; private set; }
-        public string PreviousCategory { get; private set; }
+        [HideInInspector] public UIDocument Document;
+        [HideInInspector] public UIElementLink Root;
+        [HideInInspector] public UIElementLink Breadcrumbs;
+        [HideInInspector] public UIElementLink ScrollView;
 
         [ContextMenu("Initialize")]
         public void Initialize()
@@ -33,29 +30,40 @@ namespace UnityEssentials
         {
             Document = GetComponentInChildren<UIDocument>();
 
-            Root = transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
-            Breadcrumbs = transform.Find("VisualElement (Breadcrumbs)")?.GetComponent<UIElementLink>();
-            ScrollView = transform.Find("VisualElement (ScrollView)")?.GetComponent<UIElementLink>();
+            Root = Document.transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
+            Breadcrumbs = Document.transform.Find("VisualElement (Breadcrumbs)")?.GetComponent<UIElementLink>();
+            ScrollView = Document.transform.Find("VisualElement (ScrollView)")?.GetComponent<UIElementLink>();
         }
+
+        public Action Redraw;
+        private void ConfigureRedraw(string label, bool prefix, ScriptableObject[] data) =>
+            Redraw = () =>
+            {
+                ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                PopulateHierarchy(prefix, label, data);
+            };
 
         public bool ValidateDependencies() =>
             Data != null && Document != null;
     }
 
-    // UI Management
     public partial class UIMenuGenerator : MonoBehaviour
     {
-        public Action Redraw;
-        public void RedrawUI() =>
-            Redraw?.Invoke();
-
-        public void ResetUI()
+        public string CurrentCategory { get; private set; }
+        public string PreviousCategory { get; private set; }
+        private void UpdateCategoryHistory(string newCategory)
         {
-            CurrentCategory = null;
-            ClearBreadcrumbsFromIndex(0);
+            PreviousCategory = CurrentCategory;
+            CurrentCategory = newCategory;
         }
 
-        public void ClearUI()
+        public void ResetCategory()
+        {
+            CurrentCategory = null;
+            ClearBreadcrumbsFromIndex(this);
+        }
+
+        public void ClearScrollView()
         {
             if (ScrollView.LinkedElement is ScrollView scrollView)
                 scrollView.Clear();
@@ -63,7 +71,7 @@ namespace UnityEssentials
 
         public void AddElementToScrollView(VisualElement element)
         {
-            if(element == null) 
+            if (element == null)
                 return;
 
             if (ScrollView.LinkedElement is ScrollView scrollView)
@@ -81,24 +89,24 @@ namespace UnityEssentials
 
         public VisualElement CreatePopup(string name)
         {
-            var overlay = Data.PopupPanelTemplate.CloneTree();
-            overlay.Q<Button>("Label").text = name.ToUpper();
-            overlay.Q<Button>("Back").clicked += () => Root.LinkedElement.Remove(overlay);
-
-            return overlay;
+            var popup = Instantiate(Data.PopupPanelTemplate);
+            var root = popup.GetComponent<UIDocument>().rootVisualElement;
+            root.Q<Button>("Label").text = name.ToUpper();
+            root.Q<Button>("Back").clicked += () => Root.LinkedElement.Remove(root);
+            return root;
         }
     }
 
-    // UI Population
     public partial class UIMenuGenerator : MonoBehaviour
     {
-        internal void PopulateHierarchy(bool isRoot, string categoryName, ScriptableObject[] collection)
+        public void PopulateHierarchy(bool isRoot, string categoryName, ScriptableObject[] collection)
         {
-            if (collection == null || collection.Length == 0) 
+            if (collection == null || collection.Length == 0)
                 return;
 
-            ClearUI();
-            AddBreadcrumb(categoryName, isRoot, collection);
+            ClearScrollView();
+            AddBreadcrumb(this, categoryName, !isRoot, collection);
+            ConfigureRedraw(categoryName, !isRoot, collection);
 
             UpdateCategoryHistory(categoryName);
 
@@ -106,15 +114,8 @@ namespace UnityEssentials
                 ProcessDataItem(data);
         }
 
-        private void UpdateCategoryHistory(string newCategory)
-        {
-            PreviousCategory = CurrentCategory;
-            CurrentCategory = newCategory;
-        }
-
-        private void ProcessDataItem(ScriptableObject data)
-        {
-            var element = data switch
+        private void ProcessDataItem(ScriptableObject data) =>
+            AddElementToScrollView(data switch
             {
                 CategoryData category => CreateCategory(this, category),
                 HeaderData header => CreateHeader(this, header),
@@ -128,51 +129,6 @@ namespace UnityEssentials
                 ColorPickerDataGroup colorCategory => CreateColorPickerButton(this, colorCategory),
                 ColorSliderData colorSliderData => CreateColorSlider(this, colorSliderData),
                 _ => null
-            };
-
-            AddElementToScrollView(element);
-        }
-    }
-
-    // Breadcrumb Configuration
-    public partial class UIMenuGenerator : MonoBehaviour
-    {
-        private void AddBreadcrumb(string label, bool excludePrefix, ScriptableObject[] collectionCache)
-        {
-            if (!(Breadcrumbs.LinkedElement is GroupBox breadcrumbContainer))
-                return;
-
-            var breadcrumb = CreateBreadcrumbElement(label, excludePrefix);
-            ConfigureBreadcrumbInteraction(breadcrumb, breadcrumbContainer.childCount, excludePrefix, label, collectionCache);
-
-            breadcrumbContainer.Add(breadcrumb);
-        }
-
-        private VisualElement CreateBreadcrumbElement(string label, bool excludePrefix)
-        {
-            var breadcrumb = Data.BreadcrumbTemplate.CloneTree();
-            var button = breadcrumb.Q<Button>("Button");
-            button.text = (excludePrefix ? string.Empty : "  •  ") + label.ToUpper();
-            breadcrumb.userData = label;
-
-            return breadcrumb;
-        }
-
-        private void ConfigureBreadcrumbInteraction(VisualElement breadcrumb, int breadcrumbIndex, bool excludePrefix, string originalLabel, ScriptableObject[] collectionCache)
-        {
-            var button = breadcrumb.Q<Button>();
-            button.clicked += Redraw = () =>
-            {
-                ClearBreadcrumbsFromIndex(breadcrumbIndex);
-                PopulateHierarchy(excludePrefix, originalLabel, collectionCache);
-            };
-        }
-
-        private void ClearBreadcrumbsFromIndex(int startIndex)
-        {
-            if (Breadcrumbs.LinkedElement is GroupBox groupBox)
-                while (groupBox.childCount > startIndex)
-                    groupBox.RemoveAt(groupBox.childCount - 1);
-        }
+            });
     }
 }

@@ -53,74 +53,6 @@ MonoBehaviour:
       TypeIndex: 1
       OrderIndex: 0
   _document: {fileID: 8702637790650956755}
---- !u!1 &4475511071283834947
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 725918929078416069}
-  - component: {fileID: 2349788692939210085}
-  m_Layer: 0
-  m_Name: Button (Label)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &725918929078416069
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4475511071283834947}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.85522, y: -4.02447, z: -9.3784}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6423311488800057765}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2349788692939210085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4475511071283834947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56eae073688fa274c813e739dfe6da19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _info: Linked Element #Label of type Button in Default UI Hierarchical Menu UXML
-  Data:
-    Path:
-    - Name: Root
-      DisplayName: Root
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: Overlay
-      DisplayName: Overlay
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: 
-      DisplayName: GroupBox
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: Breadcrumbs
-      DisplayName: Breadcrumbs
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: Label
-      DisplayName: Label
-      TypeIndex: 3
-      OrderIndex: 0
-  _document: {fileID: 8702637790650956755}
 --- !u!1 &4933212937940285832
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,15 +201,13 @@ Transform:
   m_GameObject: {fileID: 7703463562447253605}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.85522, y: 4.02447, z: 9.3784}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5990343135799799180}
   - {fileID: 6816928682081024851}
-  - {fileID: 5229170676934458678}
   - {fileID: 16431986388511664}
-  - {fileID: 725918929078416069}
   - {fileID: 7733938800111748486}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -363,69 +293,5 @@ MonoBehaviour:
     - Name: Breadcrumbs
       DisplayName: Breadcrumbs
       TypeIndex: 1
-      OrderIndex: 0
-  _document: {fileID: 8702637790650956755}
---- !u!1 &8961247849894577483
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5229170676934458678}
-  - component: {fileID: 7291234248709366360}
-  m_Layer: 0
-  m_Name: Button (Back)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5229170676934458678
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8961247849894577483}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.85522, y: -4.02447, z: -9.3784}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6423311488800057765}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7291234248709366360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8961247849894577483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56eae073688fa274c813e739dfe6da19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _info: Linked Element #Back of type Button in Default UI Hierarchical Menu UXML
-  Data:
-    Path:
-    - Name: Root
-      DisplayName: Root
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: Overlay
-      DisplayName: Overlay
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: 
-      DisplayName: GroupBox
-      TypeIndex: 1
-      OrderIndex: 0
-    - Name: Back
-      DisplayName: Back
-      TypeIndex: 3
       OrderIndex: 0
   _document: {fileID: 8702637790650956755}

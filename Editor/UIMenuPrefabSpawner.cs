@@ -5,12 +5,16 @@ namespace UnityEssentials
 {
     public class UIMenuPrefabSpawner : MonoBehaviour
     {
-        [MenuItem("GameObject/ UI Toolkit/ Add UI Menu Generator", false, priority = 99)]
+        [MenuItem("GameObject/ UI Toolkit/ Add Menu", false, priority = 99)]
         private static void InstantiateQuery(MenuCommand menuCommand)
         {
-            GameObject go = new GameObject("UI Menu Generator");
-            go.AddComponent<UIMenuGenerator>();
-            Undo.RegisterCreatedObjectUndo(go, "Create UI Menu Generator");
+            GameObject go = new GameObject("UI Menu");
+            var menu = go.AddComponent<UIMenu>();
+            var generator = go.AddComponent<UIMenuGenerator>();
+            generator.Initialize();
+            menu.OnTypeValueChanged();
+            generator.Fetch();
+            Undo.RegisterCreatedObjectUndo(go, "Create UI Menu");
             Selection.activeObject = go;
         }
     }
