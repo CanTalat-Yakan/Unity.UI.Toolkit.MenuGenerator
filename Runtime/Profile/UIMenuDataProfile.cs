@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public abstract class UIMenuDataProfile : ScriptableObject
+    public class UIMenuDataProfile : ScriptableObject
     {
         public SerializedDictionary<string, bool> ToggleDataDictionary;
         public SerializedDictionary<string, string> InputDataDictionary;

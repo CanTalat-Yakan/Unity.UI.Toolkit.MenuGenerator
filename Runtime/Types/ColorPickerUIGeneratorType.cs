@@ -28,7 +28,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, ColorPickerDataGroup group)
         {
-            var element = menu.UIGeneratorData.SelectionCategoryTemplate.CloneTree();
+            var element = menu.Data.SelectionCategoryTemplate.CloneTree();
 
             ConfigureColorPickerButtonVisuals(menu.Profile, element, group);
             ConfigureColorPickerButtonInteraction(menu, element, group);
@@ -83,7 +83,7 @@ namespace UnityEssentials
 
         private static VisualElement CreateColorPicker(UIMenuGenerator menu, ColorPickerData data, Action<string, Color> callback)
         {
-            var picker = menu.UIGeneratorData.ColorPickerTemplate.CloneTree();
+            var picker = menu.Data.ColorPickerTemplate.CloneTree();
 
             ConfigureColorSliders(menu.Profile, picker, data, callback);
             ConfigureColorPresets(menu.Profile, picker, data, callback);

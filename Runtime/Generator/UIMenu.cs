@@ -6,26 +6,35 @@ namespace UnityEssentials
     [Serializable]
     public class UIMenuSettings
     {
+        [Info]
+        [SerializeField]
+        private string _info = "This component manages and automatically creates a save file " +
+            "and is stored outside the Asset folder, within the Resources directory.\n\n" +
+            "Make sure to include the Resources directory and its contents in your Build folder!";
+
         public string SaveFileName = "UIMenuSettings";
     }
 
     public enum UIMenuType
     {
-        Hierarchical, 
+        Hierarchical,
         Tabbed,
     }
 
     public class UIMenu : MonoBehaviour
     {
-        [Info] 
-        [SerializeField] private string _info = 
-            "UIMenu is a component that manages the UI menu system. " +
-            "It can be used to create hierarchical or tabbed menus based on the provided settings and generator data.";
-
         [SerializeField] private UIMenuSettings _settings;
 
         [Space]
-        [SerializeField] private UIMenuType _menuType;
-        [SerializeField] private UIMenuGeneratorData _menuGeneratorData;
+        [SerializeField] private UIMenuType _type;
+        [SerializeField] private UIMenuData _data;
+
+        public void Start()
+        {
+            if (_data == null)
+                return;
+
+            GetComponent<UIMenuGenerator>().PopulateHierarchy(true, _data.Name, _data.Root);
+        }
     }
 }

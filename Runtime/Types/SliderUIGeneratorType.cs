@@ -19,8 +19,8 @@ namespace UnityEssentials
         public static VisualElement CreateSlider(UIMenuGenerator menu, SliderData data)
         {
             VisualElement element = data.Float
-                ? menu.UIGeneratorData.SliderTemplate.CloneTree()
-                : menu.UIGeneratorData.SliderIntTemplate.CloneTree();
+                ? menu.Data.SliderTemplate.CloneTree()
+                : menu.Data.SliderIntTemplate.CloneTree();
 
             ConfigureSliderVisuals(menu.Profile, element, data);
             ConfigureSliderInteraction(menu.Profile, element, data);

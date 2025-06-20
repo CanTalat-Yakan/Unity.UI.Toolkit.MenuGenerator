@@ -27,7 +27,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateButton(UIMenuGenerator menu, ButtonData data)
         {
-            var element = menu.UIGeneratorData.ButtonTemplate.CloneTree();
+            var element = menu.Data.ButtonTemplate.CloneTree();
 
             ConfigureButtonVisuals(element, data);
             ConfigureButtonInteraction(element, data);

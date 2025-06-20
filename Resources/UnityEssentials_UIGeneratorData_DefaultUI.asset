@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eadbf583623844c4ebac5b7e70ac9c1f, type: 3}
-  m_Name: UnityEssentials_UIGeneratorData_DefaultUI
+  m_Name: Default Templates
   m_EditorClassIdentifier: 
   TabbedMenuTemplate: {fileID: 0}
   HierarchicalMenuTemplate: {fileID: 0}

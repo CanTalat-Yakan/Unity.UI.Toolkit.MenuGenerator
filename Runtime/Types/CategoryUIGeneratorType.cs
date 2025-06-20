@@ -17,7 +17,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateCategory(UIMenuGenerator menu, CategoryData data)
         {
-            var element = menu.UIGeneratorData.CategoryTemplate.CloneTree();
+            var element = menu.Data.CategoryTemplate.CloneTree();
 
             ConfigureCategoryVisuals(element, data);
             ConfigureCategoryInteraction(element, data, menu);
@@ -37,7 +37,7 @@ namespace UnityEssentials
         private static void ConfigureCategoryInteraction(VisualElement element, CategoryData data, UIMenuGenerator menu)
         {
             var button = element.Q<Button>("Button");
-            button.clicked += () => menu.PopulateHierarchy(data.Name, true, data.Data);
+            button.clicked += () => menu.PopulateHierarchy(false, data.Name, data.Data);
         }
     }
 }

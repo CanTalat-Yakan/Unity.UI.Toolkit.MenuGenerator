@@ -14,7 +14,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateToggle(UIMenuGenerator menu, ToggleData data)
         {
-            var element = menu.UIGeneratorData.ToggleTemplate.CloneTree();
+            var element = menu.Data.ToggleTemplate.CloneTree();
 
             ConfigureToggleVisuals(menu.Profile, element, data);
             ConfigureToggleInteraction(menu.Profile, element, data);

@@ -22,7 +22,7 @@ namespace UnityEssentials
 
         public static VisualElement CreateSpacer(UIMenuGenerator menu, SpacerData data)
         {
-            var element = menu.UIGeneratorData.SpacerTemplate.CloneTree();
+            var element = menu.Data.SpacerTemplate.CloneTree();
 
             ConfigureOptionsVisuals(element, data);
 

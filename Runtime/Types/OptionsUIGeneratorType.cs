@@ -19,7 +19,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateOptions(UIMenuGenerator menu, OptionsData data)
         {
-            var element = menu.UIGeneratorData.OptionsTemplate.CloneTree();
+            var element = menu.Data.OptionsTemplate.CloneTree();
 
             ConfigureOptionsVisuals(menu.Profile, element, data);
             ConfigureOptionsInteraction(menu.Profile, element, data);

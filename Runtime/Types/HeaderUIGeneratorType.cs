@@ -13,7 +13,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateHeader(UIMenuGenerator menu, HeaderData data)
         {
-            var element = menu.UIGeneratorData.HeaderTemplate.CloneTree();
+            var element = menu.Data.HeaderTemplate.CloneTree();
 
             ConfigureHeaderVisuals(element, data);
 

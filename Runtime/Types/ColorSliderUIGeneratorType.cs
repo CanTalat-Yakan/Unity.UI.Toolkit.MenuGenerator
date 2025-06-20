@@ -31,7 +31,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateColorSlider(UIMenuGenerator menu, ColorSliderData data)
         {
-            var element = menu.UIGeneratorData.ColorSliderTemplate.CloneTree();
+            var element = menu.Data.ColorSliderTemplate.CloneTree();
 
             ConfigureSliderVisuals(menu.Profile, element, data);
             ConfigureSliderInteraction(menu.Profile, element, data);

@@ -5,34 +5,38 @@ using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
-    public interface UIMenuDataProfileSerializerInterface { }
-
     public partial class UIMenuDataProfileSerializer : MonoBehaviour
     {
-        private static string _serializationFileName = "NewProfile";
-
-        public static void SetSerializationFileName(string name) =>
-            _serializationFileName = name;
-
-        public static string GetSerializationFileName() =>
-            _serializationFileName;
-
-        public void SerializeData<T>(string path, T data) where T : UIMenuDataProfileSerializerInterface
+        public static void SerializeData<T>(T data, string fileName, string localResourcePath = null) where T : UIMenuDataProfile
         {
+            var directoryPath = GetDataPath("..", "Resources", localResourcePath);
+            var filePath = Path.Combine(directoryPath, $"{fileName}.json");
+
             var json = JsonConvert.SerializeObject(data, Formatting.Indented);
-            File.WriteAllText(path, json);
+            File.WriteAllText(filePath, json);
         }
 
-        public T DeserializeData<T>(string path) where T : UIMenuDataProfileSerializerInterface
+        public static bool DeserializeData<T>(out T data, string fileName, string localResourcePath = null) where T : UIMenuDataProfile
         {
-            var json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<T>(json);
+            var directoryPath = GetDataPath("..", "Resources", localResourcePath);
+            var filePath = Path.Combine(directoryPath, $"{fileName}.json");
+
+            data = ScriptableObject.CreateInstance<T>();
+            data.name = fileName + " AutoCreated";
+            if (!File.Exists(filePath))
+                return false;
+            var json = File.ReadAllText(filePath);
+            data = JsonConvert.DeserializeObject<T>(json);
+            data.name = fileName + " AutoCreated";
+            return true;
         }
 
-        public string GetDataPath(params string[] subFolders)
+        public static string GetDataPath(params string[] subFolders)
         {
             var path = new List<string>() { Application.dataPath };
-            path.AddRange(subFolders);
+            foreach (var folder in subFolders)
+                if (!string.IsNullOrEmpty(folder))
+                    path.Add(folder);
 
             string folderPath = Path.GetFullPath(Path.Combine(path.ToArray()));
             if (!Directory.Exists(folderPath))
@@ -41,7 +45,7 @@ namespace UnityEssentials
             return folderPath;
         }
 
-        public string GetUniqueFileName(string folderPath, string fileName)
+        public static string GetUniqueFileName(string folderPath, string fileName)
         {
             string fullPath = Path.Combine(folderPath, fileName);
             string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileName);

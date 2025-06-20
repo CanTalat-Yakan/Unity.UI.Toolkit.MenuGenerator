@@ -14,7 +14,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateInput(UIMenuGenerator menu, InputData data)
         {
-            var element = menu.UIGeneratorData.InputTemplate.CloneTree();
+            var element = menu.Data.InputTemplate.CloneTree();
 
             ConfigureInputVisuals(menu.Profile, element, data);
             ConfigureInputInteraction(menu.Profile, element, data);

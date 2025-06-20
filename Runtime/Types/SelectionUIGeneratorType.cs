@@ -46,7 +46,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateSelectionCategory(UIMenuGenerator menu, SelectionDataCollectionGroup group)
         {
-            var element = menu.UIGeneratorData.SelectionCategoryTemplate.CloneTree();
+            var element = menu.Data.SelectionCategoryTemplate.CloneTree();
 
             ConfigureSelectionCategoryVisuals(menu.Profile, element, group);
             ConfigureSelectionCategoryInteraction(menu, element, group);
@@ -125,7 +125,7 @@ namespace UnityEssentials
 
         private static VisualElement CreateSelectionTile(UIMenuGenerator menu, SelectionData data, Action<SelectionData> callback)
         {
-            var tile = menu.UIGeneratorData.SelectionTileTemplate.CloneTree();
+            var tile = menu.Data.SelectionTileTemplate.CloneTree();
             tile.Q<Label>().text = data.Name;
             tile.Q<VisualElement>("Image").SetBackgroundImage(data.Texture);
             tile.Q<Button>().clicked += () => callback(data);
