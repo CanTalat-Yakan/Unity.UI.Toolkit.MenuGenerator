@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadbf583623844c4ebac5b7e70ac9c1f, type: 3}
   m_Name: UnityEssentials_UIGeneratorData_DefaultUI
   m_EditorClassIdentifier: 
-  OverlayTemplate: {fileID: 9197481963319205126, guid: 9faef5f5cb53c5248a5f5ef58c6c1473, type: 3}
-  BreadcrumbTemplate: {fileID: 9197481963319205126, guid: 673f02fccedc88f4691b7d68c7971c40, type: 3}
+  TabbedMenuTemplate: {fileID: 0}
+  HierarchicalMenuTemplate: {fileID: 0}
+  ModalDialogTemplate: {fileID: 0}
+  PopupPanelTemplate: {fileID: 0}
   HeaderTemplate: {fileID: 9197481963319205126, guid: c07fac5166d31d74097d0c0690f66aed, type: 3}
   SpacerTemplate: {fileID: 9197481963319205126, guid: 89cd5cdafb7337548a6c61312dc71f6f, type: 3}
+  BreadcrumbTemplate: {fileID: 9197481963319205126, guid: 673f02fccedc88f4691b7d68c7971c40, type: 3}
   CategoryTemplate: {fileID: 9197481963319205126, guid: 241b7b02429d88045a9527ce46388bdf, type: 3}
+  ButtonTemplate: {fileID: 9197481963319205126, guid: 0cf4569738c96814c8ada2fb33917e91, type: 3}
   InputTemplate: {fileID: 9197481963319205126, guid: ebdb7c6456a92224e8d6b1fcdaa8660b, type: 3}
   OptionsTemplate: {fileID: 9197481963319205126, guid: 3ff8b16f3fc410f4c8a66f59309b2aee, type: 3}
   SliderTemplate: {fileID: 9197481963319205126, guid: b234706ef8b904546bdb0b75561010a4, type: 3}

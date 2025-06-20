@@ -12,7 +12,7 @@ namespace UnityEssentials
     public enum UIMenuType
     {
         Hierarchical, 
-        Tabbed
+        Tabbed,
     }
 
     public class UIMenu : MonoBehaviour

@@ -22,45 +22,8 @@ namespace UnityEssentials
         public string CurrentCategory { get; private set; }
         public string PreviousCategory { get; private set; }
 
-        public Action Redraw;
-
-        public void Initialize()
-        {
-            Cleanup();
-            InitializeDocument();
-            InitializeData();
-        }
-
-        public void Cleanup()
-        {
-            DestroyAllChildren();
-            UIGeneratorData = null;
-            Document = null;
-            Root = null;
-        }
-
-        private void DestroyAllChildren()
-        {
-            while (transform.childCount > 0)
-                if (Application.isEditor)
-                    DestroyImmediate(transform.GetChild(0).gameObject);
-                else Destroy(transform.GetChild(0).gameObject);
-        }
-
-        public void InitializeDocument()
-        {
-            var prefab = ResourceLoader.InstantiatePrefab("UnityEssentials_Prefab_DefaultUI", "UI Document", transform);
-            if (prefab != null)
-            {
-                Document = prefab.GetComponent<UIDocument>();
-                Root = prefab.transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
-            }
-        }
-
-        public void InitializeData(UIMenuGeneratorData data = null)
-        {
-            UIGeneratorData = data ??= ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
-        }
+        public void Initialize() =>
+            UIGeneratorData = ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
 
         public bool ValidateDependencies() =>
             UIGeneratorData != null &&
@@ -72,6 +35,7 @@ namespace UnityEssentials
     // UI Management
     public partial class UIMenuGenerator : MonoBehaviour
     {
+        public Action Redraw;
         public void RedrawUI() =>
             Redraw?.Invoke();
 
