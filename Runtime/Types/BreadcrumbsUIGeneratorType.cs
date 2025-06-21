@@ -31,7 +31,7 @@ namespace UnityEssentials
             button.clicked += () =>
             {
                 ClearBreadcrumbsFromIndex(menu, index);
-                menu.PopulateHierarchy(prefix, label, data);
+                menu.PopulateHierarchy(!prefix, label, data);
             };
         }
 
