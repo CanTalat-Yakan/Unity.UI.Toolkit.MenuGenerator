@@ -8,7 +8,7 @@ namespace UnityEssentials
         [MenuItem("GameObject/ UI Toolkit/ Add Menu", false, priority = 99)]
         private static void InstantiateQuery(MenuCommand menuCommand)
         {
-            GameObject go = new GameObject("UI Menu");
+            var go = new GameObject("UI Menu");
             var menu = go.AddComponent<UIMenu>();
             var generator = go.AddComponent<UIMenuGenerator>();
             generator.Initialize();

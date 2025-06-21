@@ -55,7 +55,7 @@ namespace UnityEssentials
                 var slider = element.Q<Slider>("Slider");
                 slider.RegisterValueChangedCallback(evt =>
                 {
-                    profile.OnSliderChange(data.Reference, evt.newValue);
+                    profile.OnSliderValueChanged(data.Reference, evt.newValue);
                 });
             }
             else
@@ -63,7 +63,7 @@ namespace UnityEssentials
                 var sliderInt = element.Q<SliderInt>("Slider");
                 sliderInt.RegisterValueChangedCallback(evt =>
                 {
-                    profile.OnSliderChange(data.Reference, (float)evt.newValue);
+                    profile.OnSliderValueChanged(data.Reference, (float)evt.newValue);
                 });
             }
         }

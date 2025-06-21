@@ -119,7 +119,7 @@ namespace UnityEssentials
 
                 callback(data.Reference, newColor);
 
-                profile.OnColorPickerChange(data.Reference, newColor);
+                profile.OnColorPickerValueChanged(data.Reference, newColor);
             };
 
             hueSlider.RegisterValueChangedCallback(_ => updateColor());
@@ -156,7 +156,7 @@ namespace UnityEssentials
 
                     callback(data.Reference, updatedColor);
 
-                    profile.OnColorPickerChange(data.Reference, updatedColor);
+                    profile.OnColorPickerValueChanged(data.Reference, updatedColor);
                 };
             }
         }
@@ -166,7 +166,7 @@ namespace UnityEssentials
             {
                 element.Q<VisualElement>("Image").SetBackgroundColor(color);
 
-                profile.OnColorPickerChange(reference, color);
+                profile.OnColorPickerValueChanged(reference, color);
             };
     }
 }

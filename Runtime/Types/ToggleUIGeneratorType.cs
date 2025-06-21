@@ -37,7 +37,7 @@ namespace UnityEssentials
             var toggle = element.Q<Toggle>("Toggle");
             toggle.RegisterValueChangedCallback(evt =>
             {
-                profile.OnToggleChange(data.Reference, evt.newValue);
+                profile.OnToggleValueChanged(data.Reference, evt.newValue);
             });
         }
     }

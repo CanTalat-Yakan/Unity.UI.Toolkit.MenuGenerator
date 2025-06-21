@@ -20,9 +20,6 @@ namespace UnityEssentials
         {
             Data = ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
             Data.name = "Default Templates";
-
-            UIMenuDataProfileSerializer.DeserializeData(out Profile, "Example");
-            UIMenuDataProfileSerializer.SerializeData(Profile, "Example");
         }
 
         [ContextMenu("Fetch")]
@@ -105,8 +102,9 @@ namespace UnityEssentials
                 return;
 
             ClearScrollView();
-            AddBreadcrumb(this, categoryName, !isRoot, collection);
+
             ConfigureRedraw(categoryName, !isRoot, collection);
+            AddBreadcrumb(this, categoryName, !isRoot, collection);
 
             UpdateCategoryHistory(categoryName);
 

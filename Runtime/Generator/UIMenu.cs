@@ -52,17 +52,25 @@ namespace UnityEssentials
         public void OnTypeValueChanged()
         {
             DestroyAllChildren();
+            InstantiateMenu();
 
-            var go = Instantiate(_type switch
-            {
-                UIMenuType.Hierarchical => Generator.Data.HierarchicalMenuTemplate,
-                UIMenuType.Tabbed => Generator.Data.TabbedMenuTemplate,
-                _ => null
-            }, parent: transform);
-            go.name = _type.ToString() + " Menu UI Document";
+            GetProfile();
+            SaveProfile();
 
             Generator.Initialize();
             Generator.Fetch();
+        }
+
+        public void GetProfile()
+        {
+            if (_settings.SaveFileMode != UIProfileSaveMode.None)
+                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+        }
+
+        public void SaveProfile()
+        {
+            if (_settings.SaveFileMode != UIProfileSaveMode.None)
+                UIMenuDataProfileSerializer.SerializeData(Generator.Profile, _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
         }
 
         private void DestroyAllChildren()
@@ -71,6 +79,17 @@ namespace UnityEssentials
                 if (Application.isEditor)
                     DestroyImmediate(transform.GetChild(0).gameObject);
                 else Destroy(transform.GetChild(0).gameObject);
+        }
+
+        private void InstantiateMenu()
+        {
+            var go = Instantiate(_type switch
+            {
+                UIMenuType.Hierarchical => Generator.Data.HierarchicalMenuTemplate,
+                UIMenuType.Tabbed => Generator.Data.TabbedMenuTemplate,
+                _ => null
+            }, parent: transform);
+            go.name = _type.ToString() + " Menu UI Document";
         }
     }
 }

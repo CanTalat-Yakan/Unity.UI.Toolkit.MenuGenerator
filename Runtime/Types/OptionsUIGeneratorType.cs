@@ -46,7 +46,7 @@ namespace UnityEssentials
             var dropdownField = element.Q<DropdownField>("Options");
             dropdownField.RegisterValueChangedCallback(evt =>
             {
-                profile.OnOptionsChange(data.Reference, dropdownField.index);
+                profile.OnOptionsValueChanged(data.Reference, dropdownField.index);
             });
 
             var buttonLeft = element.Q<Button>("Left");
@@ -58,7 +58,7 @@ namespace UnityEssentials
                 profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
 
                 index = ProcessIndex(!data.Reverse ? index - 1 : index + 1, length);
-                profile.OnOptionsChange(data.Reference, ProcessIndex(index, length));
+                profile.OnOptionsValueChanged(data.Reference, ProcessIndex(index, length));
 
                 dropdownField.index = index;
             };
@@ -72,7 +72,7 @@ namespace UnityEssentials
                 profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
 
                 index = ProcessIndex(!data.Reverse ? index + 1 : index - 1, length);
-                profile.OnOptionsChange(data.Reference, index);
+                profile.OnOptionsValueChanged(data.Reference, index);
 
                 dropdownField.index = index;
             };

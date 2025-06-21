@@ -139,7 +139,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Image").SetBackgroundImage(selectionData.Texture);
                 element.Q<Label>().text = selectionData.Name;
 
-                profile.OnSelectionChange(reference, selectionData.ID);
+                profile.OnSelectionValueChanged(reference, selectionData.ID);
             };
     }
 }

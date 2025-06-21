@@ -40,7 +40,7 @@ namespace UnityEssentials
             var textField = element.Q<TextField>("Input");
             textField.RegisterValueChangedCallback((evt) =>
             {
-                profile.OnInputChange(data.Reference, evt.newValue);
+                profile.OnInputValueChanged(data.Reference, evt.newValue);
             });
         }
     }

@@ -62,7 +62,7 @@ namespace UnityEssentials
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(e.newValue / 100f));
 
-                profile.OnColorSliderChange(data, e.newValue);
+                profile.OnColorSliderValueChanged(data, e.newValue);
             });
         }
     }
