@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -22,11 +21,12 @@ namespace UnityEssentials
             var editor = new UIMenuEditor();
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
+                .SetPane(editor.Pane, EditorPaneStyle.Left)
                 .SetBody(editor.Body)
                 .SetFooter(editor.Footer, EditorWindowStyle.HelpBox)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
-                .ShowWindow();
+                .ShowUtility();
         }
 
         private void Header()
@@ -40,18 +40,102 @@ namespace UnityEssentials
                 menu.DropDown(GUILayoutUtility.GetLastRect());
             }
 
+            GUILayout.Label("UI Menu Builder Header", EditorStyles.boldLabel);
+            GUILayout.Button("Header", EditorStyles.toolbarButton);
             GUILayout.FlexibleSpace();
+        }
+
+        private void Pane()
+        {
+            GUILayout.Button("Test");
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Pane", EditorStyles.boldLabel);
         }
 
         private void Body()
         {
-            foreach (var rootObject in Root)
-            {
-            }
+            GUILayout.Button("Test2");
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
         }
 
         private void Footer()
         {
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
         }
     }
 }
