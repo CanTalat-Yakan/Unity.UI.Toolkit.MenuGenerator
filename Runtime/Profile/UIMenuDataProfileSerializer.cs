@@ -27,6 +27,8 @@ namespace UnityEssentials
                 return false;
             var json = File.ReadAllText(filePath);
             data = JsonConvert.DeserializeObject<T>(json);
+            if(data == null)
+                return false;
             data.name = fileName + " AutoCreated";
             return true;
         }

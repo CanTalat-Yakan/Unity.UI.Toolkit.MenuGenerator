@@ -31,14 +31,13 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        [SerializeField] private UIMenuSettings _settings;
+        [SerializeField] private UIMenuSettings _settings = new();
 
         [Space]
         [SerializeField] private UIMenuType _type;
         [SerializeField] private UIMenuData _data;
 
-        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
-        private UIMenuGenerator _generator;
+        [HideInInspector] public UIMenuGenerator Generator => GetComponent<UIMenuGenerator>();
 
         public void Start()
         {
@@ -61,12 +60,14 @@ namespace UnityEssentials
             Generator.Fetch();
         }
 
+        [ContextMenu("Get Profile")]
         public void GetProfile()
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
                 UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
         }
 
+        [ContextMenu("Save Profile")]
         public void SaveProfile()
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
