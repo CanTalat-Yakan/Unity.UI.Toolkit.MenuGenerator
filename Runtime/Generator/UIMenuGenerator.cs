@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEssentials.UIMenuGeneratorType;
 
 namespace UnityEssentials
 {
@@ -36,7 +35,7 @@ namespace UnityEssentials
         private void ConfigureRedraw(string label, bool prefix, ScriptableObject[] data) =>
             Redraw = () =>
             {
-                ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                UIMenuGeneratorType.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
                 PopulateHierarchy(prefix, label, data);
             };
 
@@ -57,7 +56,7 @@ namespace UnityEssentials
         public void ResetCategory()
         {
             CurrentCategory = null;
-            ClearBreadcrumbsFromIndex(this);
+            UIMenuGeneratorType.ClearBreadcrumbsFromIndex(this);
         }
 
         public void ClearScrollView()
@@ -104,7 +103,7 @@ namespace UnityEssentials
             ClearScrollView();
 
             ConfigureRedraw(categoryName, !isRoot, collection);
-            AddBreadcrumb(this, categoryName, !isRoot, collection);
+            UIMenuGeneratorType.AddBreadcrumb(this, categoryName, !isRoot, collection);
 
             UpdateCategoryHistory(categoryName);
 
@@ -115,17 +114,17 @@ namespace UnityEssentials
         private void ProcessDataItem(ScriptableObject data) =>
             AddElementToScrollView(data switch
             {
-                CategoryData category => CreateCategory(this, category),
-                HeaderData header => CreateHeader(this, header),
-                SpacerData spacer => CreateSpacer(this, spacer),
-                ButtonData button => CreateButton(this, button),
-                ToggleData toggle => CreateToggle(this, toggle),
-                InputData input => CreateInput(this, input),
-                OptionsData options => CreateOptions(this, options),
-                SliderData slider => CreateSlider(this, slider),
-                SelectionDataCollectionGroup selectionCategory => CreateSelectionCategory(this, selectionCategory),
-                ColorPickerDataGroup colorCategory => CreateColorPickerButton(this, colorCategory),
-                ColorSliderData colorSliderData => CreateColorSlider(this, colorSliderData),
+                CategoryData category => UIMenuGeneratorType.CreateCategory(this, category),
+                HeaderData header => UIMenuGeneratorType.CreateHeader(this, header),
+                SpacerData spacer => UIMenuGeneratorType.CreateSpacer(this, spacer),
+                ButtonData button => UIMenuGeneratorType.CreateButton(this, button),
+                ToggleData toggle => UIMenuGeneratorType.CreateToggle(this, toggle),
+                InputData input => UIMenuGeneratorType.CreateInput(this, input),
+                OptionsData options => UIMenuGeneratorType.CreateOptions(this, options),
+                SliderData slider => UIMenuGeneratorType.CreateSlider(this, slider),
+                SelectionDataCollectionGroup selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
+                ColorPickerDataGroup colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
+                ColorSliderData colorSliderData => UIMenuGeneratorType.CreateColorSlider(this, colorSliderData),
                 _ => null
             });
     }
