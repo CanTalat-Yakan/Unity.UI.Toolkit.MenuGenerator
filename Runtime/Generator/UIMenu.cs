@@ -84,12 +84,14 @@ namespace UnityEssentials
 
         private void InstantiateMenu()
         {
-            var go = Instantiate(_type switch
+            var type = _type switch
             {
                 UIMenuType.Hierarchical => Generator.Data.HierarchicalMenuTemplate,
                 UIMenuType.Tabbed => Generator.Data.TabbedMenuTemplate,
                 _ => null
-            }, parent: transform);
+            };
+
+            var go = Instantiate(type, transform);
             go.name = _type.ToString() + " Menu UI Document";
         }
     }
