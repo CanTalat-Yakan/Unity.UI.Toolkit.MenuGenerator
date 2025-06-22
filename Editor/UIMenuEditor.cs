@@ -30,6 +30,8 @@ namespace UnityEssentials
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
                 .ShowUtility();
+
+            editor.Window.SplitterPosition = 200;
         }
 
         private void Initialization()
@@ -48,9 +50,9 @@ namespace UnityEssentials
             if (EditorGUILayout.DropdownButton(EditorGUIUtility.IconContent("Toolbar Plus"), FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Category"), false, () => Root.Add(ScriptableObject.CreateInstance<CategoryData>()));
-                menu.AddItem(new GUIContent("Header"), false, () => Debug.Log("Option 2 selected"));
-                menu.AddItem(new GUIContent("Space"), false, () => Debug.Log("Option 2 selected"));
+                menu.AddItem(new GUIContent("Add Category"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon)));
+                menu.AddItem(new GUIContent("Add Header"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false)));
+                menu.AddItem(new GUIContent("Add Space"), false, () => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false)));
                 menu.DropDown(GUILayoutUtility.GetLastRect());
             }
 
@@ -61,7 +63,6 @@ namespace UnityEssentials
 
         private static SimpleTreeViewItem[] CreateDefaultTreeData()
         {
-
             var category1 = new SimpleTreeViewItem("Category 1", FolderIcon);
             var header1 = new SimpleTreeViewItem("Header 1", HeaderIcon);
             var category2 = new SimpleTreeViewItem("Category 2", FolderIcon);
