@@ -51,6 +51,7 @@ namespace UnityEssentials
             var category2 = new SimpleTreeViewItem("Category 2");
             var category3 = new SimpleTreeViewItem("Category 3");
 
+            header1.SupportsChildren = false;
             header1.Parent = category1;
 
             SimpleTreeViewItem[] rootChildren = { category1, category2, category3 };
