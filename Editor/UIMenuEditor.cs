@@ -14,11 +14,15 @@ namespace UnityEssentials
         private UIMenuData _data = new();
         public List<ScriptableObject> Root = new();
 
+        private static Texture2D FolderIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.VerticalLayoutGroupIcon);
+        private static Texture2D HeaderIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.TextIcon);
+
         [MenuItem("Tools/ UI Menu Builder %g", false, priority = 1003)]
         private static void ShowWindow()
         {
             var editor = new UIMenuEditor();
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
+                .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetPane(editor.Pane, EditorPaneStyle.Left)
                 .SetBody(editor.Body)
@@ -26,6 +30,17 @@ namespace UnityEssentials
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
                 .ShowUtility();
+        }
+
+        private void Initialization()
+        {
+            _treeView ??= new SimpleTreeView(CreateDefaultTreeData(), "Menu");
+            _treeView.CustomContextMenuAction = new (string, Action<SimpleTreeViewItem>)[]
+            {
+                ("Add Category", (parent) => _treeView.AddChild(new SimpleTreeViewItem("Category", FolderIcon), parent)),
+                ("Add Header", (parent) => _treeView.AddChild(new SimpleTreeViewItem("Header", HeaderIcon), parent)),
+                ("Add Space", (parent) => _treeView.AddChild(new SimpleTreeViewItem("_", HeaderIcon), parent))
+            };
         }
 
         private void Header()
@@ -46,13 +61,11 @@ namespace UnityEssentials
 
         private static SimpleTreeViewItem[] CreateDefaultTreeData()
         {
-            var folderIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.VerticalLayoutGroupIcon);
-            var headerIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.TextIcon);
 
-            var category1 = new SimpleTreeViewItem("Category 1", folderIcon);
-            var header1 = new SimpleTreeViewItem("Header 1", headerIcon);
-            var category2 = new SimpleTreeViewItem("Category 2", folderIcon);
-            var category3 = new SimpleTreeViewItem("Category 3", folderIcon);
+            var category1 = new SimpleTreeViewItem("Category 1", FolderIcon);
+            var header1 = new SimpleTreeViewItem("Header 1", HeaderIcon);
+            var category2 = new SimpleTreeViewItem("Category 2", FolderIcon);
+            var category3 = new SimpleTreeViewItem("Category 3", FolderIcon);
 
             header1.SupportsChildren = false;
             header1.Parent = category1;
@@ -64,7 +77,6 @@ namespace UnityEssentials
         private SimpleTreeView _treeView;
         private void Pane()
         {
-            _treeView ??= new SimpleTreeView(CreateDefaultTreeData(), "Menu");
             _treeView.OnGUI();
         }
 
