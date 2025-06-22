@@ -39,9 +39,9 @@ namespace UnityEssentials
             _treeView ??= new SimpleTreeView(CreateDefaultTreeData(), "Menu");
             _treeView.CustomContextMenuAction = new (string, Action<SimpleTreeViewItem>)[]
             {
-                ("Add Category", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon), parent)),
-                ("Add Header", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false), parent)),
-                ("Add Space", (parent) => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false), parent))
+                ("Add Category", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon).SetUserData(1), parent)),
+                ("Add Header", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false).SetUserData(2), parent)),
+                ("Add Space", (parent) => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserData(3), parent))
             };
         }
 
@@ -50,9 +50,9 @@ namespace UnityEssentials
             if (EditorGUILayout.DropdownButton(EditorGUIUtility.IconContent("Toolbar Plus"), FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Add Category"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon)));
-                menu.AddItem(new GUIContent("Add Header"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false)));
-                menu.AddItem(new GUIContent("Add Space"), false, () => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false)));
+                menu.AddItem(new GUIContent("Add Category"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon).SetUserData(1)));
+                menu.AddItem(new GUIContent("Add Header"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false).SetUserData(2)));
+                menu.AddItem(new GUIContent("Add Space"), false, () => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserData(3)));
                 menu.DropDown(GUILayoutUtility.GetLastRect());
             }
 
@@ -83,7 +83,7 @@ namespace UnityEssentials
 
         private void Body()
         {
-            GUILayout.Button("Test2");
+            GUILayout.Button(_treeView.GetSelectedItem()?.Name + " " + _treeView.GetSelectedItem()?.UserData);
             GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
             GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
             GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
