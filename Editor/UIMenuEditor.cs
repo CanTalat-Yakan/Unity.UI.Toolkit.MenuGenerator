@@ -37,9 +37,9 @@ namespace UnityEssentials
             _treeView ??= new SimpleTreeView(CreateDefaultTreeData(), "Menu");
             _treeView.CustomContextMenuAction = new (string, Action<SimpleTreeViewItem>)[]
             {
-                ("Add Category", (parent) => _treeView.AddChild(new SimpleTreeViewItem("Category", FolderIcon), parent)),
-                ("Add Header", (parent) => _treeView.AddChild(new SimpleTreeViewItem("Header", HeaderIcon), parent)),
-                ("Add Space", (parent) => _treeView.AddChild(new SimpleTreeViewItem("_", HeaderIcon), parent))
+                ("Add Category", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon), parent)),
+                ("Add Header", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false), parent)),
+                ("Add Space", (parent) => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false), parent))
             };
         }
 
