@@ -46,10 +46,13 @@ namespace UnityEssentials
 
         private static SimpleTreeViewItem[] CreateDefaultTreeData()
         {
-            var category1 = new SimpleTreeViewItem("Category 1");
-            var header1 = new SimpleTreeViewItem("Header 1");
-            var category2 = new SimpleTreeViewItem("Category 2");
-            var category3 = new SimpleTreeViewItem("Category 3");
+            var folderIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.VerticalLayoutGroupIcon);
+            var headerIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.TextIcon);
+
+            var category1 = new SimpleTreeViewItem("Category 1", folderIcon);
+            var header1 = new SimpleTreeViewItem("Header 1", headerIcon);
+            var category2 = new SimpleTreeViewItem("Category 2", folderIcon);
+            var category3 = new SimpleTreeViewItem("Category 3", folderIcon);
 
             header1.SupportsChildren = false;
             header1.Parent = category1;
@@ -61,7 +64,7 @@ namespace UnityEssentials
         private SimpleTreeView _treeView;
         private void Pane()
         {
-            _treeView ??= new SimpleTreeView(CreateDefaultTreeData());
+            _treeView ??= new SimpleTreeView(CreateDefaultTreeData(), "Menu");
             _treeView.OnGUI();
         }
 
