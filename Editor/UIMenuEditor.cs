@@ -47,17 +47,14 @@ namespace UnityEssentials
         private SimpleTreeViewItem _root = CreateTreeData();
         private static SimpleTreeViewItem CreateTreeData()
         {
-            // Create items
-            var root = new SimpleTreeViewItem("Root");
             var category1 = new SimpleTreeViewItem("Category 1");
             var header1 = new SimpleTreeViewItem("Header 1");
             var category2 = new SimpleTreeViewItem("Category 2");
 
-            // Build hierarchy
-            root.AddChildren(category1, category2);
             category1.AddChild(header1);
 
-            // Only root items go in the list
+            var root = new SimpleTreeViewItem("Root");
+            root.AddChildren(category1, category2);
             return root;
         }
 
