@@ -44,25 +44,27 @@ namespace UnityEssentials
             GUILayout.FlexibleSpace();
         }
 
-        private List<SimpleTreeViewItem> _treeData = CreateTreeData();
-        private static List<SimpleTreeViewItem> CreateTreeData()
+        private SimpleTreeViewItem _root = CreateTreeData();
+        private static SimpleTreeViewItem CreateTreeData()
         {
             // Create items
-            var category1 = new SimpleTreeViewItem(1, "Category 1");
-            var header1 = new SimpleTreeViewItem(2, "Header 1");
-            var category2 = new SimpleTreeViewItem(3, "Category 2");
+            var root = new SimpleTreeViewItem("Root");
+            var category1 = new SimpleTreeViewItem("Category 1");
+            var header1 = new SimpleTreeViewItem("Header 1");
+            var category2 = new SimpleTreeViewItem("Category 2");
 
             // Build hierarchy
+            root.AddChildren(category1, category2);
             category1.AddChild(header1);
 
             // Only root items go in the list
-            return new List<SimpleTreeViewItem> { category1, category2 };
+            return root;
         }
 
         private SimpleTreeView _treeView;
         private void Pane()
         {
-            _treeView ??= new SimpleTreeView(_treeData);
+            _treeView ??= new SimpleTreeView(_root);
             _treeView.OnGUI();
         }
 
