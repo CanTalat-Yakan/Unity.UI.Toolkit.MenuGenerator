@@ -60,7 +60,7 @@ namespace UnityEssentials
         private SimpleTreeView _treeView;
         private void Pane()
         {
-            _treeView ??= new SimpleTreeView(new("Root"), CreateDefaultTreeData());
+            _treeView ??= new SimpleTreeView(CreateDefaultTreeData());
             _treeView.OnGUI();
         }
 
