@@ -30,7 +30,7 @@ namespace UnityEssentials
         {
             var editor = new UIMenuEditor();
             editor._data = data;
-            editor._treeView = new SimpleTreeView(editor.FetchData(), "Menu");
+            editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
             editor._treeView.ContextMenu = editor.GetPaneGenericMenu();
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
