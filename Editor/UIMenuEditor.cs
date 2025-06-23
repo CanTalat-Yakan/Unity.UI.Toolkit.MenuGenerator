@@ -28,11 +28,7 @@ namespace UnityEssentials
 
         [InitializeOnLoadMethod()]
         public static void Initialize() =>
-            UIMenu.ShowUIBuilder = () =>
-            {
-                Initialize();
-                ShowWindow();
-            };
+            UIMenu.ShowUIBuilder = ShowWindow;
 
         [MenuItem("Tools/ UI Menu Builder %g", false, priority = 1003)]
         private static void ShowWindow()
@@ -83,14 +79,27 @@ namespace UnityEssentials
         {
             _treeView?.OnGUI();
         }
-
         private void Body()
         {
-            string type = _treeView.GetSelectedItem()?.UserData?.ToString();
-            if (!string.IsNullOrEmpty(type))
-                type = $" ({_treeView.GetSelectedItem()?.UserData})";
+            var item = _treeView.GetSelectedItem();
+            if (item == null)
+                return;
 
-            GUILayout.Button(_treeView.GetSelectedItem()?.Name + type);
+            var icon = item.Icon;
+            string name = item.Name;
+            string type = item.UserData?.ToString();
+            if (!string.IsNullOrEmpty(type))
+                type = $" ({type})";
+
+            GUILayout.BeginHorizontal(EditorStyles.helpBox);
+            if (icon != null)
+            {
+                GUILayout.Label(icon, GUILayout.Width(24), GUILayout.Height(24));
+                GUILayout.Space(4);
+            }
+            GUILayout.Label(name + type, EditorStyles.boldLabel, GUILayout.Height(24));
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
         }
 
         private void Footer()
