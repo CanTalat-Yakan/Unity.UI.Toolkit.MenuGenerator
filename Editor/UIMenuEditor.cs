@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -5,6 +6,13 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
+    public enum UIMenuDataTypes
+    {
+        Category,
+        Header,
+        Space,
+    }
+
     public class UIMenuEditor
     {
         public EditorWindowDrawer Window;
@@ -14,8 +22,17 @@ namespace UnityEssentials
         private UIMenuData _data = new();
         public List<ScriptableObject> Root = new();
 
-        private static Texture2D FolderIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.VerticalLayoutGroupIcon);
-        private static Texture2D HeaderIcon = EditorIconUtilities.GetIconTexture(EditorIconNames.TextIcon);
+        private static Texture2D FolderIcon = EditorIconUtilities.GetTexture(EditorIconNames.VerticalLayoutGroupIcon);
+        private static Texture2D HeaderIcon = EditorIconUtilities.GetTexture(EditorIconNames.TextIcon);
+        private static GUIContent ToolbarIcon = EditorIconUtilities.GetContent(EditorIconNames.ToolbarPlus);
+
+        [InitializeOnLoadMethod()]
+        public static void Initialize() =>
+            UIMenu.ShowUIBuilder = () =>
+            {
+                Initialize();
+                ShowWindow();
+            };
 
         [MenuItem("Tools/ UI Menu Builder %g", false, priority = 1003)]
         private static void ShowWindow()
@@ -36,23 +53,23 @@ namespace UnityEssentials
 
         private void Initialization()
         {
-            _treeView ??= new SimpleTreeView(CreateDefaultTreeData(), "Menu");
+            _treeView ??= new SimpleTreeView(FetchData(), "Menu");
             _treeView.CustomContextMenuAction = new (string, Action<SimpleTreeViewItem>)[]
             {
-                ("Add Category", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon).SetUserData(1), parent)),
-                ("Add Header", (parent) => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false).SetUserData(2), parent)),
-                ("Add Space", (parent) => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserData(3), parent))
+                ("Add Category", (item) => AddCategory(parent: item)),
+                ("Add Header", (item) => AddHeader(parent: item)),
+                ("Add Space", (item) => AddSpace(parent: item))
             };
         }
 
         private void Header()
         {
-            if (EditorGUILayout.DropdownButton(EditorGUIUtility.IconContent("Toolbar Plus"), FocusType.Passive, EditorStyles.toolbarDropDown))
+            if (EditorGUILayout.DropdownButton(ToolbarIcon, FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Add Category"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Category", FolderIcon).SetUserData(1)));
-                menu.AddItem(new GUIContent("Add Header"), false, () => _treeView.AddItem(new SimpleTreeViewItem("Header", HeaderIcon).Support(false).SetUserData(2)));
-                menu.AddItem(new GUIContent("Add Space"), false, () => _treeView.AddItem(new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserData(3)));
+                menu.AddItem(new("Add Category"), false, () => AddCategory());
+                menu.AddItem(new("Add Header"), false, () => AddHeader());
+                menu.AddItem(new("Add Space"), false, () => AddSpace());
                 menu.DropDown(GUILayoutUtility.GetLastRect());
             }
 
@@ -61,46 +78,50 @@ namespace UnityEssentials
             GUILayout.FlexibleSpace();
         }
 
-        private static SimpleTreeViewItem[] CreateDefaultTreeData()
-        {
-            var category1 = new SimpleTreeViewItem("Category 1", FolderIcon);
-            var header1 = new SimpleTreeViewItem("Header 1", HeaderIcon);
-            var category2 = new SimpleTreeViewItem("Category 2", FolderIcon);
-            var category3 = new SimpleTreeViewItem("Category 3", FolderIcon);
-
-            header1.SupportsChildren = false;
-            header1.Parent = category1;
-
-            SimpleTreeViewItem[] rootChildren = { category1, category2, category3 };
-            return rootChildren;
-        }
-
         private SimpleTreeView _treeView;
         private void Pane()
         {
-            _treeView.OnGUI();
+            _treeView?.OnGUI();
         }
 
         private void Body()
         {
-            GUILayout.Button(_treeView.GetSelectedItem()?.Name + " " + _treeView.GetSelectedItem()?.UserData);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
-            GUILayout.Label("UI Menu Builder Body", EditorStyles.boldLabel);
+            string type = _treeView.GetSelectedItem()?.UserData?.ToString();
+            if (!string.IsNullOrEmpty(type))
+                type = $" ({_treeView.GetSelectedItem()?.UserData})";
+
+            GUILayout.Button(_treeView.GetSelectedItem()?.Name + type);
         }
 
         private void Footer()
         {
             GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
         }
+
+        private SimpleTreeViewItem[] FetchData()
+        {
+            var items = new List<SimpleTreeViewItem>();
+            items.Add(CreateCategory());
+            return items.ToArray();
+        }
+
+        private SimpleTreeViewItem CreateCategory(string name = "Category") =>
+            new SimpleTreeViewItem(name, FolderIcon).SetUserData(UIMenuDataTypes.Category);
+
+        private void AddCategory(string name = "Category", SimpleTreeViewItem parent = null) =>
+            _treeView.AddItem(CreateCategory(), parent);
+
+        private SimpleTreeViewItem CreateHeader(string name = "Header") =>
+            new SimpleTreeViewItem(name, HeaderIcon).SetUserData(UIMenuDataTypes.Header);
+
+        private void AddHeader(string name = "Header", SimpleTreeViewItem parent = null) =>
+            _treeView.AddItem(CreateHeader(name), parent);
+
+        private SimpleTreeViewItem CreateSpace() =>
+            new SimpleTreeViewItem(string.Empty, HeaderIcon).SetUserData(UIMenuDataTypes.Space);
+
+        private void AddSpace(SimpleTreeViewItem parent = null) =>
+            _treeView.AddItem(CreateSpace(), parent);
     }
 }
+#endif

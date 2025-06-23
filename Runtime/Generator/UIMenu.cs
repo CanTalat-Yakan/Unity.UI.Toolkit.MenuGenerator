@@ -31,6 +31,8 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
+        public static Action ShowUIBuilder { get; set; }
+
         [SerializeField] private UIMenuSettings _settings = new();
 
         [Space]
@@ -46,6 +48,10 @@ namespace UnityEssentials
 
             Generator.PopulateHierarchy(true, _data.Name, _data.Root);
         }
+
+        [Button()]
+        public void EditUIBuilder() =>
+            ShowUIBuilder?.Invoke();
 
         [OnValueChanged("_type")]
         public void OnTypeValueChanged()
