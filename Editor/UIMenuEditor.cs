@@ -308,7 +308,7 @@ namespace UnityEssentials
             if (scriptableEditor == null)
                 return;
 
-            SerializedObject so = scriptableEditor.serializedObject;
+            var so = scriptableEditor.serializedObject;
             so.Update();
 
             SerializedProperty iterator = so.GetIterator();
@@ -329,15 +329,11 @@ namespace UnityEssentials
                 // If it's an actual array (not a string), draw reorderable list
                 if (iterator.isArray && iterator.propertyType != SerializedPropertyType.String)
                 {
-                    // Defensive: Only pass a copy, and check arraySize
-                    var arrayProp = iterator.Copy();
-                    if (arrayProp.arraySize >= 0)
-                        DrawReorderablePropertyList(so, arrayProp);
+                    var arrayProperty = iterator.Copy();
+                    if (arrayProperty.arraySize >= 0)
+                        DrawReorderablePropertyList(so, arrayProperty);
                 }
-                else
-                {
-                    EditorGUILayout.PropertyField(iterator, true);
-                }
+                else EditorGUILayout.PropertyField(iterator, true);
 
                 enterChildren = false;
             }
@@ -348,15 +344,17 @@ namespace UnityEssentials
         private readonly Dictionary<string, ReorderableList> _listsCache = new();
         private void DrawReorderablePropertyList(SerializedObject so, SerializedProperty property)
         {
-            // Ensure property is a valid array
             if (property == null || !property.isArray || property.propertyType == SerializedPropertyType.String)
                 return;
 
+            // Compose a unique key using the target object's instance ID and the property path
+            string cacheKey = $"{property.serializedObject.targetObject.GetInstanceID()}_{property.propertyPath}";
+
             ReorderableList reorderableList = null;
-            if (!_listsCache.TryGetValue(property.propertyPath, out reorderableList))
+            if (!_listsCache.TryGetValue(cacheKey, out reorderableList))
             {
                 reorderableList = new ReorderableList(so, property, true, true, true, true);
-                _listsCache.Add(property.propertyPath, reorderableList);
+                _listsCache.Add(cacheKey, reorderableList);
             }
 
             reorderableList.drawHeaderCallback = (Rect position) =>
