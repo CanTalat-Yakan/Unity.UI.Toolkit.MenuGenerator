@@ -35,8 +35,9 @@ namespace UnityEssentials
         private static void ShowWindow()
         {
             var editor = new UIMenuEditor();
+            editor._treeView = new SimpleTreeView(editor.FetchData(), "Menu");
+            editor._treeView.ContextMenu = editor.GetPaneGenericMenu();
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
-                .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: editor.GetPaneGenericMenu())
                 .SetBody(editor.Body, genericMenu: editor.GetBodyGenericMenu())
@@ -48,21 +49,13 @@ namespace UnityEssentials
             editor.Window.SplitterPosition = 200;
         }
 
-        private void Initialization()
-        {
-            _treeView = new SimpleTreeView(FetchData(), "Menu");
-            _treeView.CustomContextMenuAction = new (string, Action<SimpleTreeViewItem>)[]
-            {
-                ("Add Category", (item) => AddCategory(parent: item)),
-                ("Add Header", (item) => AddHeader(parent: item)),
-                ("Add Space", (item) => AddSpace(parent: item))
-            };
-        }
-
         private void Header()
         {
             if (EditorGUILayout.DropdownButton(ToolbarIcon, FocusType.Passive, EditorStyles.toolbarDropDown))
+            {
+                _treeView.ClearAllSelections();
                 GetPaneGenericMenu().DropDown(GetLastRect());
+            }
 
             GUILayout.Label("UI Menu Builder Header", EditorStyles.boldLabel);
             GUILayout.Button("Header", EditorStyles.toolbarButton);
@@ -71,7 +64,12 @@ namespace UnityEssentials
 
         private void Pane()
         {
-            _treeView?.OnGUI();
+            _treeView.OnGUI();
+
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                _treeView.ClearAllSelections();
+
+            Window.ContextMenuHandled = _treeView.ContextMenuEnabled;
         }
 
         private void Body()
@@ -119,9 +117,9 @@ namespace UnityEssentials
         private GenericMenu GetPaneGenericMenu()
         {
             var menu = new GenericMenu();
-            menu.AddItem(new("Add Category"), false, () => AddCategory());
-            menu.AddItem(new("Add Header"), false, () => AddHeader());
-            menu.AddItem(new("Add Space"), false, () => AddSpace());
+            menu.AddItem(new("Add Category"), false, () => AddCategory(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Header"), false, () => AddHeader(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Space"), false, () => AddSpace(parent: _treeView.GetSelectedItem()?.id));
             return menu;
         }
 
@@ -139,14 +137,14 @@ namespace UnityEssentials
             return menu;
         }
 
-        private void AddCategory(string name = "Category", SimpleTreeViewItem parent = null) => _treeView.AddItem(CreateCategory(), parent);
+        private void AddCategory(string name = "Category", int? parent = null) => _treeView.AddItem(CreateCategory(), parent);
         private SimpleTreeViewItem CreateCategory(string name = "Category") => new SimpleTreeViewItem(name, FolderIcon).SetUserData(UIMenuDataTypes.Category);
 
-        private void AddHeader(string name = "Header", SimpleTreeViewItem parent = null) => _treeView.AddItem(CreateHeader(name), parent);
-        private SimpleTreeViewItem CreateHeader(string name = "Header") => new SimpleTreeViewItem(name, HeaderIcon).SetUserData(UIMenuDataTypes.Header);
+        private void AddHeader(string name = "Header", int? parent = null) => _treeView.AddItem(CreateHeader(name), parent);
+        private SimpleTreeViewItem CreateHeader(string name = "Header") => new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserData(UIMenuDataTypes.Header);
 
-        private void AddSpace(SimpleTreeViewItem parent = null) =>_treeView.AddItem(CreateSpace(), parent);
-        private SimpleTreeViewItem CreateSpace() => new SimpleTreeViewItem(string.Empty).SetUserData(UIMenuDataTypes.Space);
+        private void AddSpace(int? parent = null) => _treeView.AddItem(CreateSpace(), parent);
+        private SimpleTreeViewItem CreateSpace() => new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserData(UIMenuDataTypes.Space);
 
     }
 }
