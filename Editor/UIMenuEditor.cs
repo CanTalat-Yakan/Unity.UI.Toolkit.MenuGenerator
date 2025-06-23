@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
+using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using static PlasticGui.LaunchDiffParameters;
@@ -87,7 +89,7 @@ namespace UnityEssentials
                 _treeView.Repaint();
             });
 
-                CreateDynamicBox(item);
+            CreateDynamicBox(item);
             if (item.UserData is UIMenuCategoryData category)
             {
                 foreach (var child in item.Children)
@@ -102,8 +104,6 @@ namespace UnityEssentials
                     GUILayout.FlexibleSpace();
                 }
             }
-
-
         }
 
         private void Footer()
@@ -135,9 +135,9 @@ namespace UnityEssentials
                 UIMenuInputData inputData => AttachUserData(CreateInput(inputData.Name), inputData, parent),
                 UIMenuSliderData sliderData => AttachUserData(CreateSlider(sliderData.Name), sliderData, parent),
                 UIMenuToggleData toggleData => AttachUserData(CreateToggle(toggleData.Name), toggleData, parent),
-                UIMenuSelectionData selData => AttachUserData(CreateSelection(selData.Name), selData, parent),
-                UIMenuColorPickerData cpData => AttachUserData(CreateColorPicker(cpData.Name), cpData, parent),
-                UIMenuColorSliderData csData => AttachUserData(CreateColorSlider(csData.Name), csData, parent),
+                UIMenuSelectionData selectionData => AttachUserData(CreateSelection(selectionData.Name), selectionData, parent),
+                UIMenuColorPickerData colorPickerData => AttachUserData(CreateColorPicker(colorPickerData.Name), colorPickerData, parent),
+                UIMenuColorSliderData colorSliderData => AttachUserData(CreateColorSlider(colorSliderData.Name), colorSliderData, parent),
                 _ => null
             };
 
@@ -200,64 +200,100 @@ namespace UnityEssentials
 
         private void AddCategory(string name = "Category", int? parent = null) => _treeView.AddItem(CreateCategory(), parent);
         private SimpleTreeViewItem CreateCategory(string name = "Category") =>
-            new SimpleTreeViewItem(name, FolderIcon).SetUserTag(UIMenuDataTypes.Category.ToString());
+            new SimpleTreeViewItem(name, FolderIcon).SetUserTag(UIMenuDataTypes.Category.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>());
+
         private void AddHeader(string name = "Header", int? parent = null) => _treeView.AddItem(CreateHeader(name), parent);
         private SimpleTreeViewItem CreateHeader(string name = "Header") =>
-            new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserTag(UIMenuDataTypes.Header.ToString());
+            new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserTag(UIMenuDataTypes.Header.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>());
 
         private void AddSpace(int? parent = null) => _treeView.AddItem(CreateSpace(), parent);
         private SimpleTreeViewItem CreateSpace() =>
-            new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserTag(UIMenuDataTypes.Space.ToString());
+            new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserTag(UIMenuDataTypes.Space.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSpacerData>());
 
         private void AddButton(int? parent = null) => _treeView.AddItem(CreateButton(), parent, false);
         private SimpleTreeViewItem CreateButton(string name = "Button") =>
-            new SimpleTreeViewItem(name, ButtonIcon).Support(false).SetUserTag(UIMenuDataTypes.Button.ToString());
+            new SimpleTreeViewItem(name, ButtonIcon).Support(false).SetUserTag(UIMenuDataTypes.Button.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
 
         private void AddOptions(int? parent = null) => _treeView.AddItem(CreateOptions(), parent, false);
         private SimpleTreeViewItem CreateOptions(string name = "Options") =>
-            new SimpleTreeViewItem(name, OptionsIcon).Support(false).SetUserTag(UIMenuDataTypes.Options.ToString());
+            new SimpleTreeViewItem(name, OptionsIcon).Support(false).SetUserTag(UIMenuDataTypes.Options.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>());
 
         private void AddInput(int? parent = null) => _treeView.AddItem(CreateInput(), parent, false);
         private SimpleTreeViewItem CreateInput(string name = "Input") =>
-            new SimpleTreeViewItem(name, InputIcon).Support(false).SetUserTag(UIMenuDataTypes.Input.ToString());
+            new SimpleTreeViewItem(name, InputIcon).Support(false).SetUserTag(UIMenuDataTypes.Input.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>());
 
         private void AddSlider(int? parent = null) => _treeView.AddItem(CreateSlider(), parent, false);
         private SimpleTreeViewItem CreateSlider(string name = "Slider") =>
-            new SimpleTreeViewItem(name, SliderIcon).Support(false).SetUserTag(UIMenuDataTypes.Slider.ToString());
+            new SimpleTreeViewItem(name, SliderIcon).Support(false).SetUserTag(UIMenuDataTypes.Slider.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
 
         private void AddToggle(int? parent = null) => _treeView.AddItem(CreateToggle(), parent, false);
         private SimpleTreeViewItem CreateToggle(string name = "Toggle") =>
-            new SimpleTreeViewItem(name, ToggleIcon).Support(false).SetUserTag(UIMenuDataTypes.Toggle.ToString());
+            new SimpleTreeViewItem(name, ToggleIcon).Support(false).SetUserTag(UIMenuDataTypes.Toggle.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>());
 
         private void AddSelection(int? parent = null) => _treeView.AddItem(CreateSelection(), parent, false);
         private SimpleTreeViewItem CreateSelection(string name = "Selection") =>
-            new SimpleTreeViewItem(name, SelectionIcon).Support(false).SetUserTag(UIMenuDataTypes.Selection.ToString());
+            new SimpleTreeViewItem(name, SelectionIcon).Support(false).SetUserTag(UIMenuDataTypes.Selection.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionData>());
 
         private void AddColorPicker(int? parent = null) => _treeView.AddItem(CreateColorPicker(), parent, false);
         private SimpleTreeViewItem CreateColorPicker(string name = "Color Picker") =>
-            new SimpleTreeViewItem(name, ColorPickerIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorPicker.ToString());
+            new SimpleTreeViewItem(name, ColorPickerIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorPicker.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>());
 
         private void AddColorSlider(int? parent = null) => _treeView.AddItem(CreateColorSlider(), parent, false);
         private SimpleTreeViewItem CreateColorSlider(string name = "Color Slider") =>
-            new SimpleTreeViewItem(name, ColorSliderIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorSlider.ToString());
+            new SimpleTreeViewItem(name, ColorSliderIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorSlider.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
+
+        private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();
+        private readonly Dictionary<ScriptableObject, bool> _foldoutStates = new();
 
         private void CreateDynamicBox(SimpleTreeViewItem item)
         {
-            var icon = item.Icon;
-            string name = item.Name;
-            string type = item.UserTag;
-            if (!string.IsNullOrEmpty(type))
-                type = $" ({type})";
+            var itemData = item.UserData as ScriptableObject;
+            if (itemData == null)
+                return;
 
-            GUILayout.BeginHorizontal(EditorStyles.helpBox);
-            if (icon != null)
+            item.displayName = itemData.GetType().GetField("Name")?.GetValue(itemData) as string;
+
+            if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
-                GUILayout.Label(icon, GUILayout.Width(24), GUILayout.Height(24));
-                GUILayout.Space(4);
+                isExpanded = true;
+                _foldoutStates[itemData] = isExpanded;
             }
-            GUILayout.Label(name + type, EditorStyles.boldLabel, GUILayout.Height(24));
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
+
+            using (new EditorGUILayout.VerticalScope())
+            {
+                using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
+                {
+                    isExpanded = EditorGUILayout.Foldout(isExpanded, $"{item.Name} ({item.UserTag})", true);
+                    _foldoutStates[itemData] = isExpanded;
+                }
+
+                EditorGUI.indentLevel++;
+                {
+                    if (isExpanded)
+                    {
+                        if (!_editorCache.TryGetValue(itemData, out Editor editor) || editor == null)
+                        {
+                            editor = Editor.CreateEditor(itemData);
+                            _editorCache[itemData] = editor;
+                        }
+                        editor.OnInspectorGUI();
+
+                        GUILayout.Space(10);
+                    }
+                }
+                EditorGUI.indentLevel--;
+            }
         }
     }
 }

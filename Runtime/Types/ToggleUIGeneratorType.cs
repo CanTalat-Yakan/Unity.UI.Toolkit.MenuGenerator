@@ -8,6 +8,8 @@ namespace UnityEssentials
     {
         public string Name;
         public string Reference;
+
+        public bool Default;
     }
 
     public static partial class UIMenuGeneratorType
