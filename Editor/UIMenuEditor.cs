@@ -62,7 +62,7 @@ namespace UnityEssentials
         {
             _treeView.OnGUI();
 
-            Window.ContextMenuHandled = _treeView.ContextMenuEnabled;
+            Window.ContextMenuHandled = _treeView.ContextMenuHandled;
         }
 
         private void Body()
