@@ -10,15 +10,18 @@ namespace UnityEssentials
         public string Reference;
 
         [Space]
-        public bool Float;
-        public Vector2 ValueRange;
+        public bool IsFloat;
+        public float MinRange = 0;
+        public float MaxRange = 100;
+
+        public Vector2 ValueRange => new Vector2(MinRange, MaxRange);
     }
 
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateSlider(UIMenuGenerator menu, UIMenuSliderData data)
         {
-            VisualElement element = data.Float
+            VisualElement element = data.IsFloat
                 ? menu.Data.SliderTemplate.CloneTree()
                 : menu.Data.SliderIntTemplate.CloneTree();
 
@@ -36,7 +39,7 @@ namespace UnityEssentials
             float value = 0;
             profile.SliderDataDictionary.TryGetValue(data.Reference, out value);
 
-            if (data.Float)
+            if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
                 (slider.lowValue, slider.highValue) = (data.ValueRange.x, data.ValueRange.y);
@@ -50,7 +53,7 @@ namespace UnityEssentials
 
         private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuSliderData data)
         {
-            if (data.Float)
+            if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
                 slider.RegisterValueChangedCallback(evt =>

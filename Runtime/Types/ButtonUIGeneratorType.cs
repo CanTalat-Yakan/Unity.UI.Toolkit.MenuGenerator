@@ -10,6 +10,7 @@ namespace UnityEssentials
         public string Name;
 
         public Texture2D Texture;
+        public string Reference;
 
         [Space]
         public UnityEvent Event;

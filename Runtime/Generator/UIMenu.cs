@@ -22,10 +22,10 @@ namespace UnityEssentials
         [Info]
         [SerializeField]
         private string _info = "This component manages and automatically creates a save file " +
-            "and is stored outside the Asset folder, within the Resources directory.\n\n" +
+            "and is stored outside the Asset folder, within the Resources directory.\n" +
             "Make sure to include the Resources directory and its contents in your Build folder!";
 
-        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.None;
+        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
         public string SaveFileName = "UIMenuSettings";
     }
 
@@ -33,25 +33,37 @@ namespace UnityEssentials
     {
         public static Action<UIMenuData> ShowUIBuilder { get; set; }
 
+
         [SerializeField] private UIMenuSettings _settings = new();
 
         [Space]
         [SerializeField] private UIMenuType _type;
-        [SerializeField] private UIMenuData _data;
+
+        [If("ShowAdvancedSettings", true)]
+        public UIMenuData Data;
 
         [HideInInspector] public UIMenuGenerator Generator => GetComponent<UIMenuGenerator>();
 
         public void Start()
         {
-            if (_data == null)
+            if (Data == null)
                 return;
 
-            Generator.PopulateHierarchy(true, _data.Name, _data.Root);
+            Generator.PopulateHierarchy(true, Data.Name, Data.Root);
         }
 
         [Button()]
         public void EditUIBuilder() =>
-            ShowUIBuilder?.Invoke(_data);
+            ShowUIBuilder?.Invoke(Data ??= CreateDefault());
+
+        private UIMenuData CreateDefault()
+        {
+            var data = ScriptableObject.CreateInstance<UIMenuData>();
+            data.name = "Menu Data AutoCreated";
+            data.Name = "Menu";
+            data.Root = Array.Empty<ScriptableObject>();
+            return data;
+        }
 
         [OnValueChanged("_type")]
         public void OnTypeValueChanged()
@@ -66,18 +78,28 @@ namespace UnityEssentials
             Generator.Fetch();
         }
 
-        [ContextMenu("Get Profile")]
-        public void GetProfile()
+        public UIMenuDataProfile GetProfile(string saveFileName = null)
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
-                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, 
+                    saveFileName ??= _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+
+            return Generator.Profile ??= ScriptableObject.CreateInstance<UIMenuDataProfile>();
         }
 
-        [ContextMenu("Save Profile")]
-        public void SaveProfile()
+        public void SaveProfile(string saveFileName = null)
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
-                UIMenuDataProfileSerializer.SerializeData(Generator.Profile, _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+                UIMenuDataProfileSerializer.SerializeData(Generator.Profile, 
+                    saveFileName ??= _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+        }
+
+        [HideInInspector] public bool ShowAdvancedSettings = false;
+        [ContextMenu("Show Advanced Settings")]
+        private void ShowAdvanced()
+        {
+            ShowAdvancedSettings = !ShowAdvancedSettings;
+            GetComponent<UIMenuGenerator>().hideFlags = ShowAdvancedSettings ? HideFlags.None : HideFlags.HideInInspector;
         }
 
         private void DestroyAllChildren()

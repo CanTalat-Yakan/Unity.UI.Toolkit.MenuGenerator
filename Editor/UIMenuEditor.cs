@@ -33,7 +33,7 @@ namespace UnityEssentials
 
         [InitializeOnLoadMethod()]
         public static void Initialize() =>
-            UIMenu.ShowUIBuilder = (data) => ShowUtility(data ?? new());
+            UIMenu.ShowUIBuilder = (data) => ShowUtility(data);
 
         private static void ShowUtility(UIMenuData data)
         {
@@ -89,27 +89,30 @@ namespace UnityEssentials
             if (item == null)
                 return;
 
-            SimpleTreeViewBreadcrumbs.Draw(item, clickedItem =>
-            {
-                _treeView.SetSelectedItems(clickedItem.id);
-                _treeView.Repaint();
-            });
+            var isRoot = item == _treeView.RootItem;
+            if (!isRoot)
+                SimpleTreeViewBreadcrumbs.Draw(item, clickedItem =>
+                {
+                    _treeView.SetSelectedItems(clickedItem.id);
+                    _treeView.Repaint();
+                });
 
             CreateDynamicBox(item);
-            if (item.UserData is UIMenuCategoryData category)
+            if (item.UserData is UIMenuCategoryData category || isRoot)
             {
                 foreach (var child in item.Children)
                     CreateDynamicBox(child);
-
-                GUILayout.Space(10);
-                using (new EditorGUILayout.HorizontalScope())
-                {
-                    GUILayout.FlexibleSpace();
-                    if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
-                        GetBodyGenericMenu().DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
-                    GUILayout.FlexibleSpace();
-                }
             }
+
+            GUILayout.Space(10);
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
+                    GetBodyGenericMenu().DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                GUILayout.FlexibleSpace();
+            }
+            GUILayout.Space(10);
         }
 
         private void Footer()
@@ -121,11 +124,8 @@ namespace UnityEssentials
         {
             var items = new List<SimpleTreeViewItem>();
 
-            foreach (var data in _data.Root)
+            foreach (var data in _data?.Root)
                 items.Add(CreateItem(data, null));
-
-            if (items.Count == 0)
-                items.Add(CreateCategory());
 
             return items.ToArray();
         }
@@ -176,6 +176,15 @@ namespace UnityEssentials
             menu.AddItem(new("Add Category"), false, () => AddCategory(parent: _treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Header"), false, () => AddHeader(parent: _treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Space"), false, () => AddSpace(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddSeparator(string.Empty);
+            menu.AddItem(new("Add Button"), false, () => AddButton(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Options"), false, () => AddOptions(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Input"), false, () => AddInput(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Slider"), false, () => AddSlider(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Toggle"), false, () => AddToggle(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Selection"), false, () => AddSelection(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Color Picker"), false, () => AddColorPicker(parent: _treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Color Slider"), false, () => AddColorSlider(parent: _treeView.GetSelectedItem()?.id));
             return menu;
         }
 
@@ -279,7 +288,8 @@ namespace UnityEssentials
             {
                 using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
                 {
-                    isExpanded = EditorGUILayout.Foldout(isExpanded, $"{item.Name} ({item.UserTag})", true);
+                    var label = item.Name == string.Empty ? item.UserTag : $"{item.Name} ({item.UserTag})";
+                    isExpanded = EditorGUILayout.Foldout(isExpanded, label, true);
                     _foldoutStates[itemData] = isExpanded;
                 }
 
@@ -347,8 +357,7 @@ namespace UnityEssentials
             if (property == null || !property.isArray || property.propertyType == SerializedPropertyType.String)
                 return;
 
-            // Compose a unique key using the target object's instance ID and the property path
-            string cacheKey = $"{property.serializedObject.targetObject.GetInstanceID()}_{property.propertyPath}";
+            string cacheKey = property.serializedObject.targetObject.GetInstanceID().ToString();
 
             ReorderableList reorderableList = null;
             if (!_listsCache.TryGetValue(cacheKey, out reorderableList))

@@ -9,6 +9,7 @@ namespace UnityEssentials
         public string Name;
         public string Reference;
 
+        [Space]
         public bool Default;
     }
 

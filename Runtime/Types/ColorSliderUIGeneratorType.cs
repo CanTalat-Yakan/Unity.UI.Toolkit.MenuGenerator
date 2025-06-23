@@ -11,8 +11,6 @@ namespace UnityEssentials
 
         [Space]
         public Gradient Gradient;
-
-        [Space]
         [Range(0f, 1f)]
         public float Weight;
     }
