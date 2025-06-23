@@ -114,17 +114,17 @@ namespace UnityEssentials
         private void ProcessDataItem(ScriptableObject data) =>
             AddElementToScrollView(data switch
             {
-                CategoryData category => UIMenuGeneratorType.CreateCategory(this, category),
-                HeaderData header => UIMenuGeneratorType.CreateHeader(this, header),
-                SpacerData spacer => UIMenuGeneratorType.CreateSpacer(this, spacer),
-                ButtonData button => UIMenuGeneratorType.CreateButton(this, button),
-                ToggleData toggle => UIMenuGeneratorType.CreateToggle(this, toggle),
-                InputData input => UIMenuGeneratorType.CreateInput(this, input),
-                OptionsData options => UIMenuGeneratorType.CreateOptions(this, options),
-                SliderData slider => UIMenuGeneratorType.CreateSlider(this, slider),
-                SelectionDataCollectionGroup selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
-                ColorPickerDataGroup colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
-                ColorSliderData colorSliderData => UIMenuGeneratorType.CreateColorSlider(this, colorSliderData),
+                UIMenuCategoryData category => UIMenuGeneratorType.CreateCategory(this, category),
+                UIMenuHeaderData header => UIMenuGeneratorType.CreateHeader(this, header),
+                UIMenuSpacerData spacer => UIMenuGeneratorType.CreateSpacer(this, spacer),
+                UIMenuButtonData button => UIMenuGeneratorType.CreateButton(this, button),
+                UIMenuToggleData toggle => UIMenuGeneratorType.CreateToggle(this, toggle),
+                UIMenuInputData input => UIMenuGeneratorType.CreateInput(this, input),
+                UIMenuOptionsData options => UIMenuGeneratorType.CreateOptions(this, options),
+                UIMenuSliderData slider => UIMenuGeneratorType.CreateSlider(this, slider),
+                UIMenuSelectionDataCollectionGroup selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
+                UIMenuColorPickerDataGroup colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
+                UIMenuColorSliderData colorSliderData => UIMenuGeneratorType.CreateColorSlider(this, colorSliderData),
                 _ => null
             });
     }

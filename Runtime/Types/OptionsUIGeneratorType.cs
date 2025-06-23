@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "OptionsData_", menuName = "UI/Data/Options", order = 2)]
-    public class OptionsData : ScriptableObject
+    public class UIMenuOptionsData : ScriptableObject
     {
         public string Name;
         public string Reference;
@@ -17,7 +17,7 @@ namespace UnityEssentials
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateOptions(UIMenuGenerator menu, OptionsData data)
+        public static VisualElement CreateOptions(UIMenuGenerator menu, UIMenuOptionsData data)
         {
             var element = menu.Data.OptionsTemplate.CloneTree();
 
@@ -27,7 +27,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureOptionsVisuals(UIMenuDataProfile profile, VisualElement element, OptionsData data)
+        private static void ConfigureOptionsVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -41,7 +41,7 @@ namespace UnityEssentials
             dropdown.value = data.Options[dropDownindex];
         }
 
-        private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, OptionsData data)
+        private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)
         {
             var dropdownField = element.Q<DropdownField>("Options");
             dropdownField.RegisterValueChangedCallback(evt =>

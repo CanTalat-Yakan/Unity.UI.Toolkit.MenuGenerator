@@ -5,8 +5,8 @@ namespace UnityEssentials
 {
     public class OptionsDataEvent : MonoBehaviour
     {
-        [SerializeField] private OptionsData Data;
-        [SerializeField] private UnityEvent<OptionsData> Event;
+        [SerializeField] private UIMenuOptionsData Data;
+        [SerializeField] private UnityEvent<UIMenuOptionsData> Event;
 
         public void OnEnable() =>
             Event?.Invoke(Data);

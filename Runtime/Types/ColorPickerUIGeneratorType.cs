@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "ColorPickerData_", menuName = "UI/Data/Colors/Color Picker", order = 0)]
-    public class ColorPickerData : ScriptableObject
+    public class UIMenuColorPickerData : ScriptableObject
     {
         public string Name;
         public string Reference;
@@ -15,18 +15,18 @@ namespace UnityEssentials
     }
 
     [CreateAssetMenu(fileName = "ColorPickerDataGroup_", menuName = "UI/Data/Colors/Color Picker Group", order = 1)]
-    public class ColorPickerDataGroup : ScriptableObject
+    public class UIMenuColorPickerDataGroup : ScriptableObject
     {
         public string Name;
         public string Reference;
 
         [Space]
-        public ColorPickerData[] ColorPickerData;
+        public UIMenuColorPickerData[] ColorPickerData;
     }
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, ColorPickerDataGroup group)
+        public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, UIMenuColorPickerDataGroup group)
         {
             var element = menu.Data.SelectionCategoryTemplate.CloneTree();
 
@@ -38,17 +38,17 @@ namespace UnityEssentials
 
         private static VisualElement CreateColorPickerButton(UIMenuGenerator menu, string name, string reference)
         {
-            var group = new ColorPickerDataGroup()
+            var group = new UIMenuColorPickerDataGroup()
             {
                 Name = name,
                 Reference = reference,
-                ColorPickerData = new ColorPickerData[] { new() { Name = name, Reference = reference } }
+                ColorPickerData = new UIMenuColorPickerData[] { new() { Name = name, Reference = reference } }
             };
 
             return CreateColorPickerButton(menu, group);
         }
 
-        private static void ConfigureColorPickerButtonVisuals(UIMenuDataProfile profile, VisualElement element, ColorPickerDataGroup group)
+        private static void ConfigureColorPickerButtonVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuColorPickerDataGroup group)
         {
             var button = element.Q<Button>("Button");
             button.text = group.Name.ToUpper();
@@ -59,7 +59,7 @@ namespace UnityEssentials
                 image.SetBackgroundColor(color);
         }
 
-        private static void ConfigureColorPickerButtonInteraction(UIMenuGenerator menu, VisualElement element, ColorPickerDataGroup group)
+        private static void ConfigureColorPickerButtonInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerDataGroup group)
         {
             var button = element.Q<Button>();
             button.clicked += () =>
@@ -71,7 +71,7 @@ namespace UnityEssentials
     // Overlay Management - Color Picker
     public static partial class UIMenuGeneratorType
     {
-        private static void ShowColorPickerOverlay(UIMenuGenerator menu, ColorPickerDataGroup group, Action<string, Color> callback)
+        private static void ShowColorPickerOverlay(UIMenuGenerator menu, UIMenuColorPickerDataGroup group, Action<string, Color> callback)
         {
             var overlay = menu.CreatePopup(group.Name);
 
@@ -81,7 +81,7 @@ namespace UnityEssentials
             menu.AddElementToRoot(overlay);
         }
 
-        private static VisualElement CreateColorPicker(UIMenuGenerator menu, ColorPickerData data, Action<string, Color> callback)
+        private static VisualElement CreateColorPicker(UIMenuGenerator menu, UIMenuColorPickerData data, Action<string, Color> callback)
         {
             var picker = menu.Data.ColorPickerTemplate.CloneTree();
 
@@ -91,7 +91,7 @@ namespace UnityEssentials
             return picker;
         }
 
-        private static void ConfigureColorSliders(UIMenuDataProfile profile, VisualElement picker, ColorPickerData data, Action<string, Color> callback)
+        private static void ConfigureColorSliders(UIMenuDataProfile profile, VisualElement picker, UIMenuColorPickerData data, Action<string, Color> callback)
         {
             var hueSlider = picker.Q<SliderInt>("HueSlider");
             var satSlider = picker.Q<SliderInt>("SaturationSlider");
@@ -128,7 +128,7 @@ namespace UnityEssentials
             alphaSlider.RegisterValueChangedCallback(_ => updateColor());
         }
 
-        private static void ConfigureColorPresets(UIMenuDataProfile profile, VisualElement picker, ColorPickerData data, Action<string, Color> callback)
+        private static void ConfigureColorPresets(UIMenuDataProfile profile, VisualElement picker, UIMenuColorPickerData data, Action<string, Color> callback)
         {
             var presetButtons = picker.Query<Button>(name: "ColorPresetButton").ToList();
             var hueSlider = picker.Q<SliderInt>("HueSlider");

@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "ColorSliderData_", menuName = "UI/Data/Colors/Color Slider", order = 2)]
-    public class ColorSliderData : ScriptableObject
+    public class UIMenuColorSliderData : ScriptableObject
     {
         public string Name;
         public string Reference;
@@ -18,18 +18,18 @@ namespace UnityEssentials
     }
 
     [CreateAssetMenu(fileName = "ColorSliderDataGroup_", menuName = "UI/Data/Colors/Color Slider Group", order = 3)]
-    public class ColorSliderDataGroup : ScriptableObject
+    public class UIMenuColorSliderDataGroup : ScriptableObject
     {
         public string Name;
         public string Reference;
 
         [Space]
-        public ColorSliderData[] ColorSliderData;
+        public UIMenuColorSliderData[] ColorSliderData;
     }
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateColorSlider(UIMenuGenerator menu, ColorSliderData data)
+        public static VisualElement CreateColorSlider(UIMenuGenerator menu, UIMenuColorSliderData data)
         {
             var element = menu.Data.ColorSliderTemplate.CloneTree();
 
@@ -39,7 +39,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, ColorSliderData data)
+        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuColorSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -54,7 +54,7 @@ namespace UnityEssentials
             (slider.lowValue, slider.highValue) = (0, 100);
         }
 
-        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, ColorSliderData data)
+        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuColorSliderData data)
         {
             var icon = element.Q<VisualElement>("Icon");
             var slider = element.Q<SliderInt>();

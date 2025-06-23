@@ -10,7 +10,7 @@ namespace UnityEssentials
         public SerializedDictionary<string, float> SliderDataDictionary = new();
         public SerializedDictionary<string, int> SelectionDataDictionary = new();
         public SerializedDictionary<string, Color> ColorPickerDataDictionary = new();
-        public SerializedDictionary<ColorSliderData, int> ColorSliderDataDictionary = new();
+        public SerializedDictionary<UIMenuColorSliderData, int> ColorSliderDataDictionary = new();
 
         public void CopyValues<T>(T source) where T : UIMenuDataProfile
         {
@@ -41,7 +41,7 @@ namespace UnityEssentials
         public virtual void OnColorPickerValueChanged(string reference, Color color) =>
             ColorPickerDataDictionary[reference] = color;
 
-        public virtual void OnColorSliderValueChanged(ColorSliderData colorSliderData, int value) =>
+        public virtual void OnColorSliderValueChanged(UIMenuColorSliderData colorSliderData, int value) =>
             ColorSliderDataDictionary[colorSliderData] = value;
     }
 }

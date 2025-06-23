@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "Category_", menuName = "UI/Category", order = 1)]
-    public class CategoryData : ScriptableObject
+    public class UIMenuCategoryData : ScriptableObject
     {
         public string Name;
 
@@ -15,7 +15,7 @@ namespace UnityEssentials
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateCategory(UIMenuGenerator menu, CategoryData data)
+        public static VisualElement CreateCategory(UIMenuGenerator menu, UIMenuCategoryData data)
         {
             var element = menu.Data.CategoryTemplate.CloneTree();
 
@@ -25,7 +25,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureCategoryVisuals(VisualElement element, CategoryData data)
+        private static void ConfigureCategoryVisuals(VisualElement element, UIMenuCategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -34,7 +34,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private static void ConfigureCategoryInteraction(UIMenuGenerator menu, VisualElement element, CategoryData data)
+        private static void ConfigureCategoryInteraction(UIMenuGenerator menu, VisualElement element, UIMenuCategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => menu.PopulateHierarchy(false, data.Name, data.Data);

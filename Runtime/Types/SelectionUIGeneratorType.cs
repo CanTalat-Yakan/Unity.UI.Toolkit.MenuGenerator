@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "SelectionData_", menuName = "UI/Data/Selections/Selection", order = 0)]
-    public class SelectionData : ScriptableObject
+    public class UIMenuSelectionData : ScriptableObject
     {
         public string Name;
         public int ID;
@@ -16,22 +16,22 @@ namespace UnityEssentials
     }
 
     [CreateAssetMenu(fileName = "SelectionDataCollection_", menuName = "UI/Data/Selections/Selection Collection", order = 1)]
-    public class SelectionDataCollection : ScriptableObject
+    public class UIMenuSelectionDataCollection : ScriptableObject
     {
-        public SelectionData[] Data;
+        public UIMenuSelectionData[] Data;
     }
 
     [CreateAssetMenu(fileName = "SelectionDataCollectionGroup_", menuName = "UI/Data/Selections/Selection Collection Group", order = 2)]
-    public class SelectionDataCollectionGroup : ScriptableObject
+    public class UIMenuSelectionDataCollectionGroup : ScriptableObject
     {
         public string Name;
         public string Reference;
 
         [Space]
-        public SelectionDataCollection[] Collections;
+        public UIMenuSelectionDataCollection[] Collections;
         public ScriptableObject[] Colors;
 
-        public SelectionData GetSelectionData(int index)
+        public UIMenuSelectionData GetSelectionData(int index)
         {
             foreach (var collection in Collections)
                 foreach (var selectionData in collection.Data)
@@ -44,7 +44,7 @@ namespace UnityEssentials
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateSelectionCategory(UIMenuGenerator menu, SelectionDataCollectionGroup group)
+        public static VisualElement CreateSelectionCategory(UIMenuGenerator menu, UIMenuSelectionDataCollectionGroup group)
         {
             var element = menu.Data.SelectionCategoryTemplate.CloneTree();
 
@@ -54,7 +54,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureSelectionCategoryVisuals(UIMenuDataProfile profile, VisualElement element, SelectionDataCollectionGroup group)
+        private static void ConfigureSelectionCategoryVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuSelectionDataCollectionGroup group)
         {
             var button = element.Q<Button>("Button");
             button.text = group.Name.ToUpper();
@@ -73,7 +73,7 @@ namespace UnityEssentials
             }
         }
 
-        private static void ConfigureSelectionCategoryInteraction(UIMenuGenerator menu, VisualElement element, SelectionDataCollectionGroup group)
+        private static void ConfigureSelectionCategoryInteraction(UIMenuGenerator menu, VisualElement element, UIMenuSelectionDataCollectionGroup group)
         {
             var button = element.Q<Button>();
             button.clicked += () => 
@@ -85,17 +85,17 @@ namespace UnityEssentials
     // Overlay Management - Selection
     public static partial class UIMenuGeneratorType
     {
-        private static void ShowSelectionOverlay(UIMenuGenerator menu, SelectionDataCollectionGroup group, Action<SelectionData> callback)
+        private static void ShowSelectionOverlay(UIMenuGenerator menu, UIMenuSelectionDataCollectionGroup group, Action<UIMenuSelectionData> callback)
         {
             var overlay = menu.CreatePopup(group.Name);
 
             foreach (var colorData in group.Colors)
                 switch (colorData)
                 {
-                    case ColorSliderData colorSliderData:
+                    case UIMenuColorSliderData colorSliderData:
                         overlay.Q<GroupBox>("GroupBox").Add(CreateColorSlider(menu, colorSliderData));
                         break;
-                    case ColorPickerData colorPickerData:
+                    case UIMenuColorPickerData colorPickerData:
                         overlay.Q<GroupBox>("GroupBox").Add(CreateColorPickerButton(menu,colorPickerData.Name, colorPickerData.Reference));
                         break;
                     default: break;
@@ -108,22 +108,22 @@ namespace UnityEssentials
             menu.AddElementToRoot(overlay);
         }
 
-        private static List<VisualElement> PopulateSelectionContent(UIMenuGenerator menu, ScriptableObject[] collection, Action<SelectionData> callback)
+        private static List<VisualElement> PopulateSelectionContent(UIMenuGenerator menu, ScriptableObject[] collection, Action<UIMenuSelectionData> callback)
         {
             var content = new List<VisualElement>();
             foreach (var data in collection)
             {
-                if (data is SelectionDataCollection collectionData)
+                if (data is UIMenuSelectionDataCollection collectionData)
                     foreach (var item in collectionData.Data)
                         content.Add(CreateSelectionTile(menu, item, callback));
-                else if (data is SelectionData selectionData)
+                else if (data is UIMenuSelectionData selectionData)
                     content.Add(CreateSelectionTile(menu, selectionData, callback));
             }
 
             return content;
         }
 
-        private static VisualElement CreateSelectionTile(UIMenuGenerator menu, SelectionData data, Action<SelectionData> callback)
+        private static VisualElement CreateSelectionTile(UIMenuGenerator menu, UIMenuSelectionData data, Action<UIMenuSelectionData> callback)
         {
             var tile = menu.Data.SelectionTileTemplate.CloneTree();
             tile.Q<Label>().text = data.Name;
@@ -133,7 +133,7 @@ namespace UnityEssentials
             return tile;
         }
 
-        private static Action<SelectionData> UpdateSelectionVisuals(UIMenuDataProfile profile, VisualElement element, string reference) =>
+        private static Action<UIMenuSelectionData> UpdateSelectionVisuals(UIMenuDataProfile profile, VisualElement element, string reference) =>
             selectionData =>
             {
                 element.Q<VisualElement>("Image").SetBackgroundImage(selectionData.Texture);

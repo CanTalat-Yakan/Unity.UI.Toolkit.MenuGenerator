@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "SliderData_", menuName = "UI/Data/Slider", order = 3)]
-    public class SliderData : ScriptableObject
+    public class UIMenuSliderData : ScriptableObject
     {
         public string Name;
         public string Reference;
@@ -16,7 +16,7 @@ namespace UnityEssentials
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateSlider(UIMenuGenerator menu, SliderData data)
+        public static VisualElement CreateSlider(UIMenuGenerator menu, UIMenuSliderData data)
         {
             VisualElement element = data.Float
                 ? menu.Data.SliderTemplate.CloneTree()
@@ -28,7 +28,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, SliderData data)
+        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -48,7 +48,7 @@ namespace UnityEssentials
             }
         }
 
-        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, SliderData data)
+        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuSliderData data)
         {
             if (data.Float)
             {

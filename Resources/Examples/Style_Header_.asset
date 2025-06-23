@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02026b838408b1e4faf7d1f189070641, type: 3}
   m_Name: Style_Header_
   m_EditorClassIdentifier: 
-  Text: Test
+  Name: Test Header

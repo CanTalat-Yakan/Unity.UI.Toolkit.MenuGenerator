@@ -1,11 +1,10 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "Style_Spacer_", menuName = "UI/Spacer", order = 3)]
-    public class SpacerData : ScriptableObject
+    public class UIMenuSpacerData : ScriptableObject
     {
         public int Height;
     }
@@ -14,13 +13,13 @@ namespace UnityEssentials
     {
         public static VisualElement CreateSpacer(UIMenuGenerator menu, int height)
         {
-            var data = ScriptableObject.CreateInstance<SpacerData>();
+            var data = ScriptableObject.CreateInstance<UIMenuSpacerData>();
             data.Height = height;
 
             return CreateSpacer(menu, data);
         }
 
-        public static VisualElement CreateSpacer(UIMenuGenerator menu, SpacerData data)
+        public static VisualElement CreateSpacer(UIMenuGenerator menu, UIMenuSpacerData data)
         {
             var element = menu.Data.SpacerTemplate.CloneTree();
 
@@ -29,7 +28,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureOptionsVisuals(VisualElement element, SpacerData data)
+        private static void ConfigureOptionsVisuals(VisualElement element, UIMenuSpacerData data)
         {
             var spacer = element.Q<VisualElement>("Spacer");
             spacer.SetHeight(data.Height);

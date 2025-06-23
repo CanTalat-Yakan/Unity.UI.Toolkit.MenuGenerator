@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "InputData_", menuName = "UI/Data/Input", order = 1)]
-    public class InputData : ScriptableObject
+    public class UIMenuInputData : ScriptableObject
     {
         public string Name;
         public string Reference;
@@ -12,7 +12,7 @@ namespace UnityEssentials
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateInput(UIMenuGenerator menu, InputData data)
+        public static VisualElement CreateInput(UIMenuGenerator menu, UIMenuInputData data)
         {
             var element = menu.Data.InputTemplate.CloneTree();
 
@@ -22,7 +22,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureInputVisuals(UIMenuDataProfile profile, VisualElement element, InputData data)
+        private static void ConfigureInputVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuInputData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -35,7 +35,7 @@ namespace UnityEssentials
             inputField.value = input;
         }
 
-        private static void ConfigureInputInteraction(UIMenuDataProfile profile, VisualElement element, InputData data)
+        private static void ConfigureInputInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuInputData data)
         {
             var textField = element.Q<TextField>("Input");
             textField.RegisterValueChangedCallback((evt) =>

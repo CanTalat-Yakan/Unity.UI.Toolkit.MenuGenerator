@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "Button_", menuName = "UI/Button", order = 2)]
-    public class ButtonData : ScriptableObject
+    public class UIMenuButtonData : ScriptableObject
     {
         public string Name;
 
@@ -25,7 +25,7 @@ namespace UnityEssentials
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateButton(UIMenuGenerator menu, ButtonData data)
+        public static VisualElement CreateButton(UIMenuGenerator menu, UIMenuButtonData data)
         {
             var element = menu.Data.ButtonTemplate.CloneTree();
 
@@ -35,7 +35,7 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureButtonVisuals(VisualElement element, ButtonData data)
+        private static void ConfigureButtonVisuals(VisualElement element, UIMenuButtonData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -44,7 +44,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private static void ConfigureButtonInteraction(VisualElement element, ButtonData data)
+        private static void ConfigureButtonInteraction(VisualElement element, UIMenuButtonData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => data.InvokeEvent();

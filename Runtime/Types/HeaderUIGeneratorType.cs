@@ -4,14 +4,14 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [CreateAssetMenu(fileName = "Style_Header_", menuName = "UI/Header", order = 3)]
-    public class HeaderData : ScriptableObject
+    public class UIMenuHeaderData : ScriptableObject
     {
-        public string Text;
+        public string Name;
     }
 
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateHeader(UIMenuGenerator menu, HeaderData data)
+        public static VisualElement CreateHeader(UIMenuGenerator menu, UIMenuHeaderData data)
         {
             var element = menu.Data.HeaderTemplate.CloneTree();
 
@@ -20,10 +20,10 @@ namespace UnityEssentials
             return element;
         }
 
-        private static void ConfigureHeaderVisuals(VisualElement element, HeaderData data)
+        private static void ConfigureHeaderVisuals(VisualElement element, UIMenuHeaderData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.Text.ToUpper();
+            label.text = data.Name.ToUpper();
         }
     }
 }

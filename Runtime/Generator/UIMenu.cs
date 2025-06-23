@@ -31,7 +31,7 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        public static Action ShowUIBuilder { get; set; }
+        public static Action<UIMenuData> ShowUIBuilder { get; set; }
 
         [SerializeField] private UIMenuSettings _settings = new();
 
@@ -51,7 +51,7 @@ namespace UnityEssentials
 
         [Button()]
         public void EditUIBuilder() =>
-            ShowUIBuilder?.Invoke();
+            ShowUIBuilder?.Invoke(_data);
 
         [OnValueChanged("_type")]
         public void OnTypeValueChanged()

@@ -5,7 +5,7 @@ namespace UnityEssentials
 {
     public class ButtonDataEvent : MonoBehaviour
     {
-        [SerializeField] private ButtonData Data;
+        [SerializeField] private UIMenuButtonData Data;
         [SerializeField] private UnityEvent Event;
         [SerializeField] private UnityEvent AltEvent;
 

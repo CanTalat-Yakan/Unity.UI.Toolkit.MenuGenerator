@@ -21,20 +21,15 @@ namespace UnityEssentials
 
         private SimpleTreeView _treeView;
         private UIMenuData _data = new();
-        public List<ScriptableObject> Root = new();
-
-        private static Texture2D FolderIcon = EditorIconUtilities.GetTexture(EditorIconNames.VerticalLayoutGroupIcon);
-        private static Texture2D HeaderIcon = EditorIconUtilities.GetTexture(EditorIconNames.TextIcon);
-        private static GUIContent ToolbarIcon = EditorIconUtilities.GetContent(EditorIconNames.ToolbarPlus);
 
         [InitializeOnLoadMethod()]
         public static void Initialize() =>
-            UIMenu.ShowUIBuilder = ShowWindow;
+            UIMenu.ShowUIBuilder = (data) => ShowUtility(data ?? new());
 
-        [MenuItem("Tools/ UI Menu Builder %g", false, priority = 1003)]
-        private static void ShowWindow()
+        private static void ShowUtility(UIMenuData data)
         {
             var editor = new UIMenuEditor();
+            editor._data = data;
             editor._treeView = new SimpleTreeView(editor.FetchData(), "Menu");
             editor._treeView.ContextMenu = editor.GetPaneGenericMenu();
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
@@ -49,6 +44,7 @@ namespace UnityEssentials
             editor.Window.SplitterPosition = 200;
         }
 
+        private static GUIContent ToolbarIcon = EditorIconUtilities.GetContent(EditorIconNames.ToolbarPlus);
         private void Header()
         {
             if (EditorGUILayout.DropdownButton(ToolbarIcon, FocusType.Passive, EditorStyles.toolbarDropDown))
@@ -80,7 +76,7 @@ namespace UnityEssentials
 
             var icon = item.Icon;
             string name = item.Name;
-            string type = item.UserData?.ToString();
+            string type = item.UserTag;
             if (!string.IsNullOrEmpty(type))
                 type = $" ({type})";
 
@@ -93,6 +89,20 @@ namespace UnityEssentials
             GUILayout.Label(name + type, EditorStyles.boldLabel, GUILayout.Height(24));
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
+
+            if (item.UserData is UIMenuCategoryData categoryData)
+                foreach (var data in categoryData.Data)
+                {
+                    switch (data)
+                    {
+                        case UIMenuButtonData buttonData:
+                            GUILayout.Label($"Button: {buttonData.Name}", EditorStyles.label);
+                            EditorGUILayout.ObjectField("Button", buttonData, typeof(UIMenuButtonData), false);
+                            break;
+                        default:
+                            break;
+                    }
+                }
         }
 
         private void Footer()
@@ -103,8 +113,44 @@ namespace UnityEssentials
         private SimpleTreeViewItem[] FetchData()
         {
             var items = new List<SimpleTreeViewItem>();
-            items.Add(CreateCategory());
+
+            foreach (var item in _data.Root)
+                items.Add(item switch
+                {
+                    UIMenuCategoryData categoryData => CreateCategoryAndData(categoryData),
+                    UIMenuHeaderData headerData => CreateHeader(headerData.Name),
+                    UIMenuSpacerData spacerData => CreateSpace(),
+                    _ => null
+                });
+
+            if (items.Count == 0)
+                items.Add(CreateCategory());
+
             return items.ToArray();
+        }
+
+        private SimpleTreeViewItem CreateCategoryAndData(UIMenuCategoryData category)
+        {
+            var parent = CreateCategory(category.Name);
+
+            var items = new List<SimpleTreeViewItem>();
+            foreach (var item in category.Data)
+                items.Add(item switch
+                {
+                    UIMenuCategoryData categoryData => SetParent(CreateCategoryAndData(categoryData), parent).SetUserData(categoryData),
+                    UIMenuHeaderData headerData => SetParent(CreateHeader(headerData.Name), parent).SetUserData(headerData),
+                    UIMenuSpacerData spacerData => SetParent(CreateSpace(), parent).SetUserData(spacerData),
+                    _ => null
+                });
+
+            return parent;
+        }
+
+        private SimpleTreeViewItem SetParent(SimpleTreeViewItem item, SimpleTreeViewItem parent)
+        {
+            var categoryItem = CreateCategory(item.Name);
+            categoryItem.Parent = parent;
+            return categoryItem;
         }
 
         private Rect GetLastRect()
@@ -138,14 +184,23 @@ namespace UnityEssentials
         }
 
         private void AddCategory(string name = "Category", int? parent = null) => _treeView.AddItem(CreateCategory(), parent);
-        private SimpleTreeViewItem CreateCategory(string name = "Category") => new SimpleTreeViewItem(name, FolderIcon).SetUserData(UIMenuDataTypes.Category);
+        private static Texture2D FolderIcon = EditorIconUtilities.GetTexture(EditorIconNames.VerticalLayoutGroupIcon);
+        private SimpleTreeViewItem CreateCategory(string name = "Category") =>
+            new SimpleTreeViewItem(name, FolderIcon).SetUserTag(UIMenuDataTypes.Category.ToString());
 
         private void AddHeader(string name = "Header", int? parent = null) => _treeView.AddItem(CreateHeader(name), parent);
-        private SimpleTreeViewItem CreateHeader(string name = "Header") => new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserData(UIMenuDataTypes.Header);
+        private static Texture2D HeaderIcon = EditorIconUtilities.GetTexture(EditorIconNames.TextIcon);
+        private SimpleTreeViewItem CreateHeader(string name = "Header") =>
+            new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserTag(UIMenuDataTypes.Header.ToString());
 
         private void AddSpace(int? parent = null) => _treeView.AddItem(CreateSpace(), parent);
-        private SimpleTreeViewItem CreateSpace() => new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserData(UIMenuDataTypes.Space);
+        private SimpleTreeViewItem CreateSpace() =>
+            new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserTag(UIMenuDataTypes.Space.ToString());
 
+        private void AddButton(int? parent = null) => _treeView.AddItem(CreateButton(), parent);
+        private static Texture2D ButtonIcon = EditorIconUtilities.GetTexture(EditorIconNames.ButtonIcon);
+        private SimpleTreeViewItem CreateButton(string name = "Button") =>
+            new SimpleTreeViewItem().Support(false, false).SetUserTag(UIMenuDataTypes.Space.ToString());
     }
 }
 #endif
