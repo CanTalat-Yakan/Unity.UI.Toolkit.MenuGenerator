@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -60,7 +60,7 @@ namespace UnityEssentials
 
         private void Pane()
         {
-            _treeView.OnGUI();
+            _treeView.Draw();
 
             Window.ContextMenuHandled = _treeView.ContextMenuHandled;
         }
@@ -70,6 +70,12 @@ namespace UnityEssentials
             var item = _treeView.GetSelectedItem();
             if (item == null)
                 return;
+
+            SimpleTreeViewBreadcrumbs.Draw(item, clickedItem =>
+            {
+                _treeView.SetSelectedItems(clickedItem.id);
+                _treeView.Repaint();
+            });
 
             var icon = item.Icon;
             string name = item.Name;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef30722d93fc264492ed368f3ce0ca9, type: 3}
   m_Name: UIMenuData_
   m_EditorClassIdentifier: 
-  Name: Root
+  Name: Menu
   Root:
   - {fileID: 11400000, guid: e56910bdde7210d4691261cff031556f, type: 2}
   - {fileID: 11400000, guid: 950be5aca3e49dc4699da4885821ef9f, type: 2}
