@@ -261,7 +261,6 @@ namespace UnityEssentials
 
         private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();
         private readonly Dictionary<ScriptableObject, bool> _foldoutStates = new();
-
         private void CreateDynamicBox(SimpleTreeViewItem item)
         {
             var itemData = item.UserData as ScriptableObject;
@@ -346,7 +345,7 @@ namespace UnityEssentials
             so.ApplyModifiedProperties();
         }
 
-        private readonly Dictionary<string, ReorderableList> _lists = new();
+        private readonly Dictionary<string, ReorderableList> _listsCache = new();
         private void DrawReorderablePropertyList(SerializedObject so, SerializedProperty property)
         {
             // Ensure property is a valid array
@@ -354,28 +353,27 @@ namespace UnityEssentials
                 return;
 
             ReorderableList reorderableList = null;
-            if (!_lists.TryGetValue(property.propertyPath, out reorderableList))
+            if (!_listsCache.TryGetValue(property.propertyPath, out reorderableList))
             {
                 reorderableList = new ReorderableList(so, property, true, true, true, true);
-                _lists.Add(property.propertyPath, reorderableList);
-                Debug.Log(property.propertyPath);
+                _listsCache.Add(property.propertyPath, reorderableList);
             }
 
-            reorderableList.drawHeaderCallback = (Rect rect) =>
+            reorderableList.drawHeaderCallback = (Rect position) =>
             {
-                rect.x -= 15;
-                EditorGUI.LabelField(rect, property.displayName);
+                position.x -= 15;
+                EditorGUI.LabelField(position, property.displayName);
             };
 
-            reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            reorderableList.drawElementCallback = (Rect position, int index, bool isActive, bool isFocused) =>
             {
-                rect.y += 2;
-                rect.height -= 4;
+                position.y += 2;
+                position.height -= 4;
                 SerializedProperty element = property.GetArrayElementAtIndex(index);
-                EditorGUI.PropertyField(rect, element, GUIContent.none);
+                EditorGUI.PropertyField(position, element, GUIContent.none);
             };
 
-            Rect listRect = EditorGUILayout.GetControlRect(false, reorderableList.GetHeight());
+            var listRect = EditorGUILayout.GetControlRect(false, reorderableList.GetHeight());
             listRect = EditorGUI.IndentedRect(listRect);
             reorderableList.DoList(listRect);
         }
