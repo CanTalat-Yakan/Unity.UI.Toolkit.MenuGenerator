@@ -19,6 +19,7 @@ namespace UnityEssentials
         public Action Repaint;
         public Action Close;
 
+        private SimpleTreeView _treeView;
         private UIMenuData _data = new();
         public List<ScriptableObject> Root = new();
 
@@ -37,8 +38,8 @@ namespace UnityEssentials
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
-                .SetPane(editor.Pane, EditorPaneStyle.Left)
-                .SetBody(editor.Body)
+                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: editor.GetPaneGenericMenu())
+                .SetBody(editor.Body, genericMenu: editor.GetBodyGenericMenu())
                 .SetFooter(editor.Footer, EditorWindowStyle.HelpBox)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
@@ -49,7 +50,7 @@ namespace UnityEssentials
 
         private void Initialization()
         {
-            _treeView ??= new SimpleTreeView(FetchData(), "Menu");
+            _treeView = new SimpleTreeView(FetchData(), "Menu");
             _treeView.CustomContextMenuAction = new (string, Action<SimpleTreeViewItem>)[]
             {
                 ("Add Category", (item) => AddCategory(parent: item)),
@@ -61,24 +62,18 @@ namespace UnityEssentials
         private void Header()
         {
             if (EditorGUILayout.DropdownButton(ToolbarIcon, FocusType.Passive, EditorStyles.toolbarDropDown))
-            {
-                var menu = new GenericMenu();
-                menu.AddItem(new("Add Category"), false, () => AddCategory());
-                menu.AddItem(new("Add Header"), false, () => AddHeader());
-                menu.AddItem(new("Add Space"), false, () => AddSpace());
-                menu.DropDown(GUILayoutUtility.GetLastRect());
-            }
+                GetPaneGenericMenu().DropDown(GetLastRect());
 
             GUILayout.Label("UI Menu Builder Header", EditorStyles.boldLabel);
             GUILayout.Button("Header", EditorStyles.toolbarButton);
             GUILayout.FlexibleSpace();
         }
 
-        private SimpleTreeView _treeView;
         private void Pane()
         {
             _treeView?.OnGUI();
         }
+
         private void Body()
         {
             var item = _treeView.GetSelectedItem();
@@ -114,23 +109,45 @@ namespace UnityEssentials
             return items.ToArray();
         }
 
-        private SimpleTreeViewItem CreateCategory(string name = "Category") =>
-            new SimpleTreeViewItem(name, FolderIcon).SetUserData(UIMenuDataTypes.Category);
+        private Rect GetLastRect()
+        {
+            var lastRect = GUILayoutUtility.GetLastRect();
+            lastRect.y += 20;
+            return lastRect;
+        }
 
-        private void AddCategory(string name = "Category", SimpleTreeViewItem parent = null) =>
-            _treeView.AddItem(CreateCategory(), parent);
+        private GenericMenu GetPaneGenericMenu()
+        {
+            var menu = new GenericMenu();
+            menu.AddItem(new("Add Category"), false, () => AddCategory());
+            menu.AddItem(new("Add Header"), false, () => AddHeader());
+            menu.AddItem(new("Add Space"), false, () => AddSpace());
+            return menu;
+        }
 
-        private SimpleTreeViewItem CreateHeader(string name = "Header") =>
-            new SimpleTreeViewItem(name, HeaderIcon).SetUserData(UIMenuDataTypes.Header);
+        private GenericMenu GetBodyGenericMenu()
+        {
+            var menu = new GenericMenu();
+            menu.AddItem(new("Add Button"), false, () => { });
+            menu.AddItem(new("Add Options"), false, () => { });
+            menu.AddItem(new("Add Input"), false, () => { });
+            menu.AddItem(new("Add Slider"), false, () => { });
+            menu.AddItem(new("Add Toggle"), false, () => { });
+            menu.AddItem(new("Add Selection"), false, () => { });
+            menu.AddItem(new("Add Color Picker"), false, () => { });
+            menu.AddItem(new("Add Color Slider"), false, () => { });
+            return menu;
+        }
 
-        private void AddHeader(string name = "Header", SimpleTreeViewItem parent = null) =>
-            _treeView.AddItem(CreateHeader(name), parent);
+        private void AddCategory(string name = "Category", SimpleTreeViewItem parent = null) => _treeView.AddItem(CreateCategory(), parent);
+        private SimpleTreeViewItem CreateCategory(string name = "Category") => new SimpleTreeViewItem(name, FolderIcon).SetUserData(UIMenuDataTypes.Category);
 
-        private SimpleTreeViewItem CreateSpace() =>
-            new SimpleTreeViewItem(string.Empty, HeaderIcon).SetUserData(UIMenuDataTypes.Space);
+        private void AddHeader(string name = "Header", SimpleTreeViewItem parent = null) => _treeView.AddItem(CreateHeader(name), parent);
+        private SimpleTreeViewItem CreateHeader(string name = "Header") => new SimpleTreeViewItem(name, HeaderIcon).SetUserData(UIMenuDataTypes.Header);
 
-        private void AddSpace(SimpleTreeViewItem parent = null) =>
-            _treeView.AddItem(CreateSpace(), parent);
+        private void AddSpace(SimpleTreeViewItem parent = null) =>_treeView.AddItem(CreateSpace(), parent);
+        private SimpleTreeViewItem CreateSpace() => new SimpleTreeViewItem(string.Empty).SetUserData(UIMenuDataTypes.Space);
+
     }
 }
 #endif
