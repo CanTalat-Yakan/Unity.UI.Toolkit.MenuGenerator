@@ -1,11 +1,9 @@
 ﻿#if UNITY_EDITOR
-using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
-using static PlasticGui.LaunchDiffParameters;
 
 namespace UnityEssentials
 {
@@ -43,6 +41,14 @@ namespace UnityEssentials
             editor._data = data;
             editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
             editor._treeView.ContextMenu = editor.GetPaneGenericMenu();
+            editor._treeView.OnRename = (item) =>
+            {
+                var itemData = item.UserData as ScriptableObject;
+                if (itemData == null)
+                    return;
+
+                itemData.GetType().GetField("Reference")?.SetValue(itemData, item.Name);
+            };
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: editor.GetPaneGenericMenu())
@@ -231,7 +237,7 @@ namespace UnityEssentials
         private void AddSlider(int? parent = null) => _treeView.AddItem(CreateSlider(), parent, false);
         private SimpleTreeViewItem CreateSlider(string name = "Slider") =>
             new SimpleTreeViewItem(name, SliderIcon).Support(false).SetUserTag(UIMenuDataTypes.Slider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>());
 
         private void AddToggle(int? parent = null) => _treeView.AddItem(CreateToggle(), parent, false);
         private SimpleTreeViewItem CreateToggle(string name = "Toggle") =>
@@ -262,7 +268,7 @@ namespace UnityEssentials
             if (itemData == null)
                 return;
 
-            item.displayName = itemData.GetType().GetField("Name")?.GetValue(itemData) as string;
+            itemData.GetType().GetField("Name")?.SetValue(itemData, item.Name);
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
@@ -287,13 +293,91 @@ namespace UnityEssentials
                             editor = Editor.CreateEditor(itemData);
                             _editorCache[itemData] = editor;
                         }
-                        editor.OnInspectorGUI();
+
+                        var drawArrays = itemData is not UIMenuCategoryData;
+                        DrawScriptableObjectInline(editor, drawArrays);
 
                         GUILayout.Space(10);
                     }
                 }
                 EditorGUI.indentLevel--;
             }
+        }
+
+        private void DrawScriptableObjectInline(Editor scriptableEditor, bool drawArrays = true)
+        {
+            if (scriptableEditor == null)
+                return;
+
+            SerializedObject so = scriptableEditor.serializedObject;
+            so.Update();
+
+            SerializedProperty iterator = so.GetIterator();
+            bool enterChildren = true;
+            while (iterator.NextVisible(enterChildren))
+            {
+                // Skip the internal script reference and "Name" property
+                if (iterator.name == "m_Script" || iterator.name == "Name")
+                    continue;
+
+                // Skip arrays if requested, but allow normal strings
+                if (iterator.isArray && iterator.propertyType != SerializedPropertyType.String && !drawArrays)
+                {
+                    enterChildren = false;
+                    continue;
+                }
+
+                // If it's an actual array (not a string), draw reorderable list
+                if (iterator.isArray && iterator.propertyType != SerializedPropertyType.String)
+                {
+                    // Defensive: Only pass a copy, and check arraySize
+                    var arrayProp = iterator.Copy();
+                    if (arrayProp.arraySize >= 0)
+                        DrawReorderablePropertyList(so, arrayProp);
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(iterator, true);
+                }
+
+                enterChildren = false;
+            }
+
+            so.ApplyModifiedProperties();
+        }
+
+        private readonly Dictionary<string, ReorderableList> _lists = new();
+        private void DrawReorderablePropertyList(SerializedObject so, SerializedProperty property)
+        {
+            // Ensure property is a valid array
+            if (property == null || !property.isArray || property.propertyType == SerializedPropertyType.String)
+                return;
+
+            ReorderableList reorderableList = null;
+            if (!_lists.TryGetValue(property.propertyPath, out reorderableList))
+            {
+                reorderableList = new ReorderableList(so, property, true, true, true, true);
+                _lists.Add(property.propertyPath, reorderableList);
+                Debug.Log(property.propertyPath);
+            }
+
+            reorderableList.drawHeaderCallback = (Rect rect) =>
+            {
+                rect.x -= 15;
+                EditorGUI.LabelField(rect, property.displayName);
+            };
+
+            reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                rect.y += 2;
+                rect.height -= 4;
+                SerializedProperty element = property.GetArrayElementAtIndex(index);
+                EditorGUI.PropertyField(rect, element, GUIContent.none);
+            };
+
+            Rect listRect = EditorGUILayout.GetControlRect(false, reorderableList.GetHeight());
+            listRect = EditorGUI.IndentedRect(listRect);
+            reorderableList.DoList(listRect);
         }
     }
 }

@@ -10,8 +10,8 @@ namespace UnityEssentials
         public string Reference;
 
         [Space]
-        public Vector2 ValueRange;
         public bool Float;
+        public Vector2 ValueRange;
     }
 
     public static partial class UIMenuGeneratorType

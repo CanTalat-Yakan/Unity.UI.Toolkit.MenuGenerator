@@ -9,7 +9,6 @@ namespace UnityEssentials
     {
         public string Name;
 
-        [Space]
         public Texture2D Texture;
 
         [Space]

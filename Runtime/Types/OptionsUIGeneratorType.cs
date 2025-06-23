@@ -11,8 +11,8 @@ namespace UnityEssentials
         public string Reference;
 
         [Space]
-        public string[] Options;
         public bool Reverse;
+        public string[] Options;
     }
 
     public static partial class UIMenuGeneratorType

@@ -8,7 +8,6 @@ namespace UnityEssentials
     {
         public string Name;
 
-        [Space]
         public Texture2D Texture;
         public ScriptableObject[] Data;
     }
