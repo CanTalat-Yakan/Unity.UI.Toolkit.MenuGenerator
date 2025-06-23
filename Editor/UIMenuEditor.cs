@@ -62,9 +62,6 @@ namespace UnityEssentials
         {
             _treeView.OnGUI();
 
-            if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
-                _treeView.ClearAllSelections();
-
             Window.ContextMenuHandled = _treeView.ContextMenuEnabled;
         }
 
