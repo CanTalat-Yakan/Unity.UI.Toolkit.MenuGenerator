@@ -1,8 +1,7 @@
-using NUnit.Framework;
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -25,6 +24,8 @@ namespace UnityEssentials
             string childDirectory = Path.Combine(directory, fileName);
             CleanDirectory(childDirectory);
 
+            data.name = fileName;
+
             SaveScriptableObject(data, directory, fileName);
             SaveTreeViewToDirectory(treeView, childDirectory);
 
@@ -46,13 +47,15 @@ namespace UnityEssentials
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
                 AssetDatabase.DeleteAsset(file);
 
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
             foreach (var subDirectory in Directory.GetDirectories(directory))
                 Directory.Delete(subDirectory, true);
 
-            Directory.Delete(directory, true);
-
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
             Resources.UnloadUnusedAssets();
             System.GC.Collect();
         }
@@ -68,11 +71,20 @@ namespace UnityEssentials
 
         private static void SaveTreeViewDataRecursively(SimpleTreeViewItem item, string directory)
         {
+            string fileName = item.UniqueName;
+
+            var itemData = item.UserData as ScriptableObject;
+            if(string.IsNullOrEmpty(fileName))
+                fileName = itemData?.name;
+
+            if(string.IsNullOrEmpty(fileName))
+                fileName = "FALLBACK_NAME_NULL";
+
             if (item?.UserData is ScriptableObject scriptableObject)
-                SaveScriptableObject(scriptableObject, directory, item.Name);
+                SaveScriptableObject(scriptableObject, directory, fileName);
 
             foreach (var child in item.Children)
-                SaveTreeViewDataRecursively(child, Path.Combine(directory, item.Name));
+                SaveTreeViewDataRecursively(child, Path.Combine(directory, fileName));
         }
 
         private static void SaveScriptableObject<T>(T instance, string directory, string fileName) where T : ScriptableObject
@@ -125,3 +137,4 @@ namespace UnityEssentials
         }
     }
 }
+#endif

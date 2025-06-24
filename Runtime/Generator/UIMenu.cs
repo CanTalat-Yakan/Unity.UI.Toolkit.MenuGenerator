@@ -31,7 +31,8 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        public static Action<UIMenuData> ShowUIBuilder { get; set; }
+        public static Action<UIMenu> ShowUIBuilder { get; set; }
+        public Action<UIMenuData> SetUIMenuData { get; private set; }
 
         [SerializeField] private UIMenuSettings _settings = new();
 
@@ -51,8 +52,21 @@ namespace UnityEssentials
         }
 
         [Button()]
-        public void EditUIBuilder() =>
-            ShowUIBuilder?.Invoke(Data ??= CreateDefault());
+        public void OpenUIBuilder()
+        {
+#if UNITY_EDITOR
+            if (Data == null || Data.Equals(null))
+                Data = CreateDefault();
+
+            SetUIMenuData = (data) =>
+            {
+                Data = data;
+                UnityEditor.Selection.activeGameObject = gameObject;
+            };
+
+            ShowUIBuilder?.Invoke(this);
+#endif
+        }
 
         private UIMenuData CreateDefault()
         {
@@ -62,7 +76,7 @@ namespace UnityEssentials
             data.Root = Array.Empty<ScriptableObject>();
             return data;
         }
-        
+
         [OnValueChanged("_type")]
         public void OnTypeValueChanged()
         {
@@ -79,7 +93,7 @@ namespace UnityEssentials
         public UIMenuDataProfile GetProfile(string saveFileName = null)
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
-                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, 
+                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile,
                     saveFileName ??= _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
 
             return Generator.Profile ??= ScriptableObject.CreateInstance<UIMenuDataProfile>();
@@ -88,7 +102,7 @@ namespace UnityEssentials
         public void SaveProfile(string saveFileName = null)
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
-                UIMenuDataProfileSerializer.SerializeData(Generator.Profile, 
+                UIMenuDataProfileSerializer.SerializeData(Generator.Profile,
                     saveFileName ??= _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
         }
 

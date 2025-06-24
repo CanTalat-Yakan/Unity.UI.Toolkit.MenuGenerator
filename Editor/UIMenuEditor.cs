@@ -12,16 +12,19 @@ namespace UnityEssentials
         public Action Repaint;
         public Action Close;
 
-        private SimpleTreeView _treeView;
+        public Action<UIMenuData> SetUIMenuData;
+
         private UIMenuData _data;
+        private SimpleTreeView _treeView;
 
         [InitializeOnLoadMethod()]
         public static void Initialize() =>
-            UIMenu.ShowUIBuilder = (data) => ShowUtility(data);
+            UIMenu.ShowUIBuilder = (menu) => ShowUtility(menu.Data, menu.SetUIMenuData);
 
-        private static void ShowUtility(UIMenuData data, UIMenuEditor editor = null)
+        private static void ShowUtility(UIMenuData data, Action<UIMenuData> action, UIMenuEditor editor = null)
         {
             editor ??= new UIMenuEditor();
+            editor.SetUIMenuData = action;
             editor._data = data;
             editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
             editor._treeView.ContextMenu = UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView);
@@ -72,7 +75,7 @@ namespace UnityEssentials
 
             var isRoot = item == _treeView.RootItem;
             if (!isRoot)
-                SimpleTreeViewBreadcrumbs.Draw(item, clickedItem =>
+                SimpleTreeViewItemBreadcrumbs.Draw(item, clickedItem =>
                 {
                     _treeView.SetSelectedItems(clickedItem.id);
                     _treeView.Repaint();
@@ -111,11 +114,13 @@ namespace UnityEssentials
                 GUILayout.FlexibleSpace();
 
                 if (GUILayout.Button("Revert", GUILayout.Width(100)))
-                    ShowUtility(_data, this);
+                    ShowUtility(_data, SetUIMenuData, this);
                 if (GUILayout.Button("Apply", GUILayout.Width(100)))
                 {
                     UIMenuEditorAssetSerializer.Save(_data, _treeView);
                     UIMenuEditorUtilities.PopulateCategoryDataFromTree(_data, _treeView);
+                    SetUIMenuData?.Invoke(_data);
+                    // select gameobject 
                 }
             }
         }
