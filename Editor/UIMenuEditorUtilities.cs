@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,6 +22,28 @@ namespace UnityEssentials
 
     public class UIMenuEditorUtilities : MonoBehaviour
     {
+        public static void PopulateCategoryDataFromTree(UIMenuData data, SimpleTreeView treeView)
+        {
+            if (treeView?.RootItem == null)
+                return;
+
+            data.Root = treeView.RootItem.Children.Select(i => i.UserData as ScriptableObject).ToArray();
+
+            void Traverse(SimpleTreeViewItem item)
+            {
+                if (item == null)
+                    return;
+
+                if (item.UserData is UIMenuCategoryData categoryData)
+                    categoryData.Data = item.Children.Select(child => child.UserData as ScriptableObject).ToArray();
+
+                foreach (var child in item.Children)
+                    Traverse(child);
+            }
+
+            Traverse(treeView.RootItem);
+        }
+
         public static SimpleTreeViewItem CreateItem(ScriptableObject data, SimpleTreeViewItem parent = null) =>
             data switch
             {
@@ -110,62 +133,62 @@ namespace UnityEssentials
         public static void AddCategory(SimpleTreeView treeView, string name = "Category", int? parent = null) => treeView.AddItem(CreateCategory(), parent);
         public static SimpleTreeViewItem CreateCategory(string name = "Category") =>
             new SimpleTreeViewItem(name, FolderIcon).SetUserTag(UIMenuDataTypes.Category.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>().SetName(name));
 
         public static void AddHeader(SimpleTreeView treeView, string name = "Header", int? parent = null) => treeView.AddItem(CreateHeader(name), parent);
         public static SimpleTreeViewItem CreateHeader(string name = "Header") =>
             new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserTag(UIMenuDataTypes.Header.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>().SetName(name));
 
         public static void AddSpace(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateSpace(), parent);
         public static SimpleTreeViewItem CreateSpace() =>
             new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserTag(UIMenuDataTypes.Space.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSpacerData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSpacerData>().SetName("Space"));
 
         public static void AddButton(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateButton(), parent, false);
         public static SimpleTreeViewItem CreateButton(string name = "Button") =>
             new SimpleTreeViewItem(name, ButtonIcon).Support(false).SetUserTag(UIMenuDataTypes.Button.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>().SetName(name));
 
         public static void AddOptions(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateOptions(), parent, false);
         public static SimpleTreeViewItem CreateOptions(string name = "Options") =>
             new SimpleTreeViewItem(name, OptionsIcon).Support(false).SetUserTag(UIMenuDataTypes.Options.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>().SetName(name));
 
         public static void AddInput(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateInput(), parent, false);
         public static SimpleTreeViewItem CreateInput(string name = "Input") =>
             new SimpleTreeViewItem(name, InputIcon).Support(false).SetUserTag(UIMenuDataTypes.Input.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>().SetName(name));
 
         public static void AddSlider(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateSlider(), parent, false);
         public static SimpleTreeViewItem CreateSlider(string name = "Slider") =>
             new SimpleTreeViewItem(name, SliderIcon).Support(false).SetUserTag(UIMenuDataTypes.Slider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>().SetName(name));
 
         public static void AddToggle(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateToggle(), parent, false);
         public static SimpleTreeViewItem CreateToggle(string name = "Toggle") =>
             new SimpleTreeViewItem(name, ToggleIcon).Support(false).SetUserTag(UIMenuDataTypes.Toggle.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>().SetName(name));
 
         public static void AddSelectionCollection(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateSelectionCollection(), parent, false);
         public static SimpleTreeViewItem CreateSelectionCollection(string name = "Selection Collection") =>
             new SimpleTreeViewItem(name, SelectionIcon).Support(false).SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollection>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollection>().SetName(name));
 
         public static void AddSelectionCollectionGroup(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateSelectionCollectionGroup(), parent, false);
         public static SimpleTreeViewItem CreateSelectionCollectionGroup(string name = "Selection Group") =>
             new SimpleTreeViewItem(name, SelectionIcon).Support(true).SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollectionGroup>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollectionGroup>().SetName(name));
 
         public static void AddColorPicker(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateColorPicker(), parent, false);
         public static SimpleTreeViewItem CreateColorPicker(string name = "Color Picker") =>
             new SimpleTreeViewItem(name, ColorPickerIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorPicker.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>().SetName(name));
 
         public static void AddColorSlider(SimpleTreeView treeView, int? parent = null) => treeView.AddItem(CreateColorSlider(), parent, false);
         public static SimpleTreeViewItem CreateColorSlider(string name = "Color Slider") =>
             new SimpleTreeViewItem(name, ColorSliderIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorSlider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>().SetName(name));
     }
 }
 #endif

@@ -8,5 +8,12 @@ namespace UnityEssentials
         public string Name;
 
         public UIMenuSelectionData[] Data;
+
+        public UIMenuSelectionDataCollection SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            return this;
+        }
     }
 }

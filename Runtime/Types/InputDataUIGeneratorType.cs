@@ -7,6 +7,14 @@ namespace UnityEssentials
     {
         public string Name;
         public string Reference;
+
+        public UIMenuInputData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

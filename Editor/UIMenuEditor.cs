@@ -1,10 +1,8 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using static UnityEssentials.UIMenuEditorUtilities;
 
 namespace UnityEssentials
 {
@@ -15,30 +13,26 @@ namespace UnityEssentials
         public Action Close;
 
         private SimpleTreeView _treeView;
-        private UIMenuData _data = new();
+        private UIMenuData _data;
 
         [InitializeOnLoadMethod()]
         public static void Initialize() =>
             UIMenu.ShowUIBuilder = (data) => ShowUtility(data);
 
-        private static void ShowUtility(UIMenuData data)
+        private static void ShowUtility(UIMenuData data, UIMenuEditor editor = null)
         {
-            var editor = new UIMenuEditor();
+            editor ??= new UIMenuEditor();
             editor._data = data;
             editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
-            editor._treeView.ContextMenu = GetPaneGenericMenu(editor._treeView);
+            editor._treeView.ContextMenu = UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView);
             editor._treeView.OnRename = (item) =>
             {
-                var itemData = item.UserData as ScriptableObject;
-                if (itemData == null)
-                    return;
-
-                itemData.GetType().GetField("Reference")?.SetValue(itemData, Regex.Replace(item.Name, @"\s+", ""));
+                SetSerializedObjectName(item.UserData as ScriptableObject, item.Name);
             };
-            editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
+            editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
-                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: GetPaneGenericMenu(editor._treeView))
-                .SetBody(editor.Body, genericMenu: GetBodyGenericMenu(editor._treeView))
+                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView))
+                .SetBody(editor.Body, genericMenu: UIMenuEditorUtilities.GetBodyGenericMenu(editor._treeView))
                 .SetFooter(editor.Footer, EditorWindowStyle.HelpBox)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
@@ -55,12 +49,12 @@ namespace UnityEssentials
                 var lastRect = GUILayoutUtility.GetLastRect();
                 lastRect.y += 20;
                 _treeView.ClearAllSelections();
-                GetPaneGenericMenu(_treeView).DropDown(lastRect);
+                UIMenuEditorUtilities.GetPaneGenericMenu(_treeView).DropDown(lastRect);
             }
 
             GUILayout.FlexibleSpace();
             GUILayout.Button("Revert", EditorStyles.toolbarButton);
-            GUILayout.Button("Apply", EditorStyles.toolbarButton);
+            GUILayout.Button("Load", EditorStyles.toolbarButton);
         }
 
         private void Pane()
@@ -99,8 +93,8 @@ namespace UnityEssentials
                     GUILayout.FlexibleSpace();
                     if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
                         if (item.UserData is UIMenuSelectionDataCollectionGroup)
-                            GetSelectionGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
-                        else GetBodyGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                            UIMenuEditorUtilities.GetSelectionGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                        else UIMenuEditorUtilities.GetBodyGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.Space(10);
@@ -109,7 +103,21 @@ namespace UnityEssentials
 
         private void Footer()
         {
-            GUILayout.Label("UI Menu Builder Footer", EditorStyles.boldLabel);
+            using (new GUILayout.HorizontalScope())
+            {
+                GUIStyle italicLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Italic };
+                GUILayout.Label("§", italicLabelStyle);
+
+                GUILayout.FlexibleSpace();
+
+                if (GUILayout.Button("Revert", GUILayout.Width(100)))
+                    ShowUtility(_data, this);
+                if (GUILayout.Button("Apply", GUILayout.Width(100)))
+                {
+                    UIMenuEditorAssetSerializer.Save(_data, _treeView);
+                    UIMenuEditorUtilities.PopulateCategoryDataFromTree(_data, _treeView);
+                }
+            }
         }
 
         private SimpleTreeViewItem[] FetchData()
@@ -117,7 +125,7 @@ namespace UnityEssentials
             var items = new List<SimpleTreeViewItem>();
 
             foreach (var data in _data?.Root)
-                items.Add(CreateItem(data, null));
+                items.Add(UIMenuEditorUtilities.CreateItem(data, null));
 
             return items.ToArray();
         }
@@ -131,7 +139,7 @@ namespace UnityEssentials
             if (itemData == null)
                 return;
 
-            itemData.GetType().GetField("Name")?.SetValue(itemData, item.Name);
+            SetSerializedObjectName(itemData, item.Name);
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
@@ -171,6 +179,13 @@ namespace UnityEssentials
             }
         }
 
+        private static void SetSerializedObjectName(ScriptableObject item, string name)
+        {
+            if (item == null)
+                return;
+
+            item.GetType().GetMethod("SetName")?.Invoke(item, new object[] { name });
+        }
     }
 }
 #endif

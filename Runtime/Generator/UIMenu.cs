@@ -33,13 +33,11 @@ namespace UnityEssentials
     {
         public static Action<UIMenuData> ShowUIBuilder { get; set; }
 
-
         [SerializeField] private UIMenuSettings _settings = new();
 
         [Space]
         [SerializeField] private UIMenuType _type;
 
-        [If("ShowAdvancedSettings", true)]
         public UIMenuData Data;
 
         [HideInInspector] public UIMenuGenerator Generator => GetComponent<UIMenuGenerator>();
@@ -64,7 +62,7 @@ namespace UnityEssentials
             data.Root = Array.Empty<ScriptableObject>();
             return data;
         }
-
+        
         [OnValueChanged("_type")]
         public void OnTypeValueChanged()
         {

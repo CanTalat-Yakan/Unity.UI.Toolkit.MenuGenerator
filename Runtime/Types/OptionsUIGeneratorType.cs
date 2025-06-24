@@ -12,6 +12,14 @@ namespace UnityEssentials
         [Space]
         public bool Reverse;
         public string[] Options;
+
+        public UIMenuOptionsData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

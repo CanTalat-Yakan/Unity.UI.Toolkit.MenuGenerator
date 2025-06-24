@@ -9,6 +9,13 @@ namespace UnityEssentials
 
         public Texture2D Texture;
         public ScriptableObject[] Data;
+
+        public UIMenuCategoryData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

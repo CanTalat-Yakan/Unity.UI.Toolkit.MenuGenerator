@@ -6,6 +6,13 @@ namespace UnityEssentials
     public class UIMenuHeaderData : ScriptableObject
     {
         public string Name;
+
+        public UIMenuHeaderData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

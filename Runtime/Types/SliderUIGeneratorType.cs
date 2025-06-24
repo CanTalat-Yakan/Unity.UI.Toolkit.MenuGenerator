@@ -14,6 +14,14 @@ namespace UnityEssentials
         public float MaxRange = 100;
 
         public Vector2 ValueRange => new Vector2(MinRange, MaxRange);
+
+        public UIMenuSliderData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

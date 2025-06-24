@@ -23,6 +23,14 @@ namespace UnityEssentials
 
             return null;
         }
+
+        public UIMenuSelectionDataCollectionGroup SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

@@ -12,6 +12,14 @@ namespace UnityEssentials
         public Gradient Gradient;
         [Range(0f, 1f)]
         public float Weight;
+
+        public UIMenuColorSliderData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public class UIMenuColorSliderDataGroup : ScriptableObject
@@ -21,6 +29,14 @@ namespace UnityEssentials
 
         [Space]
         public UIMenuColorSliderData[] ColorSliderData;
+
+        public UIMenuColorSliderDataGroup SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType
