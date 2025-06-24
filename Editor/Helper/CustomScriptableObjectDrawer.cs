@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
@@ -126,3 +127,4 @@ namespace UnityEssentials
         }
     }
 }
+#endif
