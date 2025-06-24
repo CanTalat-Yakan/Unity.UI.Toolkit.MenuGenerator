@@ -8,21 +8,6 @@ using static UnityEssentials.UIMenuEditorUtilities;
 
 namespace UnityEssentials
 {
-    public enum UIMenuDataTypes
-    {
-        Category,
-        Header,
-        Space,
-        Button,
-        Options,
-        Input,
-        Slider,
-        Toggle,
-        Selection,
-        ColorPicker,
-        ColorSlider,
-    }
-
     public class UIMenuEditor
     {
         public EditorWindowDrawer Window;

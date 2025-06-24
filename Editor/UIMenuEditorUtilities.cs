@@ -4,6 +4,21 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
+    public enum UIMenuDataTypes
+    {
+        Category,
+        Header,
+        Space,
+        Button,
+        Options,
+        Input,
+        Slider,
+        Toggle,
+        Selection,
+        ColorPicker,
+        ColorSlider,
+    }
+
     public class UIMenuEditorUtilities : MonoBehaviour
     {
         public static SimpleTreeViewItem CreateItem(ScriptableObject data, SimpleTreeViewItem parent = null) =>
