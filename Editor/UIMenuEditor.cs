@@ -124,8 +124,9 @@ namespace UnityEssentials
         {
             var items = new List<SimpleTreeViewItem>();
 
-            foreach (var data in _data?.Root)
-                items.Add(UIMenuEditorUtilities.CreateItem(data, null));
+            foreach (var item in _data?.Root)
+                if (item != null)
+                    items.Add(UIMenuEditorUtilities.CreateItem(item, null));
 
             return items.ToArray();
         }
