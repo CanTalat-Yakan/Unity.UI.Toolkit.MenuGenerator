@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "Category_", menuName = "UI/Category", order = 1)]
     public class UIMenuCategoryData : ScriptableObject
     {
         public string Name;

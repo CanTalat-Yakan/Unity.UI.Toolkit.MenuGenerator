@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "ColorSliderData_", menuName = "UI/Data/Colors/Color Slider", order = 2)]
     public class UIMenuColorSliderData : ScriptableObject
     {
         public string Name;
@@ -15,7 +14,6 @@ namespace UnityEssentials
         public float Weight;
     }
 
-    [CreateAssetMenu(fileName = "ColorSliderDataGroup_", menuName = "UI/Data/Colors/Color Slider Group", order = 3)]
     public class UIMenuColorSliderDataGroup : ScriptableObject
     {
         public string Name;

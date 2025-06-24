@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "Style_Spacer_", menuName = "UI/Spacer", order = 3)]
     public class UIMenuSpacerData : ScriptableObject
     {
         public int Height;

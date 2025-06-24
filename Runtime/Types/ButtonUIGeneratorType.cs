@@ -4,7 +4,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "Button_", menuName = "UI/Button", order = 2)]
     public class UIMenuButtonData : ScriptableObject
     {
         public string Name;

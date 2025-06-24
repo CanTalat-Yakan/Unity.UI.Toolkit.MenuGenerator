@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "ToggleData_", menuName = "UI/Data/Toggle", order = 4)]
     public class UIMenuToggleData : ScriptableObject
     {
         public string Name;

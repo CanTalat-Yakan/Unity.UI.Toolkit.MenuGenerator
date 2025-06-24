@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "Style_Header_", menuName = "UI/Header", order = 3)]
     public class UIMenuHeaderData : ScriptableObject
     {
         public string Name;

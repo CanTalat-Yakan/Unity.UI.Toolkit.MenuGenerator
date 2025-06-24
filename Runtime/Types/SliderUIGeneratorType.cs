@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "SliderData_", menuName = "UI/Data/Slider", order = 3)]
     public class UIMenuSliderData : ScriptableObject
     {
         public string Name;

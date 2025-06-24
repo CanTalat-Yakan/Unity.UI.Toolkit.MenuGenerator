@@ -5,23 +5,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "SelectionData_", menuName = "UI/Data/Selections/Selection", order = 0)]
-    public class UIMenuSelectionData : ScriptableObject
-    {
-        public string Name;
-        public int ID;
-
-        [Space]
-        public Texture2D Texture;
-    }
-
-    [CreateAssetMenu(fileName = "SelectionDataCollection_", menuName = "UI/Data/Selections/Selection Collection", order = 1)]
-    public class UIMenuSelectionDataCollection : ScriptableObject
-    {
-        public UIMenuSelectionData[] Data;
-    }
-
-    [CreateAssetMenu(fileName = "SelectionDataCollectionGroup_", menuName = "UI/Data/Selections/Selection Collection Group", order = 2)]
     public class UIMenuSelectionDataCollectionGroup : ScriptableObject
     {
         public string Name;
@@ -34,9 +17,9 @@ namespace UnityEssentials
         public UIMenuSelectionData GetSelectionData(int index)
         {
             foreach (var collection in Collections)
-                foreach (var selectionData in collection.Data)
-                    if (selectionData.ID == index)
-                        return selectionData;
+            foreach (var selectionData in collection.Data)
+                if (selectionData.ID == index)
+                    return selectionData;
 
             return null;
         }
@@ -76,7 +59,7 @@ namespace UnityEssentials
         private static void ConfigureSelectionCategoryInteraction(UIMenuGenerator menu, VisualElement element, UIMenuSelectionDataCollectionGroup group)
         {
             var button = element.Q<Button>();
-            button.clicked += () => 
+            button.clicked += () =>
                 ShowSelectionOverlay(menu, group, callback:
                     UpdateSelectionVisuals(menu.Profile, element, group.Reference));
         }
@@ -96,7 +79,7 @@ namespace UnityEssentials
                         overlay.Q<GroupBox>("GroupBox").Add(CreateColorSlider(menu, colorSliderData));
                         break;
                     case UIMenuColorPickerData colorPickerData:
-                        overlay.Q<GroupBox>("GroupBox").Add(CreateColorPickerButton(menu,colorPickerData.Name, colorPickerData.Reference));
+                        overlay.Q<GroupBox>("GroupBox").Add(CreateColorPickerButton(menu, colorPickerData.Name, colorPickerData.Reference));
                         break;
                     default: break;
                 }

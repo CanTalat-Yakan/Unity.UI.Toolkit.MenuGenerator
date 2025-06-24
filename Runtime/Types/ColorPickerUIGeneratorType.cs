@@ -4,7 +4,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "ColorPickerData_", menuName = "UI/Data/Colors/Color Picker", order = 0)]
     public class UIMenuColorPickerData : ScriptableObject
     {
         public string Name;
@@ -14,7 +13,6 @@ namespace UnityEssentials
         public bool HasAlpha;
     }
 
-    [CreateAssetMenu(fileName = "ColorPickerDataGroup_", menuName = "UI/Data/Colors/Color Picker Group", order = 1)]
     public class UIMenuColorPickerDataGroup : ScriptableObject
     {
         public string Name;

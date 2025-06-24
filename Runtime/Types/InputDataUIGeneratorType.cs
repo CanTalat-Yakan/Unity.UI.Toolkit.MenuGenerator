@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "InputData_", menuName = "UI/Data/Input", order = 1)]
     public class UIMenuInputData : ScriptableObject
     {
         public string Name;

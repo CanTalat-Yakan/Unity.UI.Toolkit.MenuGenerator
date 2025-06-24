@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
+using static UnityEssentials.UIMenuEditorUtilities;
 
 namespace UnityEssentials
 {
@@ -40,7 +40,7 @@ namespace UnityEssentials
             var editor = new UIMenuEditor();
             editor._data = data;
             editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
-            editor._treeView.ContextMenu = editor.GetPaneGenericMenu();
+            editor._treeView.ContextMenu = GetPaneGenericMenu(editor._treeView);
             editor._treeView.OnRename = (item) =>
             {
                 var itemData = item.UserData as ScriptableObject;
@@ -51,8 +51,8 @@ namespace UnityEssentials
             };
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
-                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: editor.GetPaneGenericMenu())
-                .SetBody(editor.Body, genericMenu: editor.GetBodyGenericMenu())
+                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: GetPaneGenericMenu(editor._treeView))
+                .SetBody(editor.Body, genericMenu: GetBodyGenericMenu(editor._treeView))
                 .SetFooter(editor.Footer, EditorWindowStyle.HelpBox)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
@@ -67,9 +67,8 @@ namespace UnityEssentials
             if (EditorGUILayout.DropdownButton(ToolbarIcon, FocusType.Passive, EditorStyles.toolbarDropDown))
             {
                 _treeView.ClearAllSelections();
-                GetPaneGenericMenu().DropDown(GetLastRect());
+                GetPaneGenericMenu(_treeView).DropDown(GetLastRect());
             }
-
 
             GUILayout.FlexibleSpace();
             GUILayout.Button("Revert", EditorStyles.toolbarButton);
@@ -104,15 +103,20 @@ namespace UnityEssentials
                     CreateDynamicBox(child);
             }
 
-            GUILayout.Space(10);
-            using (new EditorGUILayout.HorizontalScope())
+            if (item.SupportsChildren)
             {
-                GUILayout.FlexibleSpace();
-                if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
-                    GetBodyGenericMenu().DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
-                GUILayout.FlexibleSpace();
+                GUILayout.Space(10);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
+                        if (item.UserData is UIMenuSelectionDataCollectionGroup)
+                            GetSelectionGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                        else GetBodyGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                    GUILayout.FlexibleSpace();
+                }
+                GUILayout.Space(10);
             }
-            GUILayout.Space(10);
         }
 
         private void Footer()
@@ -141,7 +145,8 @@ namespace UnityEssentials
                 UIMenuInputData inputData => AttachUserData(CreateInput(inputData.Name), inputData, parent),
                 UIMenuSliderData sliderData => AttachUserData(CreateSlider(sliderData.Name), sliderData, parent),
                 UIMenuToggleData toggleData => AttachUserData(CreateToggle(toggleData.Name), toggleData, parent),
-                UIMenuSelectionData selectionData => AttachUserData(CreateSelection(selectionData.Name), selectionData, parent),
+                UIMenuSelectionDataCollectionGroup selectionDataGroup => AttachUserData(CreateSelectionCollectionGroup(selectionDataGroup.Name), selectionDataGroup, parent),
+                UIMenuSelectionDataCollection selectionData => AttachUserData(CreateSelectionCollectionGroup(selectionData.Name), selectionData, parent),
                 UIMenuColorPickerData colorPickerData => AttachUserData(CreateColorPicker(colorPickerData.Name), colorPickerData, parent),
                 UIMenuColorSliderData colorSliderData => AttachUserData(CreateColorSlider(colorSliderData.Name), colorSliderData, parent),
                 _ => null
@@ -170,106 +175,9 @@ namespace UnityEssentials
             return lastRect;
         }
 
-        private GenericMenu GetPaneGenericMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddItem(new("Add Category"), false, () => AddCategory(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Header"), false, () => AddHeader(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Space"), false, () => AddSpace(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddSeparator(string.Empty);
-            menu.AddItem(new("Add Button"), false, () => AddButton(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Options"), false, () => AddOptions(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Input"), false, () => AddInput(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Slider"), false, () => AddSlider(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Toggle"), false, () => AddToggle(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Selection"), false, () => AddSelection(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Color Picker"), false, () => AddColorPicker(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Color Slider"), false, () => AddColorSlider(parent: _treeView.GetSelectedItem()?.id));
-            return menu;
-        }
-
-        private GenericMenu GetBodyGenericMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddItem(new("Add Button"), false, () => AddButton(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Options"), false, () => AddOptions(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Input"), false, () => AddInput(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Slider"), false, () => AddSlider(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Toggle"), false, () => AddToggle(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Selection"), false, () => AddSelection(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Color Picker"), false, () => AddColorPicker(parent: _treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Color Slider"), false, () => AddColorSlider(parent: _treeView.GetSelectedItem()?.id));
-            return menu;
-        }
-
-        private static Texture2D FolderIcon = EditorIconUtilities.GetTexture(EditorIconNames.VerticalLayoutGroupIcon);
-        private static Texture2D HeaderIcon = EditorIconUtilities.GetTexture(EditorIconNames.TextIcon);
-        private static Texture2D ButtonIcon = EditorIconUtilities.GetTexture(EditorIconNames.ButtonIcon);
-        private static Texture2D OptionsIcon = EditorIconUtilities.GetTexture(EditorIconNames.DropdownIcon);
-        private static Texture2D InputIcon = EditorIconUtilities.GetTexture(EditorIconNames.InputFieldIcon);
-        private static Texture2D SliderIcon = EditorIconUtilities.GetTexture(EditorIconNames.SliderIcon);
-        private static Texture2D ToggleIcon = EditorIconUtilities.GetTexture(EditorIconNames.ToggleIcon);
-        private static Texture2D SelectionIcon = EditorIconUtilities.GetTexture(EditorIconNames.SelectableIcon);
-        private static Texture2D ColorPickerIcon = EditorIconUtilities.GetTexture(EditorIconNames.GridPickingTool);
-        private static Texture2D ColorSliderIcon = EditorIconUtilities.GetTexture(EditorIconNames.GridPaintTool);
-
-        private void AddCategory(string name = "Category", int? parent = null) => _treeView.AddItem(CreateCategory(), parent);
-        private SimpleTreeViewItem CreateCategory(string name = "Category") =>
-            new SimpleTreeViewItem(name, FolderIcon).SetUserTag(UIMenuDataTypes.Category.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>());
-
-        private void AddHeader(string name = "Header", int? parent = null) => _treeView.AddItem(CreateHeader(name), parent);
-        private SimpleTreeViewItem CreateHeader(string name = "Header") =>
-            new SimpleTreeViewItem(name, HeaderIcon).Support(false).SetUserTag(UIMenuDataTypes.Header.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>());
-
-        private void AddSpace(int? parent = null) => _treeView.AddItem(CreateSpace(), parent);
-        private SimpleTreeViewItem CreateSpace() =>
-            new SimpleTreeViewItem(string.Empty).Support(false, false).SetUserTag(UIMenuDataTypes.Space.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSpacerData>());
-
-        private void AddButton(int? parent = null) => _treeView.AddItem(CreateButton(), parent, false);
-        private SimpleTreeViewItem CreateButton(string name = "Button") =>
-            new SimpleTreeViewItem(name, ButtonIcon).Support(false).SetUserTag(UIMenuDataTypes.Button.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
-
-        private void AddOptions(int? parent = null) => _treeView.AddItem(CreateOptions(), parent, false);
-        private SimpleTreeViewItem CreateOptions(string name = "Options") =>
-            new SimpleTreeViewItem(name, OptionsIcon).Support(false).SetUserTag(UIMenuDataTypes.Options.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>());
-
-        private void AddInput(int? parent = null) => _treeView.AddItem(CreateInput(), parent, false);
-        private SimpleTreeViewItem CreateInput(string name = "Input") =>
-            new SimpleTreeViewItem(name, InputIcon).Support(false).SetUserTag(UIMenuDataTypes.Input.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>());
-
-        private void AddSlider(int? parent = null) => _treeView.AddItem(CreateSlider(), parent, false);
-        private SimpleTreeViewItem CreateSlider(string name = "Slider") =>
-            new SimpleTreeViewItem(name, SliderIcon).Support(false).SetUserTag(UIMenuDataTypes.Slider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>());
-
-        private void AddToggle(int? parent = null) => _treeView.AddItem(CreateToggle(), parent, false);
-        private SimpleTreeViewItem CreateToggle(string name = "Toggle") =>
-            new SimpleTreeViewItem(name, ToggleIcon).Support(false).SetUserTag(UIMenuDataTypes.Toggle.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>());
-
-        private void AddSelection(int? parent = null) => _treeView.AddItem(CreateSelection(), parent, false);
-        private SimpleTreeViewItem CreateSelection(string name = "Selection") =>
-            new SimpleTreeViewItem(name, SelectionIcon).Support(false).SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionData>());
-
-        private void AddColorPicker(int? parent = null) => _treeView.AddItem(CreateColorPicker(), parent, false);
-        private SimpleTreeViewItem CreateColorPicker(string name = "Color Picker") =>
-            new SimpleTreeViewItem(name, ColorPickerIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorPicker.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>());
-
-        private void AddColorSlider(int? parent = null) => _treeView.AddItem(CreateColorSlider(), parent, false);
-        private SimpleTreeViewItem CreateColorSlider(string name = "Color Slider") =>
-            new SimpleTreeViewItem(name, ColorSliderIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorSlider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
-
         private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();
         private readonly Dictionary<ScriptableObject, bool> _foldoutStates = new();
+        private CustomScriptableObjectDrawer _customScriptableObjectDrawer = new();
         private void CreateDynamicBox(SimpleTreeViewItem item)
         {
             var itemData = item.UserData as ScriptableObject;
@@ -303,8 +211,11 @@ namespace UnityEssentials
                             _editorCache[itemData] = editor;
                         }
 
-                        var drawArrays = itemData is not UIMenuCategoryData;
-                        DrawScriptableObjectInline(editor, drawArrays);
+                        var drawArrays = true;
+                        drawArrays &= itemData is not UIMenuCategoryData;
+                        drawArrays &= itemData is not UIMenuSelectionDataCollectionGroup;
+
+                        _customScriptableObjectDrawer.Draw(editor, drawArrays);
 
                         GUILayout.Space(10);
                     }
@@ -313,77 +224,6 @@ namespace UnityEssentials
             }
         }
 
-        private void DrawScriptableObjectInline(Editor scriptableEditor, bool drawArrays = true)
-        {
-            if (scriptableEditor == null)
-                return;
-
-            var so = scriptableEditor.serializedObject;
-            so.Update();
-
-            SerializedProperty iterator = so.GetIterator();
-            bool enterChildren = true;
-            while (iterator.NextVisible(enterChildren))
-            {
-                // Skip the internal script reference and "Name" property
-                if (iterator.name == "m_Script" || iterator.name == "Name")
-                    continue;
-
-                // Skip arrays if requested, but allow normal strings
-                if (iterator.isArray && iterator.propertyType != SerializedPropertyType.String && !drawArrays)
-                {
-                    enterChildren = false;
-                    continue;
-                }
-
-                // If it's an actual array (not a string), draw reorderable list
-                if (iterator.isArray && iterator.propertyType != SerializedPropertyType.String)
-                {
-                    var arrayProperty = iterator.Copy();
-                    if (arrayProperty.arraySize >= 0)
-                        DrawReorderablePropertyList(so, arrayProperty);
-                }
-                else EditorGUILayout.PropertyField(iterator, true);
-
-                enterChildren = false;
-            }
-
-            so.ApplyModifiedProperties();
-        }
-
-        private readonly Dictionary<string, ReorderableList> _listsCache = new();
-        private void DrawReorderablePropertyList(SerializedObject so, SerializedProperty property)
-        {
-            if (property == null || !property.isArray || property.propertyType == SerializedPropertyType.String)
-                return;
-
-            string cacheKey = property.serializedObject.targetObject.GetInstanceID().ToString();
-
-            ReorderableList reorderableList = null;
-            if (!_listsCache.TryGetValue(cacheKey, out reorderableList))
-            {
-                reorderableList = new ReorderableList(so, property, true, true, true, true);
-                _listsCache.Add(cacheKey, reorderableList);
-            }
-
-            reorderableList.drawHeaderCallback = (Rect position) =>
-            {
-                position.x -= 15;
-                EditorGUI.LabelField(position, property.displayName);
-            };
-
-            reorderableList.drawElementCallback = (Rect position, int index, bool isActive, bool isFocused) =>
-            {
-                position.y += 2;
-                position.height -= 4;
-                SerializedProperty element = property.GetArrayElementAtIndex(index);
-                EditorGUI.PropertyField(position, element, GUIContent.none);
-            };
-
-            var listRect = EditorGUILayout.GetControlRect(false, reorderableList.GetHeight());
-            listRect = EditorGUI.IndentedRect(listRect);
-            reorderableList.DoList(listRect);
-        }
     }
 }
 #endif
