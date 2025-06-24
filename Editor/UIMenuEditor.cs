@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using static UnityEssentials.UIMenuEditorUtilities;
@@ -47,7 +48,7 @@ namespace UnityEssentials
                 if (itemData == null)
                     return;
 
-                itemData.GetType().GetField("Reference")?.SetValue(itemData, item.Name);
+                itemData.GetType().GetField("Reference")?.SetValue(itemData, Regex.Replace(item.Name, @"\s+", ""));
             };
             editor.Window = new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
@@ -66,8 +67,10 @@ namespace UnityEssentials
         {
             if (EditorGUILayout.DropdownButton(ToolbarIcon, FocusType.Passive, EditorStyles.toolbarDropDown))
             {
+                var lastRect = GUILayoutUtility.GetLastRect();
+                lastRect.y += 20;
                 _treeView.ClearAllSelections();
-                GetPaneGenericMenu(_treeView).DropDown(GetLastRect());
+                GetPaneGenericMenu(_treeView).DropDown(lastRect);
             }
 
             GUILayout.FlexibleSpace();
@@ -132,47 +135,6 @@ namespace UnityEssentials
                 items.Add(CreateItem(data, null));
 
             return items.ToArray();
-        }
-
-        public SimpleTreeViewItem CreateItem(ScriptableObject data, SimpleTreeViewItem parent = null) =>
-            data switch
-            {
-                UIMenuCategoryData categoryData => CreateCategoryAndData(categoryData, parent),
-                UIMenuHeaderData headerData => AttachUserData(CreateHeader(headerData.Name), headerData, parent),
-                UIMenuSpacerData spacerData => AttachUserData(CreateSpace(), spacerData, parent),
-                UIMenuButtonData buttonData => AttachUserData(CreateButton(buttonData.Name), buttonData, parent),
-                UIMenuOptionsData optionsData => AttachUserData(CreateOptions(optionsData.Name), optionsData, parent),
-                UIMenuInputData inputData => AttachUserData(CreateInput(inputData.Name), inputData, parent),
-                UIMenuSliderData sliderData => AttachUserData(CreateSlider(sliderData.Name), sliderData, parent),
-                UIMenuToggleData toggleData => AttachUserData(CreateToggle(toggleData.Name), toggleData, parent),
-                UIMenuSelectionDataCollectionGroup selectionDataGroup => AttachUserData(CreateSelectionCollectionGroup(selectionDataGroup.Name), selectionDataGroup, parent),
-                UIMenuSelectionDataCollection selectionData => AttachUserData(CreateSelectionCollectionGroup(selectionData.Name), selectionData, parent),
-                UIMenuColorPickerData colorPickerData => AttachUserData(CreateColorPicker(colorPickerData.Name), colorPickerData, parent),
-                UIMenuColorSliderData colorSliderData => AttachUserData(CreateColorSlider(colorSliderData.Name), colorSliderData, parent),
-                _ => null
-            };
-
-        private SimpleTreeViewItem CreateCategoryAndData(UIMenuCategoryData categoryData, SimpleTreeViewItem parent)
-        {
-            var categoryItem = AttachUserData(CreateCategory(categoryData.Name), categoryData, parent);
-            foreach (var item in categoryData.Data)
-                CreateItem(item, categoryItem);
-            return categoryItem;
-        }
-
-        private SimpleTreeViewItem AttachUserData(SimpleTreeViewItem item, ScriptableObject data, SimpleTreeViewItem parent)
-        {
-            if (parent != null)
-                item.Parent = parent;
-            item.SetUserData(data);
-            return item;
-        }
-
-        private Rect GetLastRect()
-        {
-            var lastRect = GUILayoutUtility.GetLastRect();
-            lastRect.y += 20;
-            return lastRect;
         }
 
         private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();

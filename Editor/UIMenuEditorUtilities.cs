@@ -6,6 +6,40 @@ namespace UnityEssentials
 {
     public class UIMenuEditorUtilities : MonoBehaviour
     {
+        public static SimpleTreeViewItem CreateItem(ScriptableObject data, SimpleTreeViewItem parent = null) =>
+            data switch
+            {
+                UIMenuCategoryData categoryData => CreateCategoryAndData(categoryData, parent),
+                UIMenuHeaderData headerData => AttachUserData(CreateHeader(headerData.Name), headerData, parent),
+                UIMenuSpacerData spacerData => AttachUserData(CreateSpace(), spacerData, parent),
+                UIMenuButtonData buttonData => AttachUserData(CreateButton(buttonData.Name), buttonData, parent),
+                UIMenuOptionsData optionsData => AttachUserData(CreateOptions(optionsData.Name), optionsData, parent),
+                UIMenuInputData inputData => AttachUserData(CreateInput(inputData.Name), inputData, parent),
+                UIMenuSliderData sliderData => AttachUserData(CreateSlider(sliderData.Name), sliderData, parent),
+                UIMenuToggleData toggleData => AttachUserData(CreateToggle(toggleData.Name), toggleData, parent),
+                UIMenuSelectionDataCollectionGroup selectionDataGroup => AttachUserData(CreateSelectionCollectionGroup(selectionDataGroup.Name), selectionDataGroup, parent),
+                UIMenuSelectionDataCollection selectionData => AttachUserData(CreateSelectionCollectionGroup(selectionData.Name), selectionData, parent),
+                UIMenuColorPickerData colorPickerData => AttachUserData(CreateColorPicker(colorPickerData.Name), colorPickerData, parent),
+                UIMenuColorSliderData colorSliderData => AttachUserData(CreateColorSlider(colorSliderData.Name), colorSliderData, parent),
+                _ => null
+            };
+
+        public static SimpleTreeViewItem CreateCategoryAndData(UIMenuCategoryData categoryData, SimpleTreeViewItem parent)
+        {
+            var categoryItem = AttachUserData(CreateCategory(categoryData.Name), categoryData, parent);
+            foreach (var item in categoryData.Data)
+                CreateItem(item, categoryItem);
+            return categoryItem;
+        }
+
+        public static SimpleTreeViewItem AttachUserData(SimpleTreeViewItem item, ScriptableObject data, SimpleTreeViewItem parent)
+        {
+            if (parent != null)
+                item.Parent = parent;
+            item.SetUserData(data);
+            return item;
+        }
+
         public static GenericMenu GetPaneGenericMenu(SimpleTreeView treeView)
         {
             var menu = new GenericMenu();
@@ -117,7 +151,6 @@ namespace UnityEssentials
         public static SimpleTreeViewItem CreateColorSlider(string name = "Color Slider") =>
             new SimpleTreeViewItem(name, ColorSliderIcon).Support(false).SetUserTag(UIMenuDataTypes.ColorSlider.ToString())
                 .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
-
     }
 }
 #endif

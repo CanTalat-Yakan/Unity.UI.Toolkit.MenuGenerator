@@ -5,7 +5,7 @@ namespace UnityEssentials
 {
     public class UIMenuSpacerData : ScriptableObject
     {
-        public int Height;
+        public int Height = 20;
     }
 
     public static partial class UIMenuGeneratorType
