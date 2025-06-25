@@ -87,6 +87,7 @@ namespace UnityEssentials
                 foreach (var child in dataValue)
                     CreateItem(child, item);
 
+            item.SetInitialUniqueName(data.name);
             return item;
         }
 
