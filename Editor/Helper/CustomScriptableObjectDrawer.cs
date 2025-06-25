@@ -13,10 +13,10 @@ namespace UnityEssentials
             if (scriptableEditor == null)
                 return;
 
-            var so = scriptableEditor.serializedObject;
-            so.Update();
+            var serializedObject = scriptableEditor.serializedObject;
+            serializedObject.Update();
 
-            SerializedProperty iterator = so.GetIterator();
+            var iterator = serializedObject.GetIterator();
             bool enterChildren = true;
             while (iterator.NextVisible(enterChildren))
             {
@@ -35,19 +35,18 @@ namespace UnityEssentials
                 {
                     var arrayProperty = iterator.Copy();
                     if (arrayProperty.arraySize >= 0)
-                        DrawReorderablePropertyList(so, arrayProperty);
+                        DrawReorderablePropertyList(serializedObject, arrayProperty);
                 }
-                else
-                    EditorGUILayout.PropertyField(iterator, true);
+                else EditorGUILayout.PropertyField(iterator, true);
 
                 enterChildren = false;
             }
 
-            so.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
         private readonly Dictionary<string, ReorderableList> _listsCache = new();
-        private void DrawReorderablePropertyList(SerializedObject so, SerializedProperty property)
+        private void DrawReorderablePropertyList(SerializedObject serializedObject, SerializedProperty property)
         {
             if (property == null || !property.isArray || property.propertyType == SerializedPropertyType.String)
                 return;
@@ -57,19 +56,19 @@ namespace UnityEssentials
             ReorderableList reorderableList = null;
             if (!_listsCache.TryGetValue(cacheKey, out reorderableList))
             {
-                reorderableList = new ReorderableList(so, property, true, true, true, true);
+                reorderableList = new ReorderableList(serializedObject, property, true, true, true, true);
                 _listsCache.Add(cacheKey, reorderableList);
             }
 
             reorderableList.drawHeaderCallback = (Rect position) =>
             {
                 float buttonWidth = 70f;
-                Rect labelRect = new Rect(position.x, position.y, position.width - buttonWidth - 5, position.height);
-                Rect buttonRect = new Rect(position.x + position.width - buttonWidth, position.y, buttonWidth, position.height);
+                var labelPostion = new Rect(position.x, position.y, position.width - buttonWidth - 5, position.height);
+                var buttonPosition = new Rect(position.x + position.width - buttonWidth, position.y, buttonWidth, position.height);
 
-                EditorGUI.LabelField(labelRect, property.displayName);
+                EditorGUI.LabelField(labelPostion, property.displayName);
 
-                if (GUI.Button(buttonRect, "Clear All", EditorStyles.toolbarButton))
+                if (GUI.Button(buttonPosition, "Clear All", EditorStyles.toolbarButton))
                 {
                     property.ClearArray();
                     property.serializedObject.ApplyModifiedProperties();
@@ -80,7 +79,7 @@ namespace UnityEssentials
             {
                 position.y += 2;
                 position.height -= 4;
-                SerializedProperty element = property.GetArrayElementAtIndex(index);
+                var element = property.GetArrayElementAtIndex(index);
                 EditorGUI.PropertyField(position, element, GUIContent.none);
             };
 
@@ -92,7 +91,7 @@ namespace UnityEssentials
 
         private void HandleDragAndDrop(Rect dropArea, SerializedProperty arrayProperty)
         {
-            Event evt = Event.current;
+            var evt = Event.current;
 
             if (!dropArea.Contains(evt.mousePosition))
                 return;
@@ -101,7 +100,6 @@ namespace UnityEssentials
             {
                 case EventType.DragUpdated:
                 case EventType.DragPerform:
-                    // You can restrict accepted object types here
                     if (DragAndDrop.objectReferences.Length > 0)
                     {
                         DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -113,7 +111,7 @@ namespace UnityEssentials
                             {
                                 int index = arrayProperty.arraySize;
                                 arrayProperty.InsertArrayElementAtIndex(index);
-                                SerializedProperty element = arrayProperty.GetArrayElementAtIndex(index);
+                                var element = arrayProperty.GetArrayElementAtIndex(index);
                                 if (element.propertyType == SerializedPropertyType.ObjectReference)
                                     element.objectReferenceValue = obj;
                             }

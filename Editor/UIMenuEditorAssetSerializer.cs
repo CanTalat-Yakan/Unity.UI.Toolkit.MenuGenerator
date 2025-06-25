@@ -42,7 +42,7 @@ namespace UnityEssentials
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            SetDataRootRefernces(data, scriptableObjectDirectory);
+            SetDataRootReferences(data, scriptableObjectDirectory);
             SetCategoryDataReferencesRecursivly(fileName, scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
@@ -112,7 +112,7 @@ namespace UnityEssentials
 
             string path = Path.Combine(directory, fileName + ".asset");
 
-            T existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
+            var existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
             if (existingAsset == null)
                 AssetDatabase.CreateAsset(instance, path);
             else
@@ -122,9 +122,9 @@ namespace UnityEssentials
             }
         }
 
-        private static void SetDataRootRefernces(UIMenuData data, string directory)
+        private static void SetDataRootReferences(UIMenuData data, string directory)
         {
-            List<ScriptableObject> assets = new();
+            var assets = new List<ScriptableObject>();
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
                 assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(file));
 
@@ -162,17 +162,17 @@ namespace UnityEssentials
             var allAssets = new HashSet<string>(Directory.GetFiles(directory, "*.asset", SearchOption.AllDirectories));
             var allDirectories = new HashSet<string>(Directory.GetDirectories(directory, "*", SearchOption.AllDirectories));
 
-            var treeAssets = new HashSet<string>();
+            var treePaths = new HashSet<string>();
             foreach (var child in treeView.RootItem.Children)
-                GatherTreeAssetPathsRecursively(child, directory, treeAssets);
+                GatherTreeAssetPathsRecursively(child, directory, treePaths);
 
-            foreach (var path in allAssets)
-                if (!treeAssets.Contains(path))
-                    AssetDatabase.DeleteAsset(path);
+            foreach (var assetPath in allAssets)
+                if (!treePaths.Contains(assetPath))
+                    AssetDatabase.DeleteAsset(assetPath);
 
-            foreach (var path in allDirectories.OrderByDescending(d => d.Length))
-                if (!treeAssets.Contains(path))
-                    DeleteDirectory(path);
+            foreach (var directoryPath in allDirectories.OrderByDescending(d => d.Length))
+                if (!treePaths.Contains(directoryPath))
+                    DeleteDirectory(directoryPath);
         }
 
         private static void GatherTreeAssetPathsRecursively(SimpleTreeViewItem item, string directory, HashSet<string> paths)

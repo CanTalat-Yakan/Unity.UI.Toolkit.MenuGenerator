@@ -26,6 +26,7 @@ namespace UnityEssentials
             editor ??= new UIMenuEditor();
             editor.SetUIMenuData = action;
             editor._data = data;
+
             editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
             editor._treeView.ContextMenu = UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView);
             editor._treeView.OnRename = (item) =>
@@ -89,11 +90,10 @@ namespace UnityEssentials
                 });
 
             CreateDynamicBox(item);
+
             if (item.UserData is UIMenuCategoryData category || isRoot)
-            {
                 foreach (var child in item.Children)
                     CreateDynamicBox(child);
-            }
 
             if (item.SupportsChildren)
             {
