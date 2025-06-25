@@ -42,7 +42,7 @@ namespace UnityEssentials
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            SetDataRootRefernces(fileName, directory);
+            SetDataRootRefernces(data, directory);
             SetCategoryDataReferencesRecursivly(fileName, directory);
 
             AssetDatabase.SaveAssets();
@@ -122,10 +122,8 @@ namespace UnityEssentials
             }
         }
 
-        private static void SetDataRootRefernces(string fileName, string directory)
+        private static void SetDataRootRefernces(UIMenuData data, string directory)
         {
-            var assetPath = Path.Combine(directory, fileName + ".asset");
-            var data = AssetDatabase.LoadAssetAtPath<UIMenuData>(assetPath);
             List<ScriptableObject> assets = new();
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
                 assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(file));
