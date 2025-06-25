@@ -41,6 +41,7 @@ namespace UnityEssentials
             var toggle = element.Q<Toggle>("Toggle");
             if (profile.ToggleDataDictionary.TryGetValue(data.Reference, out bool value))
                 toggle.value = value;
+            else toggle.value = data.Value;
         }
 
         private static void ConfigureToggleInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuToggleData data)

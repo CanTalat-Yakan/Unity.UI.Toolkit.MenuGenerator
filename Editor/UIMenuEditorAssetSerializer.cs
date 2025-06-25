@@ -11,11 +11,16 @@ namespace UnityEssentials
     {
         public static void Save(UIMenuData data, SimpleTreeView treeView)
         {
+            string defaultPath = AssetDatabase.GetAssetPath(data);
+            if (string.IsNullOrEmpty(defaultPath))
+                defaultPath = Application.dataPath;
+
             string fullPath = EditorUtility.SaveFilePanelInProject(
                 "Save ScriptableObject",
                 "UIMenuData_" + data.Name,
                 "asset",
-                "Specify where to save the ScriptableObject.");
+                "Specify where to save the ScriptableObject.",
+                defaultPath);
 
             if (string.IsNullOrEmpty(fullPath))
                 return;
@@ -138,7 +143,7 @@ namespace UnityEssentials
                 var data = AssetDatabase.LoadAssetAtPath<ScriptableObject>(file);
                 if (data == null)
                     continue;
-                
+
                 if (data is UIMenuCategoryData category)
                 {
                     string childDirectory = Path.Combine(directory, category.Name);

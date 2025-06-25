@@ -30,16 +30,16 @@
     border-bottom-right-radius: 19px;
     border-bottom-left-radius: 19px;
     letter-spacing: 10px;
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
     font-size: 24px;
     width: 300px;
     height: 40px;
     justify-content: center;
     align-items: center;
-    border-left-color: rgb(255, 255, 255);
-    border-right-color: rgb(255, 255, 255);
-    border-top-color: rgb(255, 255, 255);
-    border-bottom-color: rgb(255, 255, 255);
+    border-left-color: rgba(255, 255, 255, 0.2);
+    border-right-color: rgba(255, 255, 255, 0.2);
+    border-top-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
     -unity-text-align: middle-left;
     padding-top: 0;
     padding-right: 0;
@@ -48,18 +48,21 @@
 }
 
 .unity-button:hover {
-    scale: 1.025 1.025;
     transition-property: scale;
     transition-duration: 0.1s;
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-right-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
 .unity-button--primary {
     color: rgb(0, 0, 0);
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Semibold.ttf?fileID=12800000&guid=afdeabe9f8e2cc94a827e8d5646d169f&type=3#SegoeUI-Semibold");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Semibold.ttf?fileID=12800000&guid=afdeabe9f8e2cc94a827e8d5646d169f&type=3#SegoeUI-Semibold");
 }
 
 .unity-button--secondary {
@@ -99,7 +102,7 @@
     border-bottom-left-radius: 13px;
     font-size: 14px;
     -unity-text-align: middle-center;
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Semibold.ttf?fileID=12800000&guid=afdeabe9f8e2cc94a827e8d5646d169f&type=3#SegoeUI-Semibold");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Semibold.ttf?fileID=12800000&guid=afdeabe9f8e2cc94a827e8d5646d169f&type=3#SegoeUI-Semibold");
 }
 
 .unity-button--icon {
@@ -117,7 +120,7 @@
 }
 
 .unity-label {
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
     font-size: 24px;
     color: rgb(255, 255, 255);
     margin-top: 0;
@@ -131,7 +134,7 @@
 }
 
 .unity-label--primary {
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Bold.ttf?fileID=12800000&guid=00dbbd2f21b83d04296082de988d3521&type=3#SegoeUI-Bold");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Bold.ttf?fileID=12800000&guid=00dbbd2f21b83d04296082de988d3521&type=3#SegoeUI-Bold");
     font-size: 32px;
 }
 
@@ -143,7 +146,7 @@
     height: 15px;
     -unity-text-align: middle-left;
     font-size: 11px;
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/CascadiaMono/CascadiaMono.ttf?fileID=12800000&guid=396c44c2b519ed644b23df47a3964d05&type=3#CascadiaMono");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/CascadiaMono/CascadiaMono.ttf?fileID=12800000&guid=396c44c2b519ed644b23df47a3964d05&type=3#CascadiaMono");
     margin-top: -2px;
     margin-left: 0;
     padding-top: 0;
@@ -156,7 +159,7 @@
     flex-grow: 1;
     width: 150px;
     height: 150px;
-    background-image: url("project://database/Assets/Scenes/Essentials/Menu/Data/StarWars/StarWars_Cover_Square.png?fileID=2800000&guid=91e4f9670198198458a4c640a62151c9&type=3#StarWars_Cover_Square");
+    background-image: url('project://database/Assets/Scenes/Essentials/Menu/Data/StarWars/StarWars_Cover_Square.png?fileID=2800000&guid=91e4f9670198198458a4c640a62151c9&type=3#StarWars_Cover_Square');
     -unity-background-scale-mode: stretch-to-fill;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -194,7 +197,7 @@
 
 .cover-big {
     width: 405px;
-    background-image: url("project://database/Assets/Scenes/Essentials/Menu/Data/StarWars/StarWars_Cover_Wide.png?fileID=2800000&guid=1d980f492053578488e24f08d67648ac&type=3#StarWars_Cover_Wide");
+    background-image: url('project://database/Assets/Scenes/Essentials/Menu/Data/StarWars/StarWars_Cover_Wide.png?fileID=2800000&guid=1d980f492053578488e24f08d67648ac&type=3#StarWars_Cover_Wide');
     border-top-width: 4px;
     border-right-width: 4px;
     border-bottom-width: 4px;
@@ -223,7 +226,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: url("project://database/Assets/Scenes/Essentials/Menu/Data/GTA5/GTA5_BG_1.png?fileID=2800000&guid=996724f535727ae4ab59b628541f7e6e&type=3#GTA5_BG_1");
+    background-image: url('project://database/Assets/Scenes/Essentials/Menu/Data/GTA5/GTA5_BG_1.png?fileID=2800000&guid=996724f535727ae4ab59b628541f7e6e&type=3#GTA5_BG_1');
     transition-property: background-image;
     transition-duration: 1s;
 }
@@ -429,7 +432,7 @@
 .unity-text-field__label {
     font-size: 24px;
     -unity-text-align: lower-left;
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
     margin-top: 0;
     margin-right: 0;
     margin-bottom: 0;
@@ -469,8 +472,25 @@
     border-right-color: rgb(255, 255, 255);
     border-top-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
-    background-size: 80% 80%;
     -unity-background-scale-mode: scale-to-fit;
+    background-image: none;
+}
+
+.unity-toggle__input:checked {
+    width: 100%;
+    height: 100%;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 14px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    -unity-background-scale-mode: scale-to-fit;
+    background-image: resource('Icons/Check_Svg');
 }
 
 .unity-base-field__input {
@@ -489,7 +509,7 @@
 }
 
 .unity-base-popup-field__text {
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
     font-size: 20px;
     color: rgb(255, 255, 255);
     margin-top: 0;
@@ -534,7 +554,7 @@
 }
 
 .unity-base-dropdown__item > .unity-base-dropdown__label {
-    -unity-font-definition: url("project://database/Assets/Packages/Essentials/Common/UI/Font/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
+    -unity-font-definition: url("project://database/Assets/UnityEssentials/UI/UnityFonts/Resources/SegoeUI/SegoeUI-Regular.ttf?fileID=12800000&guid=92fa34a5952b7444d95fa41522b6718c&type=3#SegoeUI-Regular");
     font-size: 20px;
     color: rgb(255, 255, 255);
     margin-top: 0;
