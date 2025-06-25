@@ -48,7 +48,7 @@ namespace UnityEssentials
             AssetDatabase.Refresh();
 
             SetDataRootReferences(data, scriptableObjectDirectory);
-            SetCategoryDataReferencesRecursivly(fileName, scriptableObjectDirectory);
+            SetCategoryDataReferencesRecursivly(scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -136,7 +136,7 @@ namespace UnityEssentials
             data.Root = assets.ToArray();
         }
 
-        private static void SetCategoryDataReferencesRecursivly(string fileName, string directory)
+        private static void SetCategoryDataReferencesRecursivly(string directory)
         {
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
             {
@@ -144,18 +144,17 @@ namespace UnityEssentials
                 if (data == null)
                     continue;
 
-                if (data is UIMenuCategoryData category)
-                {
-                    string childDirectory = Path.Combine(directory, category.Name);
+                string childDirectory = Path.Combine(directory, data.name);
+                if (!Directory.Exists(childDirectory))
+                    return;
 
-                    List<ScriptableObject> assets = new();
-                    foreach (var childFile in Directory.GetFiles(childDirectory, "*.asset"))
-                        assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(childFile));
+                var assets = new List<ScriptableObject>();
+                foreach (var childFile in Directory.GetFiles(childDirectory, "*.asset"))
+                    assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(childFile));
 
-                    category.Data = assets.ToArray();
+                data.GetType().GetField("Data")?.SetValue(data, assets.ToArray());
 
-                    SetCategoryDataReferencesRecursivly(category.Name, childDirectory);
-                }
+                SetCategoryDataReferencesRecursivly(childDirectory);
             }
         }
 
@@ -196,6 +195,8 @@ namespace UnityEssentials
             string name = item.UniqueName;
 
             var itemData = item.UserData as ScriptableObject;
+            itemData.name = name;
+
             if (string.IsNullOrEmpty(name))
                 name = itemData?.name;
 

@@ -9,7 +9,6 @@ namespace UnityEssentials
 
         public UIMenuSpacerData SetName(string name, string uniqueName)
         {
-            base.name = uniqueName;
             return this;
         }
     }

@@ -63,7 +63,7 @@ namespace UnityEssentials
             if (GUILayout.Button("  Apply  ", EditorStyles.toolbarButton))
             {
                 UIMenuEditorAssetSerializer.Save(_data, _treeView);
-                UIMenuEditorUtilities.PopulateCategoryDataFromTree(_data, _treeView);
+                UIMenuEditorUtilities.PopulateDataFromTree(_data, _treeView);
                 SetUIMenuData?.Invoke(_data);
             }
         }
@@ -102,7 +102,7 @@ namespace UnityEssentials
                 {
                     GUILayout.FlexibleSpace();
                     if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
-                        if (item.UserData is UIMenuSelectionDataCollectionGroup)
+                        if (item.UserData is UIMenuSelectionDataCategory)
                             UIMenuEditorUtilities.GetSelectionGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                         else UIMenuEditorUtilities.GetBodyGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                     GUILayout.FlexibleSpace();
@@ -116,8 +116,7 @@ namespace UnityEssentials
             var items = new List<SimpleTreeViewItem>();
 
             foreach (var item in _data?.Root)
-                if (item != null)
-                    items.Add(UIMenuEditorUtilities.CreateItem(item, null));
+                items?.Add(UIMenuEditorUtilities.CreateItem(item, null));
 
             return items.ToArray();
         }
@@ -160,7 +159,7 @@ namespace UnityEssentials
 
                         var drawArrays = true;
                         drawArrays &= itemData is not UIMenuCategoryData;
-                        drawArrays &= itemData is not UIMenuSelectionDataCollectionGroup;
+                        drawArrays &= itemData is not UIMenuSelectionDataCategory;
 
                         _customScriptableObjectDrawer.Draw(editor, drawArrays);
 

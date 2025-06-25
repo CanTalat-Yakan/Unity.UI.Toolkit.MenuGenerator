@@ -122,7 +122,7 @@ namespace UnityEssentials
                 UIMenuInputData input => UIMenuGeneratorType.CreateInput(this, input),
                 UIMenuOptionsData options => UIMenuGeneratorType.CreateOptions(this, options),
                 UIMenuSliderData slider => UIMenuGeneratorType.CreateSlider(this, slider),
-                UIMenuSelectionDataCollectionGroup selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
+                UIMenuSelectionDataCategory selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
                 UIMenuColorPickerDataGroup colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
                 UIMenuColorSliderData colorSliderData => UIMenuGeneratorType.CreateColorSlider(this, colorSliderData),
                 _ => null

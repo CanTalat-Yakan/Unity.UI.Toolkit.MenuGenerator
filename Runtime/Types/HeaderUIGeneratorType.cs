@@ -10,7 +10,6 @@ namespace UnityEssentials
         public UIMenuHeaderData SetName(string name, string uniqueName = null)
         {
             uniqueName ??= name;
-            base.name = uniqueName;
             Name = name;
             return this;
         }

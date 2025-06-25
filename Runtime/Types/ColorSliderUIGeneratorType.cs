@@ -16,7 +16,6 @@ namespace UnityEssentials
         public UIMenuColorSliderData SetName(string name, string uniqueName = null)
         {
             uniqueName ??= name;
-            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;

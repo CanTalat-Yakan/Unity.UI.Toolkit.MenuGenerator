@@ -22,7 +22,7 @@ namespace UnityEssentials
 
     public class UIMenuEditorUtilities : MonoBehaviour
     {
-        public static void PopulateCategoryDataFromTree(UIMenuData data, SimpleTreeView treeView)
+        public static void PopulateDataFromTree(UIMenuData data, SimpleTreeView treeView)
         {
             if (treeView?.RootItem == null)
                 return;
@@ -34,8 +34,16 @@ namespace UnityEssentials
                 if (item == null)
                     return;
 
-                if (item.UserData is UIMenuCategoryData categoryData)
-                    categoryData.Data = item.Children.Select(child => child.UserData as ScriptableObject).ToArray();
+                var data = item.UserData as ScriptableObject;
+                if (data != null)
+                {
+                    var dataField = data.GetType().GetField("Data");
+                    if (dataField != null)
+                    {
+                        var childrenData = item.Children.Select(child => child.UserData as ScriptableObject).ToArray();
+                        dataField.SetValue(data, childrenData);
+                    }
+                }
 
                 foreach (var child in item.Children)
                     Traverse(child);
@@ -47,34 +55,38 @@ namespace UnityEssentials
         public static SimpleTreeViewItem CreateItem(ScriptableObject data, SimpleTreeViewItem parent = null) =>
             data switch
             {
-                UIMenuCategoryData categoryData => CreateCategoryAndData(categoryData, parent),
-                UIMenuHeaderData headerData => AttachUserData(CreateHeader(headerData.Name), headerData, parent),
-                UIMenuSpacerData spacerData => AttachUserData(CreateSpace(), spacerData, parent),
-                UIMenuButtonData buttonData => AttachUserData(CreateButton(buttonData.Name), buttonData, parent),
-                UIMenuOptionsData optionsData => AttachUserData(CreateOptions(optionsData.Name), optionsData, parent),
-                UIMenuInputData inputData => AttachUserData(CreateInput(inputData.Name), inputData, parent),
-                UIMenuSliderData sliderData => AttachUserData(CreateSlider(sliderData.Name), sliderData, parent),
-                UIMenuToggleData toggleData => AttachUserData(CreateToggle(toggleData.Name), toggleData, parent),
-                UIMenuSelectionDataCollectionGroup selectionDataGroup => AttachUserData(CreateSelectionCollectionGroup(selectionDataGroup.Name), selectionDataGroup, parent),
-                UIMenuSelectionDataCollection selectionData => AttachUserData(CreateSelectionCollectionGroup(selectionData.Name), selectionData, parent),
-                UIMenuColorPickerData colorPickerData => AttachUserData(CreateColorPicker(colorPickerData.Name), colorPickerData, parent),
-                UIMenuColorSliderData colorSliderData => AttachUserData(CreateColorSlider(colorSliderData.Name), colorSliderData, parent),
+                UIMenuCategoryData categoryData => CreateItemRecursive(CreateCategory(categoryData.Name), categoryData, parent),
+                UIMenuHeaderData headerData => CreateItemRecursive(CreateHeader(headerData.Name), headerData, parent),
+                UIMenuSpacerData spacerData => CreateItemRecursive(CreateSpace(), spacerData, parent),
+                UIMenuButtonData buttonData => CreateItemRecursive(CreateButton(buttonData.Name), buttonData, parent),
+                UIMenuOptionsData optionsData => CreateItemRecursive(CreateOptions(optionsData.Name), optionsData, parent),
+                UIMenuInputData inputData => CreateItemRecursive(CreateInput(inputData.Name), inputData, parent),
+                UIMenuSliderData sliderData => CreateItemRecursive(CreateSlider(sliderData.Name), sliderData, parent),
+                UIMenuToggleData toggleData => CreateItemRecursive(CreateToggle(toggleData.Name), toggleData, parent),
+                UIMenuSelectionDataCategory selectionDataCategory => CreateItemRecursive(CreateSelectionCategory(selectionDataCategory.Name), selectionDataCategory, parent),
+                UIMenuSelectionDataGroup selectionDataGroup => CreateItemRecursive(CreateSelectionGroup(selectionDataGroup.Name), selectionDataGroup, parent),
+                UIMenuColorPickerData colorPickerData => CreateItemRecursive(CreateColorPicker(colorPickerData.Name), colorPickerData, parent),
+                UIMenuColorSliderData colorSliderData => CreateItemRecursive(CreateColorSlider(colorSliderData.Name), colorSliderData, parent),
                 _ => null
             };
 
-        public static SimpleTreeViewItem CreateCategoryAndData(UIMenuCategoryData categoryData, SimpleTreeViewItem parent)
+        public static SimpleTreeViewItem CreateItemRecursive<T>(SimpleTreeViewItem item, T data, SimpleTreeViewItem parent) where T : ScriptableObject
         {
-            var categoryItem = AttachUserData(CreateCategory(categoryData.Name), categoryData, parent);
-            foreach (var item in categoryData.Data)
-                CreateItem(item, categoryItem);
-            return categoryItem;
-        }
+            if (item == null || data == null)
+                return null;
 
-        public static SimpleTreeViewItem AttachUserData(SimpleTreeViewItem item, ScriptableObject data, SimpleTreeViewItem parent)
-        {
+            item.SetUserData(data);
+
             if (parent != null)
                 item.Parent = parent;
-            item.SetUserData(data);
+
+            var dataField = data.GetType().GetField("Data");
+            var dataValue = dataField?.GetValue(data) as ScriptableObject[];
+
+            if (dataValue != null)
+                foreach (var child in dataValue)
+                    CreateItem(child, item);
+
             return item;
         }
 
@@ -90,7 +102,7 @@ namespace UnityEssentials
             menu.AddItem(new("Add Input"), false, () => AddInput(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Slider"), false, () => AddSlider(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Toggle"), false, () => AddToggle(treeView, parent: treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Selection Group"), false, () => AddSelectionCollectionGroup(treeView, parent: treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Selection Category"), false, () => AddSelectionCategory(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Color Picker"), false, () => AddColorPicker(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Color Slider"), false, () => AddColorSlider(treeView, parent: treeView.GetSelectedItem()?.id));
             return menu;
@@ -104,7 +116,7 @@ namespace UnityEssentials
             menu.AddItem(new("Add Input"), false, () => AddInput(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Slider"), false, () => AddSlider(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Toggle"), false, () => AddToggle(treeView, parent: treeView.GetSelectedItem()?.id));
-            menu.AddItem(new("Add Selection Group"), false, () => AddSelectionCollectionGroup(treeView, parent: treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Selection Category"), false, () => AddSelectionCategory(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Color Picker"), false, () => AddColorPicker(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Color Slider"), false, () => AddColorSlider(treeView, parent: treeView.GetSelectedItem()?.id));
             return menu;
@@ -113,7 +125,7 @@ namespace UnityEssentials
         public static GenericMenu GetSelectionGenericMenu(SimpleTreeView treeView)
         {
             var menu = new GenericMenu();
-            menu.AddItem(new("Add Selection Collection"), false, () => AddSelectionCollection(treeView, parent: treeView.GetSelectedItem()?.id));
+            menu.AddItem(new("Add Selection Group"), false, () => AddSelectionGroup(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Color Picker"), false, () => AddColorPicker(treeView, parent: treeView.GetSelectedItem()?.id));
             menu.AddItem(new("Add Color Slider"), false, () => AddColorSlider(treeView, parent: treeView.GetSelectedItem()?.id));
             return menu;
@@ -215,25 +227,25 @@ namespace UnityEssentials
                 .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>()
                     .SetName(name));
 
-        public static void AddSelectionCollection(SimpleTreeView treeView, int? parent = null) =>
-            treeView.AddItem(CreateSelectionCollection(), parent, false);
-        public static SimpleTreeViewItem CreateSelectionCollection(string name = "Selection Collection") =>
+        public static void AddSelectionCategory(SimpleTreeView treeView, int? parent = null) =>
+            treeView.AddItem(CreateSelectionCategory(), parent, true);
+        public static SimpleTreeViewItem CreateSelectionCategory(string name = "Selection Category") =>
+            new SimpleTreeViewItem()
+                .SetName(name)
+                .SetIcon(SelectionIcon)
+                .SetUserTag(UIMenuDataTypes.Selection.ToString())
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCategory>()
+                    .SetName(name));
+
+        public static void AddSelectionGroup(SimpleTreeView treeView, int? parent = null) =>
+            treeView.AddItem(CreateSelectionGroup(), parent, false);
+        public static SimpleTreeViewItem CreateSelectionGroup(string name = "Selection Group") =>
             new SimpleTreeViewItem()
                 .SetName(name)
                 .SetIcon(SelectionIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollection>()
-                    .SetName(name));
-
-        public static void AddSelectionCollectionGroup(SimpleTreeView treeView, int? parent = null) =>
-            treeView.AddItem(CreateSelectionCollectionGroup(), parent, false);
-        public static SimpleTreeViewItem CreateSelectionCollectionGroup(string name = "Selection Group") =>
-            new SimpleTreeViewItem()
-                .SetName(name)
-                .SetIcon(SelectionIcon)
-                .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollectionGroup>()
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataGroup>()
                     .SetName(name));
 
         public static void AddColorPicker(SimpleTreeView treeView, int? parent = null) =>
