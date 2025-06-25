@@ -7,9 +7,10 @@ namespace UnityEssentials
     public class UIMenuButtonData : ScriptableObject
     {
         public string Name;
-
-        public Texture2D Texture;
         public string Reference;
+
+        [Space]
+        public Texture2D Texture;
 
         [Space]
         public UnityEvent Event;
@@ -20,6 +21,14 @@ namespace UnityEssentials
 
         public void InvokeAltEvent() =>
             AltEvent?.Invoke();
+
+        public UIMenuButtonData SetName(string name)
+        {
+            base.name = name;
+            Name = name;
+            Reference = name.ToLower().Replace(" ", "_");
+            return this;
+        }
     }
 
     public static partial class UIMenuGeneratorType

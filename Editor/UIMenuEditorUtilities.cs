@@ -166,7 +166,7 @@ namespace UnityEssentials
                 .SetIcon(ButtonIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Button.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuButtonData>());
 
         public static void AddOptions(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateOptions(), parent, false);
