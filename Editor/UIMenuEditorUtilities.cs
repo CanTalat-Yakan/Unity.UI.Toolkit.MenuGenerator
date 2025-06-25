@@ -40,7 +40,7 @@ namespace UnityEssentials
                     var dataField = data.GetType().GetField("Data");
                     if (dataField != null)
                     {
-                        var childrenData = item.Children.Select(child => child.UserData as ScriptableObject).ToArray();
+                        var childrenData = item.Children.Select(child => child.UserData).ToArray();
                         dataField.SetValue(data, childrenData);
                     }
                 }
