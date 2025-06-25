@@ -22,9 +22,9 @@ namespace UnityEssentials
         public void InvokeAltEvent() =>
             AltEvent?.Invoke();
 
-        public UIMenuButtonData SetName(string name)
+        public UIMenuButtonData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;

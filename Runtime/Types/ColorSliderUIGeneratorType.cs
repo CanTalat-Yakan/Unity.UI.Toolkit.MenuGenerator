@@ -13,9 +13,9 @@ namespace UnityEssentials
         [Range(0f, 1f)]
         public float Weight;
 
-        public UIMenuColorSliderData SetName(string name)
+        public UIMenuColorSliderData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;
@@ -30,9 +30,9 @@ namespace UnityEssentials
         [Space]
         public UIMenuColorSliderData[] ColorSliderData;
 
-        public UIMenuColorSliderDataGroup SetName(string name)
+        public UIMenuColorSliderDataGroup SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;

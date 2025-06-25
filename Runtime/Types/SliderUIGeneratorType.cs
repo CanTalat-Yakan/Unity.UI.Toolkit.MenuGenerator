@@ -15,9 +15,9 @@ namespace UnityEssentials
 
         public Vector2 ValueRange => new Vector2(MinRange, MaxRange);
 
-        public UIMenuSliderData SetName(string name)
+        public UIMenuSliderData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;

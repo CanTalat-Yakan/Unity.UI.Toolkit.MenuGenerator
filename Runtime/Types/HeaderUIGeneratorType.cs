@@ -7,9 +7,9 @@ namespace UnityEssentials
     {
         public string Name;
 
-        public UIMenuHeaderData SetName(string name)
+        public UIMenuHeaderData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             return this;
         }

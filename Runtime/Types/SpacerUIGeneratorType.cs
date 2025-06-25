@@ -7,9 +7,9 @@ namespace UnityEssentials
     {
         public int Height = 20;
 
-        public UIMenuSpacerData SetName(string name)
+        public UIMenuSpacerData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             return this;
         }
     }

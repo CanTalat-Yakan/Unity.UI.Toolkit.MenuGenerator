@@ -13,9 +13,9 @@ namespace UnityEssentials
         public bool Reverse;
         public string[] Options;
 
-        public UIMenuOptionsData SetName(string name)
+        public UIMenuOptionsData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;

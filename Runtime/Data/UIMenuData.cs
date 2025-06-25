@@ -4,7 +4,7 @@ namespace UnityEssentials
 {
     public class UIMenuData : ScriptableObject
     {
-        public string Name = "Menu";
-        public ScriptableObject[] Root;
+        [HideInInspector] public string Name = "Menu";
+        [HideInInspector] public ScriptableObject[] Root;
     }
 }

@@ -22,7 +22,7 @@ namespace UnityEssentials
 
             string fileName = Path.GetFileNameWithoutExtension(fullPath);
             string directory = Path.GetDirectoryName(fullPath);
-            string childDirectory = Path.Combine(directory, fileName);
+            string scriptableObjectDirectory = Path.Combine(directory, fileName);
 
             data.name = fileName;
 
@@ -31,19 +31,19 @@ namespace UnityEssentials
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            CleanUnusedAssetsInDirectory(treeView, childDirectory);
+            CleanUnusedAssetsInDirectory(treeView, scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
             SaveScriptableObject(data, directory, fileName);
-            SaveTreeViewToDirectory(treeView, childDirectory);
+            SaveTreeViewToDirectory(treeView, scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            SetDataRootRefernces(data, directory);
-            SetCategoryDataReferencesRecursivly(fileName, directory);
+            SetDataRootRefernces(data, scriptableObjectDirectory);
+            SetCategoryDataReferencesRecursivly(fileName, scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -72,13 +72,13 @@ namespace UnityEssentials
                 return;
             }
 
-            string oldChildDirectory = Path.Combine(oldDirectory, oldFileName);
-            string newChildDirectory = Path.Combine(newDirectory, newFileName);
-            if (AssetDatabase.IsValidFolder(oldChildDirectory))
+            string oldScriptableObjectDirectory = Path.Combine(oldDirectory, oldFileName);
+            string newScriptableObjectDirectory = Path.Combine(newDirectory, newFileName);
+            if (AssetDatabase.IsValidFolder(oldScriptableObjectDirectory))
             {
-                error = AssetDatabase.MoveAsset(oldChildDirectory, newChildDirectory);
+                error = AssetDatabase.MoveAsset(oldScriptableObjectDirectory, newScriptableObjectDirectory);
                 if (!string.IsNullOrEmpty(error))
-                    Debug.LogError($"Failed to move child directory to '{newChildDirectory}': {error}");
+                    Debug.LogError($"Failed to move child directory to '{newScriptableObjectDirectory}': {error}");
             }
         }
 
@@ -138,7 +138,7 @@ namespace UnityEssentials
                 var data = AssetDatabase.LoadAssetAtPath<ScriptableObject>(file);
                 if (data == null)
                     continue;
-
+                
                 if (data is UIMenuCategoryData category)
                 {
                     string childDirectory = Path.Combine(directory, category.Name);
@@ -148,7 +148,6 @@ namespace UnityEssentials
                         assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(childFile));
 
                     category.Data = assets.ToArray();
-                    EditorUtility.SetDirty(category);
 
                     SetCategoryDataReferencesRecursivly(category.Name, childDirectory);
                 }
@@ -176,15 +175,15 @@ namespace UnityEssentials
                     DeleteDirectory(path);
         }
 
-        private static void GatherTreeAssetPathsRecursively(SimpleTreeViewItem item, string directory, HashSet<string> pathHashs)
+        private static void GatherTreeAssetPathsRecursively(SimpleTreeViewItem item, string directory, HashSet<string> paths)
         {
             var itemName = GetUniqueName(item);
 
-            pathHashs.Add(Path.Combine(directory, itemName));
-            pathHashs.Add(Path.Combine(directory, itemName + ".asset"));
+            paths.Add(Path.Combine(directory, itemName));
+            paths.Add(Path.Combine(directory, itemName + ".asset"));
 
             foreach (var child in item.Children)
-                GatherTreeAssetPathsRecursively(child, Path.Combine(directory, itemName), pathHashs);
+                GatherTreeAssetPathsRecursively(child, Path.Combine(directory, itemName), paths);
         }
 
         private static string GetUniqueName(SimpleTreeViewItem item)

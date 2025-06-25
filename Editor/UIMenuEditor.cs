@@ -32,14 +32,14 @@ namespace UnityEssentials
             {
                 SetSerializedObjectName(item.UserData as ScriptableObject, item.Name, item.UniqueName);
             };
-            editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
+
+            editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800)).ShowUtility();
+            editor.Window
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView))
                 .SetBody(editor.Body, genericMenu: UIMenuEditorUtilities.GetBodyGenericMenu(editor._treeView))
-                .SetFooter(editor.Footer, EditorWindowStyle.HelpBox)
                 .GetRepaintEvent(out editor.Repaint)
-                .GetCloseEvent(out editor.Close)
-                .ShowUtility();
+                .GetCloseEvent(out editor.Close);
 
             editor.Window.SplitterPosition = 200;
         }
@@ -56,8 +56,15 @@ namespace UnityEssentials
             }
 
             GUILayout.FlexibleSpace();
-            GUILayout.Button("Revert", EditorStyles.toolbarButton);
-            GUILayout.Button("Load", EditorStyles.toolbarButton);
+
+            if (GUILayout.Button("  Revert  ", EditorStyles.toolbarButton))
+                ShowUtility(_data, SetUIMenuData, this);
+            if (GUILayout.Button("  Apply  ", EditorStyles.toolbarButton))
+            {
+                UIMenuEditorAssetSerializer.Save(_data, _treeView);
+                UIMenuEditorUtilities.PopulateCategoryDataFromTree(_data, _treeView);
+                SetUIMenuData?.Invoke(_data);
+            }
         }
 
         private void Pane()
@@ -101,26 +108,6 @@ namespace UnityEssentials
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.Space(10);
-            }
-        }
-
-        private void Footer()
-        {
-            using (new GUILayout.HorizontalScope())
-            {
-                GUIStyle italicLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Italic };
-                GUILayout.Label("§", italicLabelStyle);
-
-                GUILayout.FlexibleSpace();
-
-                if (GUILayout.Button("Revert", GUILayout.Width(100)))
-                    ShowUtility(_data, SetUIMenuData, this);
-                if (GUILayout.Button("Apply", GUILayout.Width(100)))
-                {
-                    UIMenuEditorAssetSerializer.Save(_data, _treeView);
-                    UIMenuEditorUtilities.PopulateCategoryDataFromTree(_data, _treeView);
-                    SetUIMenuData?.Invoke(_data);
-                }
             }
         }
 
@@ -189,10 +176,10 @@ namespace UnityEssentials
             if (item == null)
                 return;
 
-            if(name == string.Empty)
+            if (name == string.Empty)
                 name = uniqueName;
 
-            item.GetType().GetMethod("SetName")?.Invoke(item, new object[] { name });
+            item.GetType().GetMethod("SetName")?.Invoke(item, new object[] { name, uniqueName });
         }
     }
 }

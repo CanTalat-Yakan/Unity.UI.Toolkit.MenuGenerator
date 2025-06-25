@@ -8,9 +8,9 @@ namespace UnityEssentials
         public string Name;
         public string Reference;
 
-        public UIMenuInputData SetName(string name)
+        public UIMenuInputData SetName(string name, string uniqueName)
         {
-            base.name = name;
+            base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
             return this;
