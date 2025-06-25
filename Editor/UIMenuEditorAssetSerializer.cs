@@ -127,6 +127,7 @@ namespace UnityEssentials
             List<ScriptableObject> assets = new();
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
                 assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(file));
+
             data.Root = assets.ToArray();
         }
 
@@ -140,11 +141,16 @@ namespace UnityEssentials
 
                 if (data is UIMenuCategoryData category)
                 {
+                    string childDirectory = Path.Combine(directory, category.Name);
+
                     List<ScriptableObject> assets = new();
-                    foreach (var childFile in Directory.GetFiles(Path.Combine(directory, category.Name), "*.asset"))
+                    foreach (var childFile in Directory.GetFiles(childDirectory, "*.asset"))
                         assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(childFile));
+
                     category.Data = assets.ToArray();
                     EditorUtility.SetDirty(category);
+
+                    SetCategoryDataReferencesRecursivly(category.Name, childDirectory);
                 }
             }
         }
