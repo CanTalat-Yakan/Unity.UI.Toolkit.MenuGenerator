@@ -30,7 +30,7 @@ namespace UnityEssentials
             editor._treeView.ContextMenu = UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView);
             editor._treeView.OnRename = (item) =>
             {
-                SetSerializedObjectName(item.UserData as ScriptableObject, item.Name);
+                SetSerializedObjectName(item.UserData as ScriptableObject, item.Name, item.UniqueName);
             };
             editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800))
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
@@ -120,7 +120,6 @@ namespace UnityEssentials
                     UIMenuEditorAssetSerializer.Save(_data, _treeView);
                     UIMenuEditorUtilities.PopulateCategoryDataFromTree(_data, _treeView);
                     SetUIMenuData?.Invoke(_data);
-                    // select gameobject 
                 }
             }
         }
@@ -145,7 +144,7 @@ namespace UnityEssentials
             if (itemData == null)
                 return;
 
-            SetSerializedObjectName(itemData, item.Name);
+            SetSerializedObjectName(itemData, item.Name, item.UniqueName);
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
@@ -185,10 +184,13 @@ namespace UnityEssentials
             }
         }
 
-        private static void SetSerializedObjectName(ScriptableObject item, string name)
+        private static void SetSerializedObjectName(ScriptableObject item, string name, string uniqueName)
         {
             if (item == null)
                 return;
+
+            if(name == string.Empty)
+                name = uniqueName;
 
             item.GetType().GetMethod("SetName")?.Invoke(item, new object[] { name });
         }
