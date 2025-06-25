@@ -131,7 +131,7 @@ namespace UnityEssentials
             if (itemData == null)
                 return;
 
-            SetSerializedObjectName(itemData, item.Name, item.UniqueName);
+            //SetSerializedObjectName(itemData, item.Name, item.UniqueName);
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {

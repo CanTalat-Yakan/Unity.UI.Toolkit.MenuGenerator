@@ -12,8 +12,9 @@ namespace UnityEssentials
         [Space]
         public bool HasAlpha;
 
-        public UIMenuColorPickerData SetName(string name, string uniqueName)
+        public UIMenuColorPickerData SetName(string name, string uniqueName = null)
         {
+            uniqueName ??= name;
             base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");

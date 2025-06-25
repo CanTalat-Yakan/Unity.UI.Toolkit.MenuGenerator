@@ -11,8 +11,9 @@ namespace UnityEssentials
         [Space]
         public bool Value;
 
-        public UIMenuToggleData SetName(string name, string uniqueName)
+        public UIMenuToggleData SetName(string name, string uniqueName = null)
         {
+            uniqueName ??= name;
             base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");

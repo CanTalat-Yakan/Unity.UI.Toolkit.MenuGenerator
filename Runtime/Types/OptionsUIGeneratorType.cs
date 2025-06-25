@@ -13,8 +13,9 @@ namespace UnityEssentials
         public bool Reverse;
         public string[] Options;
 
-        public UIMenuOptionsData SetName(string name, string uniqueName)
+        public UIMenuOptionsData SetName(string name, string uniqueName = null)
         {
+            uniqueName ??= name;
             base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");
@@ -40,6 +41,9 @@ namespace UnityEssentials
             label.text = data.Name.ToUpper();
 
             var dropdown = element.Q<DropdownField>("Options");
+
+            if(data.Options == null || data.Options.Length == 0)
+                return;
 
             profile.OptionsDataDictionary.TryGetValue(data.Reference, out var dropDownindex);
 

@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,8 +10,9 @@ namespace UnityEssentials
         public Texture2D Texture;
         public ScriptableObject[] Data;
 
-        public UIMenuCategoryData SetName(string name, string uniqueName)
+        public UIMenuCategoryData SetName(string name, string uniqueName = null)
         {
+            uniqueName ??= name;
             base.name = uniqueName;
             Name = name;
             return this;

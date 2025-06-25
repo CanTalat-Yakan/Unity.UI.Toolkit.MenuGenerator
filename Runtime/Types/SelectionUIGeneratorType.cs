@@ -24,8 +24,9 @@ namespace UnityEssentials
             return null;
         }
 
-        public UIMenuSelectionDataCollectionGroup SetName(string name, string uniqueName)
+        public UIMenuSelectionDataCollectionGroup SetName(string name, string uniqueName = null)
         {
+            uniqueName ??= name;
             base.name = uniqueName;
             Name = name;
             Reference = name.ToLower().Replace(" ", "_");

@@ -137,7 +137,8 @@ namespace UnityEssentials
                 .SetName(name)
                 .SetIcon(FolderIcon)
                 .SetUserTag(UIMenuDataTypes.Category.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>()
+                    .SetName(name));
 
         public static void AddHeader(SimpleTreeView treeView, string name = "Header", int? parent = null) =>
             treeView.AddItem(CreateHeader(name), parent, false);
@@ -147,7 +148,8 @@ namespace UnityEssentials
                 .SetIcon(HeaderIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Header.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>()
+                    .SetName(name));
 
         public static void AddSpace(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSpace(), parent, false);
@@ -166,7 +168,8 @@ namespace UnityEssentials
                 .SetIcon(ButtonIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Button.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuButtonData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuButtonData>()
+                    .SetName(name));
 
         public static void AddOptions(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateOptions(), parent, false);
@@ -176,7 +179,8 @@ namespace UnityEssentials
                 .SetIcon(OptionsIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Options.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>()
+                    .SetName(name));
 
         public static void AddInput(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateInput(), parent, false);
@@ -186,7 +190,8 @@ namespace UnityEssentials
                 .SetIcon(InputIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Input.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>()
+                    .SetName(name));
 
         public static void AddSlider(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSlider(), parent, false);
@@ -196,7 +201,8 @@ namespace UnityEssentials
                 .SetName(name)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Slider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>()
+                    .SetName(name));
 
         public static void AddToggle(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateToggle(), parent, false);
@@ -206,7 +212,8 @@ namespace UnityEssentials
                 .SetIcon(ToggleIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Toggle.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>()
+                    .SetName(name));
 
         public static void AddSelectionCollection(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSelectionCollection(), parent, false);
@@ -216,7 +223,8 @@ namespace UnityEssentials
                 .SetIcon(SelectionIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollection>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollection>()
+                    .SetName(name));
 
         public static void AddSelectionCollectionGroup(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSelectionCollectionGroup(), parent, false);
@@ -224,9 +232,9 @@ namespace UnityEssentials
             new SimpleTreeViewItem()
                 .SetName(name)
                 .SetIcon(SelectionIcon)
-                .Support(allowChildren: true)
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollectionGroup>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCollectionGroup>()
+                    .SetName(name));
 
         public static void AddColorPicker(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateColorPicker(), parent, false);
@@ -236,7 +244,8 @@ namespace UnityEssentials
                 .SetIcon(ColorPickerIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.ColorPicker.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>()
+                    .SetName(name));
 
         public static void AddColorSlider(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateColorSlider(), parent, false);
@@ -246,7 +255,8 @@ namespace UnityEssentials
                 .SetIcon(ColorSliderIcon)
                 .Support(allowChildren: false)
                 .SetUserTag(UIMenuDataTypes.ColorSlider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>());
+                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>()
+                    .SetName(name));
     }
 }
 #endif
