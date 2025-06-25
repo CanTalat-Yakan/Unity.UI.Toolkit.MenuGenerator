@@ -22,11 +22,19 @@ namespace UnityEssentials
 
             string fileName = Path.GetFileNameWithoutExtension(fullPath);
             string directory = Path.GetDirectoryName(fullPath);
-            string childDirectory = Path.Combine(directory, fileName, "~");
+            string childDirectory = Path.Combine(directory, fileName);
 
             data.name = fileName;
 
+            MoveDataAndChildDirectoryIfExists(data, directory, fileName);
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
             CleanUnusedAssetsInDirectory(treeView, childDirectory);
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
 
             SaveScriptableObject(data, directory, fileName);
             SaveTreeViewToDirectory(treeView, childDirectory);
@@ -39,6 +47,39 @@ namespace UnityEssentials
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private static void MoveDataAndChildDirectoryIfExists(UIMenuData data, string newDirectory, string newFileName)
+        {
+            string oldPath = AssetDatabase.GetAssetPath(data);
+            if (string.IsNullOrEmpty(oldPath))
+                return;
+
+            string oldDirectory = Path.GetDirectoryName(oldPath);
+            string oldFileName = Path.GetFileNameWithoutExtension(oldPath);
+
+            if (oldDirectory.Equals(newDirectory) && oldFileName.Equals(newFileName))
+                return;
+
+            if (!AssetDatabase.IsValidFolder(newDirectory))
+                AssetDatabase.CreateFolder(Path.GetDirectoryName(newDirectory), Path.GetFileName(newDirectory));
+
+            string newPath = Path.Combine(newDirectory, newFileName + ".asset");
+            string error = AssetDatabase.MoveAsset(oldPath, newPath);
+            if (!string.IsNullOrEmpty(error))
+            {
+                Debug.LogError($"Failed to move asset to '{newPath}': {error}");
+                return;
+            }
+
+            string oldChildDirectory = Path.Combine(oldDirectory, oldFileName);
+            string newChildDirectory = Path.Combine(newDirectory, newFileName);
+            if (AssetDatabase.IsValidFolder(oldChildDirectory))
+            {
+                error = AssetDatabase.MoveAsset(oldChildDirectory, newChildDirectory);
+                if (!string.IsNullOrEmpty(error))
+                    Debug.LogError($"Failed to move child directory to '{newChildDirectory}': {error}");
+            }
         }
 
         private static void SaveTreeViewToDirectory(SimpleTreeView treeView, string directory)
@@ -129,9 +170,6 @@ namespace UnityEssentials
             foreach (var path in allDirectories.OrderByDescending(d => d.Length))
                 if (!treeAssets.Contains(path))
                     DeleteDirectory(path);
-
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         private static void GatherTreeAssetPathsRecursively(SimpleTreeViewItem item, string directory, HashSet<string> pathHashs)
