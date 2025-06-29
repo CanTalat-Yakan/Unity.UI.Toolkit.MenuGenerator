@@ -40,8 +40,8 @@ namespace UnityEssentials
             editor.Window
                 .SetPreProcess(editor._treeView.PreProcess)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
-                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView))
-                .SetBody(editor.Body, genericMenu: UIMenuEditorUtilities.GetBodyGenericMenu(editor._treeView))
+                .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: UIMenuEditorUtilities.GetGenericMenu(editor._treeView))
+                .SetBody(editor.Body)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close);
 
@@ -56,7 +56,7 @@ namespace UnityEssentials
                 var lastRect = GUILayoutUtility.GetLastRect();
                 lastRect.y += 20;
                 _treeView.ClearAllSelections();
-                UIMenuEditorUtilities.GetPaneGenericMenu(_treeView).DropDown(lastRect);
+                UIMenuEditorUtilities.GetGenericMenu(_treeView).DropDown(lastRect);
             }
 
             GUILayout.FlexibleSpace();
@@ -107,7 +107,7 @@ namespace UnityEssentials
                     if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
                         if (item.ContextMenu != null)
                             item.ContextMenu.DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
-                        else UIMenuEditorUtilities.GetBodyGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                        else UIMenuEditorUtilities.GetGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.Space(10);
