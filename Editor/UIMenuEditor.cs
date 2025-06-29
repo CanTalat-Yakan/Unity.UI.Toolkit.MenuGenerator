@@ -114,14 +114,6 @@ namespace UnityEssentials
             }
         }
 
-        private SimpleTreeViewItem[] FetchData()
-        {
-            var items = new List<SimpleTreeViewItem>();
-
-
-            return items.ToArray();
-        }
-
         private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();
         private readonly Dictionary<ScriptableObject, bool> _foldoutStates = new();
         private CustomScriptableObjectDrawer _customScriptableObjectDrawer = new();
