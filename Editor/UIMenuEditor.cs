@@ -37,7 +37,6 @@ namespace UnityEssentials
             editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800)).ShowUtility();
             editor.Window
                 .SetPreProcess(editor._treeView.PreProcess)
-                .SetPostProcess(editor._treeView.PostProcess)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView))
                 .SetBody(editor.Body, genericMenu: UIMenuEditorUtilities.GetBodyGenericMenu(editor._treeView))
