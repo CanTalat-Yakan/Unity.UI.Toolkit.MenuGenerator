@@ -6,7 +6,7 @@ namespace UnityEssentials
 {
     public class CustomScriptableObjectDrawer : MonoBehaviour
     {
-        private CustomReorderableListDrawer _reorderableListDrawer = new();
+        private CustomReorderableListDrawer _customReorderableListDrawer = new();
 
         public void Draw(Editor scriptableEditor, bool drawArrays = true)
         {
@@ -35,7 +35,7 @@ namespace UnityEssentials
                 {
                     var arrayProperty = iterator.Copy();
                     if (arrayProperty.arraySize >= 0)
-                        _reorderableListDrawer.Draw(serializedObject, arrayProperty);
+                        _customReorderableListDrawer.Draw(serializedObject, arrayProperty);
                 }
                 else EditorGUILayout.PropertyField(iterator, true);
 
