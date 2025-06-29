@@ -21,68 +21,57 @@ namespace UnityEssentials
         }
     }
 
-    public class UIMenuColorPickerDataGroup : ScriptableObject
-    {
-        public string Name;
-        public string Reference;
-
-        [Space]
-        public UIMenuColorPickerData[] ColorPickerData;
-    }
-
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, UIMenuColorPickerDataGroup group)
+        public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, UIMenuColorPickerData data)
         {
             var element = menu.Data.SelectionCategoryTemplate.CloneTree();
 
-            ConfigureColorPickerButtonVisuals(menu.Profile, element, group);
-            ConfigureColorPickerButtonInteraction(menu, element, group);
+            ConfigureColorPickerButtonVisuals(menu.Profile, element, data);
+            ConfigureColorPickerButtonInteraction(menu, element, data);
 
             return element;
         }
 
         private static VisualElement CreateColorPickerButton(UIMenuGenerator menu, string name, string reference)
         {
-            var group = new UIMenuColorPickerDataGroup()
+            var data = new UIMenuColorPickerData()
             {
                 Name = name,
                 Reference = reference,
-                ColorPickerData = new UIMenuColorPickerData[] { new() { Name = name, Reference = reference } }
             };
 
-            return CreateColorPickerButton(menu, group);
+            return CreateColorPickerButton(menu, data);
         }
 
-        private static void ConfigureColorPickerButtonVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuColorPickerDataGroup group)
+        private static void ConfigureColorPickerButtonVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuColorPickerData data)
         {
             var button = element.Q<Button>("Button");
-            button.text = group.Name.ToUpper();
+            button.text = data.Name.ToUpper();
 
             var image = element.Q<VisualElement>("Image");
 
-            if (profile.ColorPickerDataDictionary.TryGetValue(group.Reference, out Color color))
+            if (profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out Color color))
                 image.SetBackgroundColor(color);
         }
 
-        private static void ConfigureColorPickerButtonInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerDataGroup group)
+        private static void ConfigureColorPickerButtonInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var button = element.Q<Button>();
             button.clicked += () =>
-                ShowColorPickerOverlay(menu, group, callback:
-                    UpdateColorPickerVisuals(menu.Profile, element, group.Reference));
+                ShowColorPickerOverlay(menu, data, callback:
+                    UpdateColorPickerVisuals(menu.Profile, element, data.Reference));
         }
     }
 
     // Overlay Management - Color Picker
     public static partial class UIMenuGeneratorType
     {
-        private static void ShowColorPickerOverlay(UIMenuGenerator menu, UIMenuColorPickerDataGroup group, Action<string, Color> callback)
+        private static void ShowColorPickerOverlay(UIMenuGenerator menu, UIMenuColorPickerData data, Action<string, Color> callback)
         {
-            var overlay = menu.CreatePopup(group.Name);
+            var overlay = menu.CreatePopup(data.Name);
 
-            foreach (var colorPickerData in group.ColorPickerData)
-                overlay.Q<GroupBox>("GroupBox").Add(CreateColorPicker(menu, colorPickerData, callback));
+            overlay.Q<GroupBox>("GroupBox").Add(CreateColorPicker(menu, data, callback));
 
             menu.AddElementToRoot(overlay);
         }
@@ -143,7 +132,6 @@ namespace UnityEssentials
             var alphaSlider = picker.Q<SliderInt>("AlphaSlider");
 
             foreach (var button in presetButtons)
-            {
                 button.clicked += () =>
                 {
                     var color = button.GetBackgroundColor();
@@ -164,7 +152,6 @@ namespace UnityEssentials
 
                     profile.OnColorPickerValueChanged(data.Reference, updatedColor);
                 };
-            }
         }
 
         private static Action<string, Color> UpdateColorPickerVisuals(UIMenuDataProfile profile, VisualElement element, string reference) =>

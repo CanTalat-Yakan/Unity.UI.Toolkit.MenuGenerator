@@ -90,6 +90,9 @@ namespace UnityEssentials
 
         private static int ProcessIndex(int index, int maxIndex, int minIndex = 0)
         {
+            if(maxIndex <= 0)
+                return 0; // Avoid division by zero or negative index
+
             // Ensure the index is within the bounds
             int range = maxIndex - minIndex;
 

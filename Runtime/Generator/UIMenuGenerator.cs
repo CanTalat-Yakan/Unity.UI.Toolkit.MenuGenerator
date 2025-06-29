@@ -97,9 +97,6 @@ namespace UnityEssentials
     {
         public void PopulateHierarchy(bool isRoot, string categoryName, ScriptableObject[] collection)
         {
-            if (collection == null || collection.Length == 0)
-                return;
-
             ClearScrollView();
 
             ConfigureRedraw(categoryName, !isRoot, collection);
@@ -107,8 +104,9 @@ namespace UnityEssentials
 
             UpdateCategoryHistory(categoryName);
 
-            foreach (var data in collection)
-                ProcessDataItem(data);
+            if (collection != null && collection.Length != 0)
+                foreach (var data in collection)
+                    ProcessDataItem(data);
         }
 
         private void ProcessDataItem(ScriptableObject data) =>
@@ -123,7 +121,7 @@ namespace UnityEssentials
                 UIMenuOptionsData options => UIMenuGeneratorType.CreateOptions(this, options),
                 UIMenuSliderData slider => UIMenuGeneratorType.CreateSlider(this, slider),
                 UIMenuSelectionDataCategory selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
-                UIMenuColorPickerDataGroup colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
+                UIMenuColorPickerData colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
                 UIMenuColorSliderData colorSliderData => UIMenuGeneratorType.CreateColorSlider(this, colorSliderData),
                 _ => null
             });

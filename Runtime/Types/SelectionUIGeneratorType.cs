@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -41,7 +44,6 @@ namespace UnityEssentials
         public UIMenuSelectionDataGroup SetName(string name, string uniqueName = null)
         {
             uniqueName ??= name;
-            base.name = name;
             Name = name;
             return this;
         }
@@ -50,7 +52,7 @@ namespace UnityEssentials
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateSelectionCategory(
-            UIMenuGenerator menu, 
+            UIMenuGenerator menu,
             UIMenuSelectionDataCategory category)
         {
             var categoryElement = menu.Data.SelectionCategoryTemplate.CloneTree();
@@ -62,8 +64,8 @@ namespace UnityEssentials
         }
 
         private static void ConfigureSelectionCategoryVisuals(
-            UIMenuDataProfile profile, 
-            VisualElement categoryElement, 
+            UIMenuDataProfile profile,
+            VisualElement categoryElement,
             UIMenuSelectionDataCategory category)
         {
             var button = categoryElement.Q<Button>("Button");
@@ -84,64 +86,65 @@ namespace UnityEssentials
         }
 
         private static void ConfigureSelectionCategoryInteraction(
-            UIMenuGenerator menu, 
-            VisualElement categoryElement, 
+            UIMenuGenerator menu,
+            VisualElement categoryElement,
             UIMenuSelectionDataCategory category)
         {
             var button = categoryElement.Q<Button>();
             button.clicked += () =>
-                ShowSelectionOverlay(menu, categoryElement, category);
+            {
+                menu.PopulateHierarchy(false, category.Name, null);
+
+                foreach (var element in AddSelectionTiles(menu, categoryElement, category))
+                    menu.AddElementToScrollView(element);
+            };
         }
     }
 
     // Overlay Management - Selection
     public static partial class UIMenuGeneratorType
     {
-        private static void ShowSelectionOverlay(
-            UIMenuGenerator menu, 
-            VisualElement categoryElement, 
+        public static IEnumerable<VisualElement> AddSelectionTiles(
+            UIMenuGenerator menu,
+            VisualElement categoryElement,
             UIMenuSelectionDataCategory category)
         {
-            var overlay = menu.CreatePopup(category.Name);
-            var groupBox = overlay.Q<GroupBox>("GroupBox");
-
             foreach (var scriptableObject in category.Data)
                 switch (scriptableObject)
                 {
                     case UIMenuColorSliderData sliderData:
-                        groupBox.Add(CreateColorSlider(menu, sliderData));
+                        yield return CreateColorSlider(menu, sliderData);
                         break;
                     case UIMenuColorPickerData pickerData:
-                        groupBox.Add(CreateColorPickerButton(menu, pickerData.Name, pickerData.Reference));
+                        yield return CreateColorPickerButton(menu, pickerData.Name, pickerData.Reference);
                         break;
                     case UIMenuSelectionDataGroup group:
-                        AddSelectionTiles(menu, groupBox, categoryElement, category, group);
+                        yield return CreateGroupBoxSelectionTiles(group, menu, categoryElement, category);
                         break;
                 }
-
-            menu.AddElementToRoot(overlay);
         }
 
-        private static void AddSelectionTiles(
+        private static VisualElement CreateGroupBoxSelectionTiles(
+            UIMenuSelectionDataGroup group,
             UIMenuGenerator menu,
-            VisualElement groupBox,
             VisualElement categoryElement,
-            UIMenuSelectionDataCategory category,
-            UIMenuSelectionDataGroup group)
+            UIMenuSelectionDataCategory category)
         {
+            var groupBox = new GroupBox();
+            groupBox.style.alignSelf = Align.FlexStart;
+            groupBox.style.marginLeft = 20;
             foreach (var selections in group.Selections)
                 for (int i = 0; i < selections.Data.Length; i++)
-                {
                     groupBox.Add(CreateSelectionTile(
                         menu, categoryElement, category, selections.Data[i], selections.ID + i));
-                }
+            return groupBox;
         }
 
         private static VisualElement CreateSelectionTile(
-            UIMenuGenerator menu, 
-            VisualElement categorycategoryElement, 
-            UIMenuSelectionDataCategory category, 
-            UIMenuSelectionDataElement data, 
+            UIMenuGenerator menu,
+            VisualElement categorycategoryElement,
+            UIMenuSelectionDataCategory category,
+            UIMenuSelectionDataElement data,
             int index)
         {
             var tile = menu.Data.SelectionTileTemplate.CloneTree();
@@ -153,10 +156,10 @@ namespace UnityEssentials
         }
 
         private static void UpdateSelectionVisuals(
-            UIMenuDataProfile profile, 
-            VisualElement categorycategoryElement, 
-            UIMenuSelectionDataElement data, 
-            string reference, 
+            UIMenuDataProfile profile,
+            VisualElement categorycategoryElement,
+            UIMenuSelectionDataElement data,
+            string reference,
             int index)
         {
             categorycategoryElement.Q<VisualElement>("Image").SetBackgroundImage(data.Texture);
