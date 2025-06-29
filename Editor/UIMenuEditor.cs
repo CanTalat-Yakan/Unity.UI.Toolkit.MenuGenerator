@@ -27,12 +27,14 @@ namespace UnityEssentials
             editor.SetUIMenuData = action;
             editor._data = data;
 
-            editor._treeView = new SimpleTreeView(editor.FetchData(), data.Name);
-            editor._treeView.ContextMenu = UIMenuEditorUtilities.GetPaneGenericMenu(editor._treeView);
+            editor._treeView = new SimpleTreeView(data.Name);
             editor._treeView.OnRename = (item) =>
             {
                 SetSerializedObjectName(item.UserData as ScriptableObject, item.Name, item.UniqueName);
             };
+
+            foreach (var item in data?.Root)
+                editor._treeView?.AddItem(UIMenuEditorUtilities.CreateItem(item, editor._treeView));
 
             editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800)).ShowUtility();
             editor.Window
@@ -103,8 +105,8 @@ namespace UnityEssentials
                 {
                     GUILayout.FlexibleSpace();
                     if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
-                        if (item.UserData is UIMenuSelectionDataCategory)
-                            UIMenuEditorUtilities.GetSelectionGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+                        if (item.ContextMenu != null)
+                            item.ContextMenu.DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                         else UIMenuEditorUtilities.GetBodyGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                     GUILayout.FlexibleSpace();
                 }
@@ -116,8 +118,6 @@ namespace UnityEssentials
         {
             var items = new List<SimpleTreeViewItem>();
 
-            foreach (var item in _data?.Root)
-                items?.Add(UIMenuEditorUtilities.CreateItem(item, null));
 
             return items.ToArray();
         }
@@ -130,8 +130,6 @@ namespace UnityEssentials
             var itemData = item.UserData as ScriptableObject;
             if (itemData == null)
                 return;
-
-            //SetSerializedObjectName(itemData, item.Name, item.UniqueName);
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
