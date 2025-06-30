@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuOptionsData : ScriptableObject
+    public class UIMenuOptionsData : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;

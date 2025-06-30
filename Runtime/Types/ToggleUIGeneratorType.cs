@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuToggleData : ScriptableObject
+    public class UIMenuToggleData : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;

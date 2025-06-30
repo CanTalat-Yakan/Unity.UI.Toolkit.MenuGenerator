@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuButtonData : ScriptableObject
+    public class UIMenuButtonData : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;

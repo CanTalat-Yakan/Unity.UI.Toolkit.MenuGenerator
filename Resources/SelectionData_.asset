@@ -13,3 +13,13 @@ MonoBehaviour:
   m_Name: SelectionData_
   m_EditorClassIdentifier: 
   ID: 0
+  Data:
+  - Name: 
+    Texture: {fileID: 0}
+    Source: {fileID: 0}
+  - Name: 
+    Texture: {fileID: 0}
+    Source: {fileID: 0}
+  - Name: 
+    Texture: {fileID: 0}
+    Source: {fileID: 0}

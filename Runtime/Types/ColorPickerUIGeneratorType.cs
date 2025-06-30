@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorPickerData : ScriptableObject
+    public class UIMenuColorPickerData : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;
@@ -69,11 +69,8 @@ namespace UnityEssentials
     {
         private static void ShowColorPickerOverlay(UIMenuGenerator menu, UIMenuColorPickerData data, Action<string, Color> callback)
         {
-            var overlay = menu.CreatePopup(data.Name);
-
-            overlay.Q<GroupBox>("GroupBox").Add(CreateColorPicker(menu, data, callback));
-
-            menu.AddElementToRoot(overlay);
+            menu.PopulateHierarchy(false, data.Name, null);
+            menu.AddElementToScrollView(CreateColorPicker(menu, data, callback));
         }
 
         private static VisualElement CreateColorPicker(UIMenuGenerator menu, UIMenuColorPickerData data, Action<string, Color> callback)
@@ -92,6 +89,7 @@ namespace UnityEssentials
             var satSlider = picker.Q<SliderInt>("SaturationSlider");
             var valSlider = picker.Q<SliderInt>("ValueSlider");
             var alphaSlider = picker.Q<SliderInt>("AlphaSlider");
+            var colorElement = picker.Q<VisualElement>("Color");
 
             picker.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
@@ -102,6 +100,7 @@ namespace UnityEssentials
                 satSlider.value = (int)(s * 100);
                 valSlider.value = (int)(v * 100);
                 alphaSlider.value = (int)(color.a * 100);
+                colorElement.SetBackgroundColor(color);
             }
 
             Action updateColor = () =>
@@ -111,6 +110,8 @@ namespace UnityEssentials
                     satSlider.value / 100f,
                     valSlider.value / 100f);
                 newColor.a = alphaSlider.value / 100f;
+
+                colorElement.SetBackgroundColor(newColor);
 
                 callback(data.Reference, newColor);
 

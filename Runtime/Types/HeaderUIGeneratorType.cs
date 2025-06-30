@@ -1,9 +1,8 @@
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuHeaderData : ScriptableObject
+    public class UIMenuHeaderData : UIGeneratorTypeTemplate
     {
         public string Name;
 

@@ -3,12 +3,12 @@
     <engine:VisualElement name="Root" style="flex-grow: 1; width: 100%; height: 100%; align-items: center; justify-content: center;">
         <engine:GroupBox name="Overlay" style="width: 600px; height: 90%; background-color: rgba(0, 0, 0, 0.39); margin-left: 100px; justify-content: flex-start; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border-left-color: rgb(128, 128, 128); border-right-color: rgb(128, 128, 128); border-top-color: rgb(128, 128, 128); border-bottom-color: rgb(128, 128, 128); flex-direction: column; position: absolute; left: 0; align-self: center; top: 5%;">
             <engine:GroupBox style="width: 100%; height: 5%; align-self: flex-start; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-                <engine:Button name="Back" class="unity-button--icon icon-big" style="top: 5px; left: 5px; right: auto; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; background-image: resource(&apos;Icons/Arrow_Back_Svg&apos;); -unity-background-scale-mode: scale-and-crop;" />
+                <engine:Button name="Back" tooltip="BACK" class="unity-button--icon icon-big" style="top: 5px; left: 5px; right: auto; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; background-image: resource(&apos;Icons/Arrow_Back_Svg&apos;); -unity-background-scale-mode: scale-and-crop;" />
                 <engine:GroupBox name="Breadcrumbs" style="width: auto; height: 24px; align-self: flex-start; position: absolute; left: 70px; top: 12px;" />
             </engine:GroupBox>
-            <engine:GroupBox style="width: 100%; height: 95%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <engine:GroupBox style="width: 100%; height: 95%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 20px; padding-bottom: 0; padding-left: 20px; overflow: hidden;">
                 <engine:ScrollView name="ScrollView" vertical-scroller-visibility="Hidden" horizontal-scroller-visibility="AlwaysVisible" style="width: 100%; height: 100%;">
-                    <engine:GroupBox name="GroupBox" style="width: 100%; height: 100%; overflow: hidden; flex-wrap: wrap; align-items: flex-start; padding-top: 0; padding-right: 20px; padding-bottom: 0; padding-left: 20px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+                    <engine:GroupBox name="GroupBox" style="width: 100%; height: 100%; overflow: visible; flex-wrap: wrap; align-items: flex-start; padding-top: 0; padding-right: 20px; padding-bottom: 0; padding-left: 20px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
                 </engine:ScrollView>
             </engine:GroupBox>
         </engine:GroupBox>

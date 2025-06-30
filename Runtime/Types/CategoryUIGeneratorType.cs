@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuCategoryData : ScriptableObject
+    public class UIMenuCategoryData : UIGeneratorTypeTemplate
     {
         public string Name;
 

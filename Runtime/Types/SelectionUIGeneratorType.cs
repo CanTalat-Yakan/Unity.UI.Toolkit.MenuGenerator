@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionDataCategory : ScriptableObject
+    public class UIMenuSelectionDataCategory : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;
@@ -131,8 +129,8 @@ namespace UnityEssentials
             UIMenuSelectionDataCategory category)
         {
             var groupBox = new GroupBox();
-            groupBox.style.alignSelf = Align.FlexStart;
-            groupBox.style.marginLeft = 20;
+            groupBox.SetWidth(100f);
+            groupBox.style.flexWrap = Wrap.Wrap;
             foreach (var selections in group.Selections)
                 for (int i = 0; i < selections.Data.Length; i++)
                     groupBox.Add(CreateSelectionTile(

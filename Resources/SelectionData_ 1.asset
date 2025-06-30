@@ -20,6 +20,3 @@ MonoBehaviour:
   - Name: Test2
     Texture: {fileID: 0}
     Source: {fileID: 0}
-  - Name: Test3
-    Texture: {fileID: 0}
-    Source: {fileID: 0}

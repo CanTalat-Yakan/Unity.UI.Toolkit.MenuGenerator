@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSliderData : ScriptableObject
+    public class UIMenuSliderData : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;

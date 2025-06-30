@@ -195,10 +195,11 @@ namespace UnityEssentials
             string name = item.UniqueName;
 
             var itemData = item.UserData as ScriptableObject;
-            itemData.name = name;
-
-            if (string.IsNullOrEmpty(name))
-                name = itemData?.name;
+            if (itemData != null)
+            {
+                name += $" {(itemData as UIGeneratorTypeTemplate).ID}";
+                itemData.name = name;
+            }
 
             if (string.IsNullOrEmpty(name))
                 name = "FALLBACK";

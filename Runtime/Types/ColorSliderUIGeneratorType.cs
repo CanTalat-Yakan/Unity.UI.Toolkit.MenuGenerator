@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorSliderData : ScriptableObject
+    public class UIMenuColorSliderData : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;
@@ -22,7 +22,7 @@ namespace UnityEssentials
         }
     }
 
-    public class UIMenuColorSliderDataGroup : ScriptableObject
+    public class UIMenuColorSliderDataGroup : UIGeneratorTypeTemplate
     {
         public string Name;
         public string Reference;
