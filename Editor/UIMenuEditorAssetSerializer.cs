@@ -169,6 +169,8 @@ namespace UnityEssentials
                     assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(NormalizeAssetPath(childFile)));
 
                 data.GetType().GetField("Data")?.SetValue(data, assets.ToArray());
+                EditorUtility.SetDirty(data);
+                AssetDatabase.SaveAssets();
 
                 SetCategoryDataReferencesRecursivly(childDirectory);
             }

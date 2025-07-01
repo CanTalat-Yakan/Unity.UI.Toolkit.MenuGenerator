@@ -11,9 +11,8 @@ namespace UnityEssentials
         public float MaxRange = 100;
 
         [Space]
+        [Range(0, 1)]
         public float Default;
-
-        public Vector2 ValueRange => new Vector2(MinRange, MaxRange);
     }
 
     public static partial class UIMenuGeneratorType
@@ -34,18 +33,20 @@ namespace UnityEssentials
             label.text = data.Name.ToUpper();
 
             profile.Sliders.TryGetValue(data.Reference, data.Default, out var value);
-            
+
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
-                (slider.lowValue, slider.highValue) = (data.ValueRange.x, data.ValueRange.y);
-                slider.value = value;
+                slider.lowValue = data.MinRange;
+                slider.highValue = data.MaxRange;
+                slider.value = value * data.MaxRange;
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
-                (sliderInt.lowValue, sliderInt.highValue) = ((int)data.ValueRange.x, (int)data.ValueRange.y);
-                sliderInt.value = (int)value;
+                sliderInt.lowValue = (int)data.MinRange;
+                sliderInt.highValue = (int)data.MaxRange;
+                sliderInt.value = (int)(value * data.MaxRange);
             }
         }
 
@@ -54,18 +55,14 @@ namespace UnityEssentials
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
-                slider.RegisterValueChangedCallback(evt =>
-                {
-                    profile.OnSliderValueChanged(data.Reference, evt.newValue);
-                });
+                slider.RegisterValueChangedCallback(e =>
+                    profile.OnSliderValueChanged(data.Reference, e.newValue));
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
-                sliderInt.RegisterValueChangedCallback(evt =>
-                {
-                    profile.OnSliderValueChanged(data.Reference, (float)evt.newValue);
-                });
+                sliderInt.RegisterValueChangedCallback(e =>
+                    profile.OnSliderValueChanged(data.Reference, e.newValue));
             }
         }
     }

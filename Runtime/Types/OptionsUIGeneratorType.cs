@@ -44,7 +44,7 @@ namespace UnityEssentials
         private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)
         {
             var dropdownField = element.Q<DropdownField>("Options");
-            dropdownField.RegisterValueChangedCallback(evt =>
+            dropdownField.RegisterValueChangedCallback(e =>
             {
                 profile.OnOptionsValueChanged(data.Reference, dropdownField.index);
             });

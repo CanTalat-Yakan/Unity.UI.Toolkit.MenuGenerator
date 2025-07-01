@@ -15,6 +15,7 @@ namespace UnityEssentials
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new UnityColorJsonConverter());
             settings.ContractResolver = new IgnoreUnityObjectContractResolver();
+
             var json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
             File.WriteAllText(filePath, json);
         }
@@ -29,7 +30,12 @@ namespace UnityEssentials
             if (!File.Exists(filePath))
                 return false;
             var json = File.ReadAllText(filePath);
-            data = JsonConvert.DeserializeObject<T>(json);
+
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new UnityColorJsonConverter());
+            settings.ContractResolver = new IgnoreUnityObjectContractResolver();
+
+            data = JsonConvert.DeserializeObject<T>(json, settings);
             if(data == null)
                 return false;
             data.name = fileName + " AutoCreated";

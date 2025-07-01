@@ -27,7 +27,7 @@ namespace UnityEssentials
             var inputField = element.Q<TextField>("Input");
 
             profile.Inputs.TryGetValue(data.Reference, data.Default, out var input);
-            
+
             if (string.IsNullOrEmpty(input))
                 input = string.Empty;
 
@@ -37,10 +37,8 @@ namespace UnityEssentials
         private static void ConfigureInputInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuInputData data)
         {
             var textField = element.Q<TextField>("Input");
-            textField.RegisterValueChangedCallback((evt) =>
-            {
-                profile.OnInputValueChanged(data.Reference, evt.newValue);
-            });
+            textField.RegisterValueChangedCallback((e) =>
+                profile.OnInputValueChanged(data.Reference, e.newValue));
         }
     }
 }

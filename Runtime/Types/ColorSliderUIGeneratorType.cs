@@ -7,6 +7,7 @@ namespace UnityEssentials
     {
         [Space]
         public Gradient Gradient;
+        [Space]
         [Range(0f, 1f)]
         public float Default;
     }
@@ -38,7 +39,9 @@ namespace UnityEssentials
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
 
             var slider = element.Q<SliderInt>();
-            (slider.lowValue, slider.highValue) = (0, 100);
+            slider.lowValue = 0;
+            slider.highValue = 100;
+            slider.value = (int)(value * 100);
         }
 
         private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuColorSliderData data)
