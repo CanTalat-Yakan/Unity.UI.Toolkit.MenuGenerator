@@ -17,11 +17,11 @@ namespace UnityEssentials
     {
         public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, UIMenuColorPickerData data)
         {
-            var element = menu.Data.SelectionCategoryTemplate.CloneTree();
+            menu.Profile.ColorPickerDataDictionary.TryAdd(data.Reference, data.Default);
 
+            var element = menu.Data.SelectionCategoryTemplate.CloneTree();
             ConfigureColorPickerButtonVisuals(menu.Profile, element, data);
             ConfigureColorPickerButtonInteraction(menu, element, data);
-
             return element;
         }
 
@@ -43,8 +43,7 @@ namespace UnityEssentials
 
             var image = element.Q<VisualElement>("Image");
 
-            if (!profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out var color))
-                color = data.Default;
+            profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out var color);
 
             image.SetBackgroundColor(color);
         }
@@ -105,9 +104,9 @@ namespace UnityEssentials
                     valSlider.value / 100f);
                 newColor.a = alphaSlider.value / 100f;
 
-                colorElement.SetBackgroundColor(newColor);
-
                 callback(data.Reference, newColor);
+
+                colorElement.SetBackgroundColor(newColor);
 
                 profile.OnColorPickerValueChanged(data.Reference, newColor);
             };

@@ -5,9 +5,9 @@ namespace UnityEssentials
 {
     public class UIGeneratorTypeTemplate : ScriptableObject
     {
-        [HideInInspector] public bool HasReference;
-        [HideInInspector] public GUID? ID;
-        [HideInInspector] public string Name;
+        [HideInInspector, SerializeField] public bool HasReference;
+        [HideInInspector, SerializeField] public GUID? ID;
+        [HideInInspector, SerializeField] public string Name;
         public string Reference;
 
         public static T Initialize<T>(string name = null, string uniqueName = null, bool hasReference = true) where T : UIGeneratorTypeTemplate

@@ -29,6 +29,8 @@ namespace UnityEssentials
                 return;
 
             data.Root = treeView.RootItem.Children.Select(i => i.UserData as ScriptableObject).ToArray();
+            EditorUtility.SetDirty(data); 
+            AssetDatabase.SaveAssets();
 
             void Traverse(SimpleTreeViewItem item)
             {

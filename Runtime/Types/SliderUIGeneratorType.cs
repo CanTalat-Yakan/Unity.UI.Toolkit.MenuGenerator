@@ -20,13 +20,13 @@ namespace UnityEssentials
     {
         public static VisualElement CreateSlider(UIMenuGenerator menu, UIMenuSliderData data)
         {
-            VisualElement element = data.IsFloat
+            menu.Profile.SliderDataDictionary.TryAdd(data.Reference, data.Default);
+
+            var element = data.IsFloat
                 ? menu.Data.SliderTemplate.CloneTree()
                 : menu.Data.SliderIntTemplate.CloneTree();
-
             ConfigureSliderVisuals(menu.Profile, element, data);
             ConfigureSliderInteraction(menu.Profile, element, data);
-
             return element;
         }
 

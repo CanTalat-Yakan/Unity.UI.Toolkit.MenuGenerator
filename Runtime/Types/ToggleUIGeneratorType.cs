@@ -13,11 +13,11 @@ namespace UnityEssentials
     {
         public static VisualElement CreateToggle(UIMenuGenerator menu, UIMenuToggleData data)
         {
-            var element = menu.Data.ToggleTemplate.CloneTree();
+            menu.Profile.ToggleDataDictionary.TryAdd(data.Reference, data.Default);
 
+            var element = menu.Data.ToggleTemplate.CloneTree();
             ConfigureToggleVisuals(menu.Profile, element, data);
             ConfigureToggleInteraction(menu.Profile, element, data);
-
             return element;
         }
 

@@ -148,6 +148,8 @@ namespace UnityEssentials
                 assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(NormalizeAssetPath(file)));
 
             data.Root = assets.ToArray();
+            EditorUtility.SetDirty(data);
+            AssetDatabase.SaveAssets();
         }
 
         private static void SetCategoryDataReferencesRecursivly(string directory)

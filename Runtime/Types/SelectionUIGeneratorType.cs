@@ -36,11 +36,11 @@ namespace UnityEssentials
             UIMenuGenerator menu,
             UIMenuSelectionDataCategory category)
         {
-            var categoryElement = menu.Data.SelectionCategoryTemplate.CloneTree();
+            menu.Profile.SelectionDataDictionary.TryAdd(category.Reference, category.Default);
 
+            var categoryElement = menu.Data.SelectionCategoryTemplate.CloneTree();
             ConfigureSelectionCategoryVisuals(menu.Profile, categoryElement, category);
             ConfigureSelectionCategoryInteraction(menu, categoryElement, category);
-
             return categoryElement;
         }
 

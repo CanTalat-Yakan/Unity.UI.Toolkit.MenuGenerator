@@ -18,11 +18,11 @@ namespace UnityEssentials
     {
         public static VisualElement CreateOptions(UIMenuGenerator menu, UIMenuOptionsData data)
         {
-            var element = menu.Data.OptionsTemplate.CloneTree();
+            menu.Profile.OptionsDataDictionary.TryAdd(data.Reference, data.Default);
 
+            var element = menu.Data.OptionsTemplate.CloneTree();
             ConfigureOptionsVisuals(menu.Profile, element, data);
             ConfigureOptionsInteraction(menu.Profile, element, data);
-
             return element;
         }
 
