@@ -21,8 +21,6 @@ namespace UnityEssentials
     {
         public static VisualElement CreateColorSlider(UIMenuGenerator menu, UIMenuColorSliderData data)
         {
-            menu.Profile.ColorSliderDataDictionary.TryAdd(data.Reference, data.Default);
-
             var element = menu.Data.ColorSliderTemplate.CloneTree();
             ConfigureSliderVisuals(menu.Profile, element, data);
             ConfigureSliderInteraction(menu.Profile, element, data);
@@ -34,13 +32,12 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            if (!profile.ColorSliderDataDictionary.TryGetValue(data.Reference, out var value))
-                value = data.Default;
+            profile.ColorSliders.TryGetValue(data.Reference, data.Default, out var value);
 
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
 
-            var slider = element.Q<SliderInt>(); 
+            var slider = element.Q<SliderInt>();
             (slider.lowValue, slider.highValue) = (0, 100);
         }
 

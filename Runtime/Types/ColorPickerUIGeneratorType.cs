@@ -17,8 +17,6 @@ namespace UnityEssentials
     {
         public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, UIMenuColorPickerData data)
         {
-            menu.Profile.ColorPickerDataDictionary.TryAdd(data.Reference, data.Default);
-
             var element = menu.Data.SelectionCategoryTemplate.CloneTree();
             ConfigureColorPickerButtonVisuals(menu.Profile, element, data);
             ConfigureColorPickerButtonInteraction(menu, element, data);
@@ -43,7 +41,7 @@ namespace UnityEssentials
 
             var image = element.Q<VisualElement>("Image");
 
-            profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out var color);
+            profile.ColorPickers.TryGetValue(data.Reference, data.Default, out var color);
 
             image.SetBackgroundColor(color);
         }
@@ -86,8 +84,7 @@ namespace UnityEssentials
 
             picker.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
-            if (!profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out var color))
-                color = data.Default;
+            profile.ColorPickers.TryGetValue(data.Reference, data.Default, out var color);
 
             Color.RGBToHSV(color, out var h, out var s, out var v);
             hueSlider.value = (int)(h * 360);

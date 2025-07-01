@@ -11,10 +11,8 @@ namespace UnityEssentials
                 return;
 
             var element = menu.Data.BreadcrumbTemplate.CloneTree();
-
             ConfigureBreadcrumbVisuals(element, label, prefix);
             ConfigureBreadcrumbInteraction(menu, element, container.childCount, prefix, label, data);
-
             container.Add(element);
         }
 

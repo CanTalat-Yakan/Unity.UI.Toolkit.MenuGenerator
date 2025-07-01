@@ -13,8 +13,6 @@ namespace UnityEssentials
     {
         public static VisualElement CreateToggle(UIMenuGenerator menu, UIMenuToggleData data)
         {
-            menu.Profile.ToggleDataDictionary.TryAdd(data.Reference, data.Default);
-
             var element = menu.Data.ToggleTemplate.CloneTree();
             ConfigureToggleVisuals(menu.Profile, element, data);
             ConfigureToggleInteraction(menu.Profile, element, data);
@@ -26,9 +24,8 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            if (!profile.ToggleDataDictionary.TryGetValue(data.Reference, out bool value))
-                value = data.Default;
-
+            profile.Toggles.TryGetValue(data.Reference, data.Default, out var value);
+            
             var toggle = element.Q<Toggle>("Toggle");
             toggle.value = value;
         }

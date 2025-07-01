@@ -15,10 +15,8 @@ namespace UnityEssentials
         public static VisualElement CreateCategory(UIMenuGenerator menu, UIMenuCategoryData data)
         {
             var element = menu.Data.CategoryTemplate.CloneTree();
-
             ConfigureCategoryVisuals(element, data);
             ConfigureCategoryInteraction(menu, element, data);
-
             return element;
         }
 

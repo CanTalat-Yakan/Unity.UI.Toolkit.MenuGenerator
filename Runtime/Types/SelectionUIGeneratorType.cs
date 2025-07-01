@@ -36,8 +36,6 @@ namespace UnityEssentials
             UIMenuGenerator menu,
             UIMenuSelectionDataCategory category)
         {
-            menu.Profile.SelectionDataDictionary.TryAdd(category.Reference, category.Default);
-
             var categoryElement = menu.Data.SelectionCategoryTemplate.CloneTree();
             ConfigureSelectionCategoryVisuals(menu.Profile, categoryElement, category);
             ConfigureSelectionCategoryInteraction(menu, categoryElement, category);
@@ -55,8 +53,7 @@ namespace UnityEssentials
             var image = categoryElement.Q<VisualElement>("Image");
             var label = categoryElement.Q<Label>("Label");
 
-            if (!profile.SelectionDataDictionary.TryGetValue(category.Reference, out var index))
-                index = category.Default;
+            profile.Selections.TryGetValue(category.Reference, category.Default, out var index);
 
             var selectionData = category.GetSelectionData(index);
             if (selectionData == null)

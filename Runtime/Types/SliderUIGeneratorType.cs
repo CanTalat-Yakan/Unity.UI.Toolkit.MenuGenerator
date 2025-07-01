@@ -20,8 +20,6 @@ namespace UnityEssentials
     {
         public static VisualElement CreateSlider(UIMenuGenerator menu, UIMenuSliderData data)
         {
-            menu.Profile.SliderDataDictionary.TryAdd(data.Reference, data.Default);
-
             var element = data.IsFloat
                 ? menu.Data.SliderTemplate.CloneTree()
                 : menu.Data.SliderIntTemplate.CloneTree();
@@ -35,9 +33,8 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            if(!profile.SliderDataDictionary.TryGetValue(data.Reference, out var value))
-                value = data.Default;
-
+            profile.Sliders.TryGetValue(data.Reference, data.Default, out var value);
+            
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");

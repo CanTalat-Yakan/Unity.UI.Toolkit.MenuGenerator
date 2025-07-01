@@ -6,67 +6,67 @@ namespace UnityEssentials
 {
     public class UIMenuDataProfile : ScriptableObject
     {
-        public SerializedDictionary<string, bool> ToggleDataDictionary = new();
-        public SerializedDictionary<string, string> InputDataDictionary = new();
-        public SerializedDictionary<string, int> OptionsDataDictionary = new();
-        public SerializedDictionary<string, float> SliderDataDictionary = new();
-        public SerializedDictionary<string, int> SelectionDataDictionary = new();
-        public SerializedDictionary<string, Color> ColorPickerDataDictionary = new();
-        public SerializedDictionary<string, float> ColorSliderDataDictionary = new();
+        public SerializedDictionary<string, bool> Toggles = new();
+        public SerializedDictionary<string, string> Inputs = new();
+        public SerializedDictionary<string, int> Options = new();
+        public SerializedDictionary<string, float> Sliders = new();
+        public SerializedDictionary<string, int> Selections = new();
+        public SerializedDictionary<string, Color> ColorPickers = new();
+        public SerializedDictionary<string, float> ColorSliders = new();
 
         [JsonIgnore]
         public Action OnValueChanged;
 
         public void CopyValues<T>(T source) where T : UIMenuDataProfile
         {
-            ToggleDataDictionary.CopyFrom(source.ToggleDataDictionary?.Dictionary);
-            InputDataDictionary.CopyFrom(source.InputDataDictionary?.Dictionary);
-            OptionsDataDictionary.CopyFrom(source.OptionsDataDictionary?.Dictionary);
-            SliderDataDictionary.CopyFrom(source.SliderDataDictionary?.Dictionary);
-            SelectionDataDictionary.CopyFrom(source.SelectionDataDictionary?.Dictionary);
-            ColorPickerDataDictionary.CopyFrom(source.ColorPickerDataDictionary?.Dictionary);
-            ColorSliderDataDictionary.CopyFrom(source.ColorSliderDataDictionary?.Dictionary);
+            Toggles.CopyFrom(source.Toggles?.Dictionary);
+            Inputs.CopyFrom(source.Inputs?.Dictionary);
+            Options.CopyFrom(source.Options?.Dictionary);
+            Sliders.CopyFrom(source.Sliders?.Dictionary);
+            Selections.CopyFrom(source.Selections?.Dictionary);
+            ColorPickers.CopyFrom(source.ColorPickers?.Dictionary);
+            ColorSliders.CopyFrom(source.ColorSliders?.Dictionary);
         }
 
         public virtual void OnToggleValueChanged(string reference, bool value)
         {
-            ToggleDataDictionary[reference] = value;
+            Toggles[reference] = value;
             OnValueChanged?.Invoke();
         }
 
         public virtual void OnInputValueChanged(string reference, string input)
         {
-            InputDataDictionary[reference] = input;
+            Inputs[reference] = input;
             OnValueChanged?.Invoke();
         }
 
         public virtual void OnOptionsValueChanged(string reference, int index)
         {
-            OptionsDataDictionary[reference] = index;
+            Options[reference] = index;
             OnValueChanged?.Invoke();
         }
 
         public virtual void OnSliderValueChanged(string reference, float value)
         {
-            SliderDataDictionary[reference] = value;
+            Sliders[reference] = value;
             OnValueChanged?.Invoke();
         }
 
         public virtual void OnSelectionValueChanged(string reference, int index)
         {
-            SelectionDataDictionary[reference] = index;
+            Selections[reference] = index;
             OnValueChanged?.Invoke();
         }
 
         public virtual void OnColorPickerValueChanged(string reference, Color color)
         {
-            ColorPickerDataDictionary[reference] = color;
+            ColorPickers[reference] = color;
             OnValueChanged?.Invoke();
         }
 
         public virtual void OnColorSliderValueChanged(string reference, int value)
         {
-            ColorSliderDataDictionary[reference] = value;
+            ColorSliders[reference] = value;
             OnValueChanged?.Invoke();
         }
     }

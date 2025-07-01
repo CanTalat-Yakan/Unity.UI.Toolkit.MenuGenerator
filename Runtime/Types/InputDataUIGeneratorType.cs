@@ -13,8 +13,6 @@ namespace UnityEssentials
     {
         public static VisualElement CreateInput(UIMenuGenerator menu, UIMenuInputData data)
         {
-            menu.Profile.InputDataDictionary.TryAdd(data.Reference, data.Default);
-
             var element = menu.Data.InputTemplate.CloneTree();
             ConfigureInputVisuals(menu.Profile, element, data);
             ConfigureInputInteraction(menu.Profile, element, data);
@@ -28,9 +26,8 @@ namespace UnityEssentials
 
             var inputField = element.Q<TextField>("Input");
 
-            if(!profile.InputDataDictionary.TryGetValue(data.Reference, out var input))
-                input = data.Default;
-
+            profile.Inputs.TryGetValue(data.Reference, data.Default, out var input);
+            
             if (string.IsNullOrEmpty(input))
                 input = string.Empty;
 

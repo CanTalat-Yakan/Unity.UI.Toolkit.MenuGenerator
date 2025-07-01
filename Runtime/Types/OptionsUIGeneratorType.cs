@@ -18,8 +18,6 @@ namespace UnityEssentials
     {
         public static VisualElement CreateOptions(UIMenuGenerator menu, UIMenuOptionsData data)
         {
-            menu.Profile.OptionsDataDictionary.TryAdd(data.Reference, data.Default);
-
             var element = menu.Data.OptionsTemplate.CloneTree();
             ConfigureOptionsVisuals(menu.Profile, element, data);
             ConfigureOptionsInteraction(menu.Profile, element, data);
@@ -36,8 +34,7 @@ namespace UnityEssentials
             if(data.Options == null || data.Options.Length == 0)
                 return;
 
-            if(!profile.OptionsDataDictionary.TryGetValue(data.Reference, out var index))
-                index = data.Default;
+            profile.Options.TryGetValue(data.Reference, data.Default, out var index);
 
             dropdown.choices = data.Options.ToList();
             dropdown.index = index;
@@ -57,8 +54,7 @@ namespace UnityEssentials
             {
                 var length = data.Options.Length;
 
-                var index = 0;
-                profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
+                profile.Options.TryGetValue(data.Reference, data.Default, out var index);
 
                 index = ProcessIndex(!data.Reverse ? index - 1 : index + 1, length);
                 profile.OnOptionsValueChanged(data.Reference, ProcessIndex(index, length));
@@ -71,8 +67,7 @@ namespace UnityEssentials
             {
                 var length = data.Options.Length;
 
-                var index = 0;
-                profile.OptionsDataDictionary.TryGetValue(data.Reference, out index);
+                profile.Options.TryGetValue(data.Reference, data.Default, out var index);
 
                 index = ProcessIndex(!data.Reverse ? index + 1 : index - 1, length);
                 profile.OnOptionsValueChanged(data.Reference, index);
