@@ -18,7 +18,7 @@ namespace UnityEssentials
                 if (scriptableObject is UIMenuSelectionDataGroup group)
                     foreach (var selections in group.Selections)
                         for (int i = 0; i < selections.Data.Length; i++)
-                            if (selections.ID + i == index)
+                            if (selections.StartIndexID + i == index)
                                 return selections.Data[i];
 
             return null;
@@ -117,7 +117,7 @@ namespace UnityEssentials
             foreach (var selections in group.Selections)
                 for (int i = 0; i < selections.Data.Length; i++)
                     groupBox.Add(CreateSelectionTile(
-                        menu, categoryElement, category, selections.Data[i], selections.ID + i));
+                        menu, categoryElement, category, selections.Data[i], selections.StartIndexID + i));
             return groupBox;
         }
 

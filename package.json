@@ -16,8 +16,8 @@
     "com.unityessentials.uielementlinker": "1.0.0",
     "com.unityessentials.serializeddictionarydrawer": "1.0.0",
     "com.unityessentials.onvaluechangedattribute": "1.0.0",
+    "com.unityessentials.ifattribute": "1.0.0",
     "com.unityessentials.buttonattribute": "1.0.0",
-    "com.unityessentials.infoattribute": "1.0.0",
     "com.unity.vectorgraphics": "2.0.0-preview.25"
   },
   "keywords": [],

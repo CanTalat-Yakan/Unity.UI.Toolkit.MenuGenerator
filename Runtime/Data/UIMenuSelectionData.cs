@@ -16,7 +16,8 @@ namespace UnityEssentials
     [CreateAssetMenu(fileName = "SelectionData_", menuName = "UI/Selection", order = 0)]
     public class UIMenuSelectionData : ScriptableObject
     {
-        public int ID;
+        [Tooltip("The starting index is added to the element's index to determine the final Selection ID")]
+        public int StartIndexID;
 
         public UIMenuSelectionDataElement[] Data;
     }

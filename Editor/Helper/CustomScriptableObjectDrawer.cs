@@ -8,7 +8,7 @@ namespace UnityEssentials
     {
         private CustomReorderableListDrawer _customReorderableListDrawer = new();
 
-        public void Draw(Editor scriptableEditor, bool drawArrays = true)
+        public void Draw(Editor scriptableEditor, bool drawArrays = true, bool drawReference = true)
         {
             if (scriptableEditor == null)
                 return;
@@ -20,8 +20,10 @@ namespace UnityEssentials
             bool enterChildren = true;
             while (iterator.NextVisible(enterChildren))
             {
-                // Skip the internal script reference and "Name" property
-                if (iterator.name == "m_Script" || iterator.name == "Name")
+                if (iterator.name == "m_Script")
+                    continue;
+
+                if (iterator.name == "Reference" && !drawReference)
                     continue;
 
                 // Skip arrays if requested, but allow normal strings

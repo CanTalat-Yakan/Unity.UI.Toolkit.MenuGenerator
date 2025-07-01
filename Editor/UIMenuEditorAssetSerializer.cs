@@ -33,7 +33,6 @@ namespace UnityEssentials
 
             MoveDataAndChildDirectoryIfExists(data, directory, fileName);
 
-
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -64,11 +63,15 @@ namespace UnityEssentials
             if (oldDirectory.Equals(newDirectory) && oldFileName.Equals(newFileName))
                 return;
 
-            if (!AssetDatabase.IsValidFolder(newDirectory))
-                AssetDatabase.CreateFolder(Path.GetDirectoryName(newDirectory), Path.GetFileName(newDirectory));
+            if (!AssetDatabase.IsValidFolder(NormalizeAssetPath(newDirectory)))
+                AssetDatabase.CreateFolder(
+                    NormalizeAssetPath(Path.GetDirectoryName(newDirectory)),
+                    Path.GetFileName(newDirectory));
 
             string newPath = Path.Combine(newDirectory, newFileName + ".asset");
-            string error = AssetDatabase.MoveAsset(oldPath, newPath);
+            string error = AssetDatabase.MoveAsset(
+                NormalizeAssetPath(oldPath),
+                NormalizeAssetPath(newPath));
             if (!string.IsNullOrEmpty(error))
             {
                 Debug.LogError($"Failed to move asset to '{newPath}': {error}");
@@ -77,9 +80,11 @@ namespace UnityEssentials
 
             string oldScriptableObjectDirectory = Path.Combine(oldDirectory, oldFileName);
             string newScriptableObjectDirectory = Path.Combine(newDirectory, newFileName);
-            if (AssetDatabase.IsValidFolder(oldScriptableObjectDirectory))
+            if (AssetDatabase.IsValidFolder(NormalizeAssetPath(oldScriptableObjectDirectory)))
             {
-                error = AssetDatabase.MoveAsset(oldScriptableObjectDirectory, newScriptableObjectDirectory);
+                error = AssetDatabase.MoveAsset(
+                    NormalizeAssetPath(oldScriptableObjectDirectory),
+                    NormalizeAssetPath(newScriptableObjectDirectory));
                 if (!string.IsNullOrEmpty(error))
                     Debug.LogError($"Failed to move child directory to '{newScriptableObjectDirectory}': {error}");
             }
@@ -118,18 +123,20 @@ namespace UnityEssentials
 
             if (string.IsNullOrEmpty(assetPath))
                 // Not an asset yet, create it
-                AssetDatabase.CreateAsset(instance, path);
-            else if (assetPath != path)
+                AssetDatabase.CreateAsset(instance, NormalizeAssetPath(path));
+            else if (NormalizeAssetPath(assetPath) != NormalizeAssetPath(path))
             {
                 // Asset exists but at a different path, move it
-                string error = AssetDatabase.MoveAsset(assetPath, path);
+                string error = AssetDatabase.MoveAsset(
+                    NormalizeAssetPath(assetPath),
+                    NormalizeAssetPath(path));
                 if (!string.IsNullOrEmpty(error))
                     Debug.LogError($"Failed to move asset from '{assetPath}' to '{path}': {error}");
             }
             else
             {
                 // Asset exists at the correct path, update it
-                EditorUtility.CopySerialized(instance, AssetDatabase.LoadAssetAtPath<T>(path));
+                EditorUtility.CopySerialized(instance, AssetDatabase.LoadAssetAtPath<T>(NormalizeAssetPath(path)));
                 EditorUtility.SetDirty(instance);
             }
         }
@@ -138,7 +145,7 @@ namespace UnityEssentials
         {
             var assets = new List<ScriptableObject>();
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
-                assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(file));
+                assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(NormalizeAssetPath(file)));
 
             data.Root = assets.ToArray();
         }
@@ -147,7 +154,7 @@ namespace UnityEssentials
         {
             foreach (var file in Directory.GetFiles(directory, "*.asset"))
             {
-                var data = AssetDatabase.LoadAssetAtPath<ScriptableObject>(file);
+                var data = AssetDatabase.LoadAssetAtPath<ScriptableObject>(NormalizeAssetPath(file));
                 if (data == null)
                     continue;
 
@@ -157,7 +164,7 @@ namespace UnityEssentials
 
                 var assets = new List<ScriptableObject>();
                 foreach (var childFile in Directory.GetFiles(childDirectory, "*.asset"))
-                    assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(childFile));
+                    assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(NormalizeAssetPath(childFile)));
 
                 data.GetType().GetField("Data")?.SetValue(data, assets.ToArray());
 
@@ -179,7 +186,7 @@ namespace UnityEssentials
 
             foreach (var assetPath in allAssets)
                 if (!treePaths.Contains(assetPath))
-                    AssetDatabase.DeleteAsset(assetPath);
+                    AssetDatabase.DeleteAsset(NormalizeAssetPath(assetPath));
 
             foreach (var directoryPath in allDirectories.OrderByDescending(d => d.Length))
                 if (!treePaths.Contains(directoryPath))
@@ -228,11 +235,14 @@ namespace UnityEssentials
             foreach (string directoryPath in directoriesPaths)
                 DeleteDirectory(directoryPath);
 
-            if (!AssetDatabase.IsValidFolder(path))
+            if (!AssetDatabase.IsValidFolder(NormalizeAssetPath(path)))
                 return;
 
-            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.DeleteAsset(NormalizeAssetPath(path));
         }
+
+        private static string NormalizeAssetPath(string path) =>
+            path.Replace('\\', '/');
     }
 }
 #endif

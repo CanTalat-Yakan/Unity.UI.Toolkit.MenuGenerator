@@ -7,14 +7,6 @@ namespace UnityEssentials
     {
         [Space]
         public bool Default;
-
-        public UIMenuToggleData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
     }
 
     public static partial class UIMenuGeneratorType

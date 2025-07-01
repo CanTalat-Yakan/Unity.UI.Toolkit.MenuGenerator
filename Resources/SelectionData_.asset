@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb6a76440f66be84190286d200c36245, type: 3}
   m_Name: SelectionData_
   m_EditorClassIdentifier: 
-  ID: 0
+  StartIndexID: 0
   Data:
-  - Name: 
+  - Name: 1
     Texture: {fileID: 0}
     Source: {fileID: 0}
-  - Name: 
+  - Name: 2
     Texture: {fileID: 0}
     Source: {fileID: 0}
-  - Name: 
+  - Name: 3
     Texture: {fileID: 0}
     Source: {fileID: 0}

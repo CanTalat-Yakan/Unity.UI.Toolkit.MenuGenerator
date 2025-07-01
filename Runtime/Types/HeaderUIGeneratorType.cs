@@ -4,6 +4,7 @@ namespace UnityEssentials
 {
     public class UIMenuHeaderData : UIGeneratorTypeTemplate
     {
+        public int MarginTop = 20;
     }
 
     public static partial class UIMenuGeneratorType
@@ -21,6 +22,7 @@ namespace UnityEssentials
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
+            label.style.marginTop = data.MarginTop;
         }
     }
 }
