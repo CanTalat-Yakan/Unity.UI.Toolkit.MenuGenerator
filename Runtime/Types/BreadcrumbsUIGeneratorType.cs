@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -5,31 +6,42 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static void AddBreadcrumb(UIMenuGenerator menu, string label, bool prefix, ScriptableObject[] data)
+        public static void AddBreadcrumb(UIMenuGenerator menu, string label, bool isRoot, ScriptableObject[] data, Action redraw)
         {
-            if(menu.Breadcrumbs.LinkedElement is not GroupBox container)
+            if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;
 
             var element = menu.Data.BreadcrumbTemplate.CloneTree();
-            ConfigureBreadcrumbVisuals(element, label, prefix);
-            ConfigureBreadcrumbInteraction(menu, element, container.childCount, prefix, label, data);
+            ConfigureBreadcrumbVisuals(element, label, !isRoot);
+            ConfigureBreadcrumbInteraction(menu, element, container.childCount, isRoot, label, data, redraw);
             container.Add(element);
         }
 
-        private static void ConfigureBreadcrumbVisuals(VisualElement element, string label, bool prefix)
+        private static void ConfigureBreadcrumbVisuals(VisualElement element, string label, bool showIcon)
         {
             var button = element.Q<Button>("Button");
-            button.text = (prefix ? "  •  " : string.Empty) + label.ToUpper();
+            button.text = (showIcon ? "  •  " : string.Empty) + label.ToUpper();
             element.userData = label;
+
+            //var icon = element.Q<VisualElement>("Icon");
+            //icon.SetDisplayEnabled(showIcon);
         }
 
-        private static void ConfigureBreadcrumbInteraction(UIMenuGenerator menu, VisualElement element, int index, bool prefix, string label, ScriptableObject[] data)
+        private static void ConfigureBreadcrumbInteraction(
+            UIMenuGenerator menu,
+            VisualElement element,
+            int index, bool isRoot, string label,
+            ScriptableObject[] data,
+            Action redraw)
         {
             var button = element.Q<Button>();
             button.clicked += () =>
             {
                 ClearBreadcrumbsFromIndex(menu, index);
-                menu.PopulateHierarchy(!prefix, label, data);
+                if (data != null && data.Length > 0)
+                    menu.PopulateHierarchy(isRoot, label, data, null);
+                else
+                    menu.PopulateHierarchy(isRoot, label, null, redraw);
             };
         }
 

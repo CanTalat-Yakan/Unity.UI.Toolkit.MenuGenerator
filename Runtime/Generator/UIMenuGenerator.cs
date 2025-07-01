@@ -95,18 +95,25 @@ namespace UnityEssentials
 
     public partial class UIMenuGenerator : MonoBehaviour
     {
-        public void PopulateHierarchy(bool isRoot, string categoryName, ScriptableObject[] collection)
+        public void PopulateHierarchy(bool isRoot, string categoryName, ScriptableObject[] data, Action redraw = null)
         {
             ClearScrollView();
 
-            ConfigureRedraw(categoryName, !isRoot, collection);
-            UIMenuGeneratorType.AddBreadcrumb(this, categoryName, !isRoot, collection);
+            if (data != null && data.Length > 0)
+                ConfigureRedraw(categoryName, !isRoot, data);
+            else
+            {
+                Redraw = redraw;
+                Redraw?.Invoke();
+            }
+
+            UIMenuGeneratorType.AddBreadcrumb(this, categoryName, isRoot, data, redraw);
 
             UpdateCategoryHistory(categoryName);
 
-            if (collection != null && collection.Length != 0)
-                foreach (var data in collection)
-                    ProcessDataItem(data);
+            if (data != null && data.Length != 0)
+                foreach (var item in data)
+                    ProcessDataItem(item);
         }
 
         private void ProcessDataItem(ScriptableObject data) =>

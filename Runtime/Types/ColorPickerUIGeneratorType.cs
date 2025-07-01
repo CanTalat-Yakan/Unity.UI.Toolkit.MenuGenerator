@@ -50,27 +50,24 @@ namespace UnityEssentials
         {
             var button = element.Q<Button>();
             button.clicked += () =>
-                ShowColorPickerOverlay(menu, data, callback:
-                    UpdateColorPickerVisuals(menu.Profile, element, data.Reference));
+            {
+                menu.PopulateHierarchy(false, data.Name, null, () =>
+                {
+                    menu.AddElementToScrollView(CreateColorPicker(menu, data, 
+                        callback: UpdateColorPickerVisuals(menu.Profile, element, data.Reference)));
+                });
+            };
         }
     }
 
     // Overlay Management - Color Picker
     public static partial class UIMenuGeneratorType
     {
-        private static void ShowColorPickerOverlay(UIMenuGenerator menu, UIMenuColorPickerData data, Action<string, Color> callback)
-        {
-            menu.PopulateHierarchy(false, data.Name, null);
-            menu.AddElementToScrollView(CreateColorPicker(menu, data, callback));
-        }
-
         private static VisualElement CreateColorPicker(UIMenuGenerator menu, UIMenuColorPickerData data, Action<string, Color> callback)
         {
             var picker = menu.Data.ColorPickerTemplate.CloneTree();
-
             ConfigureColorSliders(menu.Profile, picker, data, callback);
             ConfigureColorPresets(menu.Profile, picker, data, callback);
-
             return picker;
         }
 
