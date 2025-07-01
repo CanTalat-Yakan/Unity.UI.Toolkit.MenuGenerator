@@ -12,7 +12,10 @@ namespace UnityEssentials
             var directoryPath = GetDataPath(useParentDirectory, "Resources", localResourcePath);
             var filePath = Path.Combine(directoryPath, $"{fileName}.json");
 
-            var json = JsonConvert.SerializeObject(data, Formatting.Indented);
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new UnityColorJsonConverter());
+            settings.ContractResolver = new IgnoreUnityObjectContractResolver();
+            var json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
             File.WriteAllText(filePath, json);
         }
 

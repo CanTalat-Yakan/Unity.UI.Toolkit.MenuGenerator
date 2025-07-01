@@ -58,7 +58,7 @@ namespace UnityEssentials
             label.text = data.Name.ToUpper();
 
             var value = 0;
-            profile.ColorSliderDataDictionary.TryGetValue(data, out value);
+            profile.ColorSliderDataDictionary.TryGetValue(data.Reference, out value);
 
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
@@ -75,7 +75,7 @@ namespace UnityEssentials
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(e.newValue / 100f));
 
-                profile.OnColorSliderValueChanged(data, e.newValue);
+                profile.OnColorSliderValueChanged(data.Reference, e.newValue);
             });
         }
     }

@@ -34,7 +34,8 @@ namespace UnityEssentials
             };
 
             foreach (var item in data?.Root)
-                editor._treeView?.AddItem(UIMenuEditorUtilities.CreateItem(item, editor._treeView));
+                if (item != null)
+                    editor._treeView?.AddItem(UIMenuEditorUtilities.CreateItem(item, editor._treeView));
 
             editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800)).ShowUtility();
             editor.Window

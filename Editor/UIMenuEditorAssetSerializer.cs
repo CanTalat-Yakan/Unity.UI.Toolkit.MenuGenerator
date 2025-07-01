@@ -190,15 +190,17 @@ namespace UnityEssentials
                 GatherTreeAssetPathsRecursively(child, Path.Combine(directory, itemName), paths);
         }
 
-        private static string GetUniqueName(SimpleTreeViewItem item)
-        {
-            string name = item.UniqueName;
+        private static string GetUniqueName(SimpleTreeViewItem item) =>
+            GetUniqueName(item.UniqueName, item.UserData as UIGeneratorTypeTemplate);
 
-            var itemData = item.UserData as ScriptableObject;
-            if (itemData != null)
+        private static string GetUniqueName(string uniqueName, UIGeneratorTypeTemplate data)
+        {
+            string name = uniqueName;
+
+            if (data != null)
             {
-                name += $" {(itemData as UIGeneratorTypeTemplate).ID}";
-                itemData.name = name;
+                name += $" {data.ID}";
+                data.name = name;
             }
 
             if (string.IsNullOrEmpty(name))

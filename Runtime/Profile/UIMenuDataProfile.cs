@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
@@ -10,7 +12,10 @@ namespace UnityEssentials
         public SerializedDictionary<string, float> SliderDataDictionary = new();
         public SerializedDictionary<string, int> SelectionDataDictionary = new();
         public SerializedDictionary<string, Color> ColorPickerDataDictionary = new();
-        public SerializedDictionary<UIMenuColorSliderData, int> ColorSliderDataDictionary = new();
+        public SerializedDictionary<string, int> ColorSliderDataDictionary = new();
+
+        [JsonIgnore]
+        public Action OnValueChanged;
 
         public void CopyValues<T>(T source) where T : UIMenuDataProfile
         {
@@ -23,25 +28,46 @@ namespace UnityEssentials
             ColorSliderDataDictionary.CopyFrom(source.ColorSliderDataDictionary?.Dictionary);
         }
 
-        public virtual void OnToggleValueChanged(string reference, bool value) =>
+        public virtual void OnToggleValueChanged(string reference, bool value)
+        {
             ToggleDataDictionary[reference] = value;
+            OnValueChanged?.Invoke();
+        }
 
-        public virtual void OnInputValueChanged(string reference, string input) =>
+        public virtual void OnInputValueChanged(string reference, string input)
+        {
             InputDataDictionary[reference] = input;
+            OnValueChanged?.Invoke();
+        }
 
-        public virtual void OnOptionsValueChanged(string reference, int index) =>
+        public virtual void OnOptionsValueChanged(string reference, int index)
+        {
             OptionsDataDictionary[reference] = index;
+            OnValueChanged?.Invoke();
+        }
 
-        public virtual void OnSliderValueChanged(string reference, float value) =>
+        public virtual void OnSliderValueChanged(string reference, float value)
+        {
             SliderDataDictionary[reference] = value;
+            OnValueChanged?.Invoke();
+        }
 
-        public virtual void OnSelectionValueChanged(string reference, int index) =>
+        public virtual void OnSelectionValueChanged(string reference, int index)
+        {
             SelectionDataDictionary[reference] = index;
+            OnValueChanged?.Invoke();
+        }
 
-        public virtual void OnColorPickerValueChanged(string reference, Color color) =>
+        public virtual void OnColorPickerValueChanged(string reference, Color color)
+        {
             ColorPickerDataDictionary[reference] = color;
+            OnValueChanged?.Invoke();
+        }
 
-        public virtual void OnColorSliderValueChanged(UIMenuColorSliderData colorSliderData, int value) =>
-            ColorSliderDataDictionary[colorSliderData] = value;
+        public virtual void OnColorSliderValueChanged(string reference, int value)
+        {
+            ColorSliderDataDictionary[reference] = value;
+            OnValueChanged?.Invoke();
+        }
     }
 }

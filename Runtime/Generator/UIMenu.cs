@@ -27,6 +27,7 @@ namespace UnityEssentials
 
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
         public string SaveFileName = "UIMenuSettings";
+        public bool SaveOnChange = true;
     }
 
     public class UIMenu : MonoBehaviour
@@ -48,6 +49,8 @@ namespace UnityEssentials
             if (Data == null)
                 return;
 
+            GetProfile();
+            Generator.Profile.OnValueChanged += () => SaveProfile();
             Generator.PopulateHierarchy(true, Data.Name, Data.Root);
         }
 
@@ -94,7 +97,8 @@ namespace UnityEssentials
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
                 UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile,
-                    saveFileName ??= _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+                    saveFileName ??= _settings.SaveFileName, 
+                    _settings.SaveFileMode == UIProfileSaveMode.Outside);
 
             return Generator.Profile ??= ScriptableObject.CreateInstance<UIMenuDataProfile>();
         }
@@ -103,7 +107,8 @@ namespace UnityEssentials
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
                 UIMenuDataProfileSerializer.SerializeData(Generator.Profile,
-                    saveFileName ??= _settings.SaveFileName, _settings.SaveFileMode == UIProfileSaveMode.Outside);
+                    saveFileName ??= _settings.SaveFileName, 
+                    _settings.SaveFileMode == UIProfileSaveMode.Outside);
         }
 
         [HideInInspector] public bool ShowAdvancedSettings = false;

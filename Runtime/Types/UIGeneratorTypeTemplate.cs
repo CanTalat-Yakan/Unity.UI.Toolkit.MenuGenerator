@@ -7,7 +7,7 @@ namespace UnityEssentials
     {
         [HideInInspector] public GUID? ID;
 
-        public void OnEnable() =>
+        public void Initialize() =>
             ID ??= GUID.Generate();
     }
 }
