@@ -32,21 +32,22 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            profile.Sliders.TryGetValue(data.Reference, data.Default, out var value);
+            var defaultValue = data.Default * (data.MaxRange - data.MinRange) + data.MinRange;
+            profile.Sliders.TryGetValue(data.Reference, defaultValue, out var value);
 
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
                 slider.lowValue = data.MinRange;
                 slider.highValue = data.MaxRange;
-                slider.value = value * data.MaxRange;
+                slider.value = value;
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
                 sliderInt.lowValue = (int)data.MinRange;
                 sliderInt.highValue = (int)data.MaxRange;
-                sliderInt.value = (int)(value * data.MaxRange);
+                sliderInt.value = (int)value;
             }
         }
 

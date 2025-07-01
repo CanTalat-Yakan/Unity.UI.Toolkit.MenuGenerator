@@ -63,6 +63,9 @@ namespace UnityEssentials
 
             SetUIMenuData = (data) =>
             {
+                if (this == null) 
+                    return;
+
                 Data = data;
                 UnityEditor.Selection.activeGameObject = gameObject;
             };

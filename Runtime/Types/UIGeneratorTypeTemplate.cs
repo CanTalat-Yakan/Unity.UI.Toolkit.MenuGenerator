@@ -6,7 +6,7 @@ namespace UnityEssentials
     public class UIGeneratorTypeTemplate : ScriptableObject
     {
         [HideInInspector, SerializeField] public bool HasReference;
-        [HideInInspector, SerializeField] public GUID? ID;
+        [HideInInspector, SerializeField] public string ID;
         [HideInInspector, SerializeField] public string Name;
         public string Reference;
 
@@ -14,7 +14,7 @@ namespace UnityEssentials
         {
             var generatorType = CreateInstance<T>();
             generatorType.HasReference = hasReference;
-            generatorType.ID ??= GUID.Generate();
+            generatorType.ID = GUID.Generate().ToString();
             generatorType.SetName(name ?? string.Empty, uniqueName);
             return generatorType;
         }
@@ -24,6 +24,9 @@ namespace UnityEssentials
             uniqueName ??= name;
             Name = name;
             Reference = uniqueName.ToLower().Replace(" ", "_");
+
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
         }
     }
 }

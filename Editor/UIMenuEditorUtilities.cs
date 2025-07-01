@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using static PlasticGui.LaunchDiffParameters;
 
 namespace UnityEssentials
 {
@@ -89,6 +90,8 @@ namespace UnityEssentials
             if (dataValue != null)
                 foreach (var child in dataValue)
                     CreateItem(child, treeView, item);
+
+            treeView.SetExpanded(item.id, true);
 
             return item;
         }
