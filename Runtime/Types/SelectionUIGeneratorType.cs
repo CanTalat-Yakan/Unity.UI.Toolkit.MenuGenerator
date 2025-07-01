@@ -6,11 +6,11 @@ namespace UnityEssentials
 {
     public class UIMenuSelectionDataCategory : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
         [Space]
         public ScriptableObject[] Data;
+
+        [Space]
+        public int Default;
 
         public UIMenuSelectionDataElement GetSelectionData(int index)
         {
@@ -23,28 +23,11 @@ namespace UnityEssentials
 
             return null;
         }
-
-        public UIMenuSelectionDataCategory SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
     }
 
-    public class UIMenuSelectionDataGroup : ScriptableObject
+    public class UIMenuSelectionDataGroup : UIGeneratorTypeTemplate
     {
-        public string Name;
-
         public UIMenuSelectionData[] Selections;
-
-        public UIMenuSelectionDataGroup SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            return this;
-        }
     }
 
     public static partial class UIMenuGeneratorType
@@ -72,15 +55,15 @@ namespace UnityEssentials
             var image = categoryElement.Q<VisualElement>("Image");
             var label = categoryElement.Q<Label>("Label");
 
-            if (profile.SelectionDataDictionary.TryGetValue(category.Reference, out int index))
-            {
-                var selectionData = category.GetSelectionData(index);
-                if (selectionData == null)
-                    return;
+            if (!profile.SelectionDataDictionary.TryGetValue(category.Reference, out var index))
+                index = category.Default;
 
-                image.SetBackgroundImage(selectionData.Texture);
-                label.text = selectionData.Name;
-            }
+            var selectionData = category.GetSelectionData(index);
+            if (selectionData == null)
+                return;
+
+            image.SetBackgroundImage(selectionData.Texture);
+            label.text = selectionData.Name;
         }
 
         private static void ConfigureSelectionCategoryInteraction(

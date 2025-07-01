@@ -140,8 +140,7 @@ namespace UnityEssentials
                 .SetIcon(FolderIcon)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Category.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuCategoryData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuCategoryData>(name));
 
         public static void AddHeader(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateHeader(treeView), parent, false);
@@ -152,8 +151,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Header.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuHeaderData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuHeaderData>(name));
 
         public static void AddSpace(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSpace(), parent, false);
@@ -162,7 +160,7 @@ namespace UnityEssentials
                 .SetName(string.Empty)
                 .Support(allowChildren: false, allowRenaming: false)
                 .SetUserTag(UIMenuDataTypes.Space.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSpacerData>());
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuSpacerData>());
 
         public static void AddButton(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateButton(treeView), parent, false);
@@ -173,8 +171,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Button.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuButtonData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuButtonData>(name));
 
         public static void AddOptions(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateOptions(treeView), parent, false);
@@ -185,8 +182,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Options.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuOptionsData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuOptionsData>(name));
 
         public static void AddInput(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateInput(treeView), parent, false);
@@ -197,8 +193,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Input.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuInputData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuInputData>(name));
 
         public static void AddSlider(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSlider(treeView), parent, false);
@@ -209,8 +204,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Slider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSliderData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuSliderData>(name));
 
         public static void AddToggle(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateToggle(treeView), parent, false);
@@ -221,8 +215,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Toggle.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuToggleData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuToggleData>(name));
 
         public static void AddSelectionCategory(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSelectionCategory(treeView), parent, true);
@@ -235,8 +228,7 @@ namespace UnityEssentials
                 .Support(SupportedTypes)
                 .SetContextMenu(GetSelectionGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataCategory>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuSelectionDataCategory>(name));
 
         public static void AddSelectionGroup(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSelectionGroup(treeView), parent, false);
@@ -247,8 +239,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuSelectionDataGroup>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuSelectionDataGroup>(name));
 
         public static void AddColorPicker(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateColorPicker(treeView), parent, false);
@@ -259,8 +250,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.ColorPicker.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorPickerData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuColorPickerData>(name));
 
         public static void AddColorSlider(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateColorSlider(treeView), parent, false);
@@ -271,8 +261,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.ColorSlider.ToString())
-                .SetUserData(ScriptableObject.CreateInstance<UIMenuColorSliderData>()
-                    .SetName(name));
+                .SetUserData(UIGeneratorTypeTemplate.Initialize<UIMenuColorSliderData>(name));
     }
 }
 #endif

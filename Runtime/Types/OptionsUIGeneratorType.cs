@@ -6,20 +6,12 @@ namespace UnityEssentials
 {
     public class UIMenuOptionsData : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
         [Space]
         public bool Reverse;
         public string[] Options;
 
-        public UIMenuOptionsData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
+        [Space]
+        public int Default;
     }
 
     public static partial class UIMenuGeneratorType
@@ -44,11 +36,12 @@ namespace UnityEssentials
             if(data.Options == null || data.Options.Length == 0)
                 return;
 
-            profile.OptionsDataDictionary.TryGetValue(data.Reference, out var dropDownindex);
+            if(!profile.OptionsDataDictionary.TryGetValue(data.Reference, out var index))
+                index = data.Default;
 
             dropdown.choices = data.Options.ToList();
-            dropdown.index = dropDownindex;
-            dropdown.value = data.Options[dropDownindex];
+            dropdown.index = index;
+            dropdown.value = data.Options[index];
         }
 
         private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)

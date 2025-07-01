@@ -5,23 +5,15 @@ namespace UnityEssentials
 {
     public class UIMenuSliderData : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
         [Space]
         public bool IsFloat;
         public float MinRange = 0;
         public float MaxRange = 100;
 
-        public Vector2 ValueRange => new Vector2(MinRange, MaxRange);
+        [Space]
+        public float Default;
 
-        public UIMenuSliderData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
+        public Vector2 ValueRange => new Vector2(MinRange, MaxRange);
     }
 
     public static partial class UIMenuGeneratorType
@@ -43,18 +35,20 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            float value = 0;
-            profile.SliderDataDictionary.TryGetValue(data.Reference, out value);
+            if(!profile.SliderDataDictionary.TryGetValue(data.Reference, out var value))
+                value = data.Default;
 
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
                 (slider.lowValue, slider.highValue) = (data.ValueRange.x, data.ValueRange.y);
+                slider.value = value;
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
                 (sliderInt.lowValue, sliderInt.highValue) = ((int)data.ValueRange.x, (int)data.ValueRange.y);
+                sliderInt.value = (int)value;
             }
         }
 

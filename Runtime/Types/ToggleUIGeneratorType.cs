@@ -5,11 +5,8 @@ namespace UnityEssentials
 {
     public class UIMenuToggleData : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
         [Space]
-        public bool Value;
+        public bool Default;
 
         public UIMenuToggleData SetName(string name, string uniqueName = null)
         {
@@ -37,10 +34,11 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
+            if (!profile.ToggleDataDictionary.TryGetValue(data.Reference, out bool value))
+                value = data.Default;
+
             var toggle = element.Q<Toggle>("Toggle");
-            if (profile.ToggleDataDictionary.TryGetValue(data.Reference, out bool value))
-                toggle.value = value;
-            else toggle.value = data.Value;
+            toggle.value = value;
         }
 
         private static void ConfigureToggleInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuToggleData data)

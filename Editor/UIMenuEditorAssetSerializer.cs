@@ -33,10 +33,6 @@ namespace UnityEssentials
 
             MoveDataAndChildDirectoryIfExists(data, directory, fileName);
 
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            CleanUnusedAssetsInDirectory(treeView, scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -52,6 +48,8 @@ namespace UnityEssentials
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
+            CleanUnusedAssetsInDirectory(treeView, scriptableObjectDirectory);
         }
 
         private static void MoveDataAndChildDirectoryIfExists(UIMenuData data, string newDirectory, string newFileName)
@@ -116,14 +114,23 @@ namespace UnityEssentials
                 Directory.CreateDirectory(directory);
 
             string path = Path.Combine(directory, fileName + ".asset");
+            string assetPath = AssetDatabase.GetAssetPath(instance);
 
-            var existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (existingAsset == null)
+            if (string.IsNullOrEmpty(assetPath))
+                // Not an asset yet, create it
                 AssetDatabase.CreateAsset(instance, path);
+            else if (assetPath != path)
+            {
+                // Asset exists but at a different path, move it
+                string error = AssetDatabase.MoveAsset(assetPath, path);
+                if (!string.IsNullOrEmpty(error))
+                    Debug.LogError($"Failed to move asset from '{assetPath}' to '{path}': {error}");
+            }
             else
             {
-                EditorUtility.CopySerialized(instance, existingAsset);
-                EditorUtility.SetDirty(existingAsset);
+                // Asset exists at the correct path, update it
+                EditorUtility.CopySerialized(instance, AssetDatabase.LoadAssetAtPath<T>(path));
+                EditorUtility.SetDirty(instance);
             }
         }
 
@@ -190,17 +197,15 @@ namespace UnityEssentials
                 GatherTreeAssetPathsRecursively(child, Path.Combine(directory, itemName), paths);
         }
 
-        private static string GetUniqueName(SimpleTreeViewItem item) =>
-            GetUniqueName(item.UniqueName, item.UserData as UIGeneratorTypeTemplate);
-
-        private static string GetUniqueName(string uniqueName, UIGeneratorTypeTemplate data)
+        private static string GetUniqueName(SimpleTreeViewItem item)
         {
-            string name = uniqueName;
+            string name = item.UniqueName;
 
-            if (data != null)
+            var itemData = item.UserData as ScriptableObject;
+            if (itemData != null)
             {
-                name += $" {data.ID}";
-                data.name = name;
+                name += $" {(itemData as UIGeneratorTypeTemplate).ID}";
+                itemData.name = name;
             }
 
             if (string.IsNullOrEmpty(name))

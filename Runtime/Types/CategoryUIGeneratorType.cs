@@ -5,18 +5,9 @@ namespace UnityEssentials
 {
     public class UIMenuCategoryData : UIGeneratorTypeTemplate
     {
-        public string Name;
-
+        [Space]
         public Texture2D Texture;
         public ScriptableObject[] Data;
-
-        public UIMenuCategoryData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            base.name = uniqueName;
-            Name = name;
-            return this;
-        }
     }
 
     public static partial class UIMenuGeneratorType

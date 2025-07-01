@@ -4,14 +4,6 @@ namespace UnityEssentials
 {
     public class UIMenuHeaderData : UIGeneratorTypeTemplate
     {
-        public string Name;
-
-        public UIMenuHeaderData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            return this;
-        }
     }
 
     public static partial class UIMenuGeneratorType

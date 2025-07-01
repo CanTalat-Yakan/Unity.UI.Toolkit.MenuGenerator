@@ -6,11 +6,6 @@ namespace UnityEssentials
     public class UIMenuSpacerData : UIGeneratorTypeTemplate
     {
         public int Height = 20;
-
-        public UIMenuSpacerData SetName(string name, string uniqueName)
-        {
-            return this;
-        }
     }
 
     public static partial class UIMenuGeneratorType

@@ -1,19 +1,12 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
     public class UIMenuInputData : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
-        public UIMenuInputData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
+        [Space]
+        public string Default;
     }
 
     public static partial class UIMenuGeneratorType
@@ -35,8 +28,11 @@ namespace UnityEssentials
 
             var inputField = element.Q<TextField>("Input");
 
-            string input = string.Empty;
-            profile.InputDataDictionary.TryGetValue(data.Reference, out input);
+            if(!profile.InputDataDictionary.TryGetValue(data.Reference, out var input))
+                input = data.Default;
+
+            if (string.IsNullOrEmpty(input))
+                input = string.Empty;
 
             inputField.value = input;
         }

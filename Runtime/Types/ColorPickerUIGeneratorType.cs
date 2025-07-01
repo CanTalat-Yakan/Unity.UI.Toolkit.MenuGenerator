@@ -6,19 +6,11 @@ namespace UnityEssentials
 {
     public class UIMenuColorPickerData : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
         [Space]
         public bool HasAlpha;
 
-        public UIMenuColorPickerData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
+        [Space]
+        public Color Default;
     }
 
     public static partial class UIMenuGeneratorType
@@ -51,8 +43,10 @@ namespace UnityEssentials
 
             var image = element.Q<VisualElement>("Image");
 
-            if (profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out Color color))
-                image.SetBackgroundColor(color);
+            if (!profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out var color))
+                color = data.Default;
+
+            image.SetBackgroundColor(color);
         }
 
         private static void ConfigureColorPickerButtonInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
@@ -93,15 +87,15 @@ namespace UnityEssentials
 
             picker.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
-            if (profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out Color color))
-            {
-                Color.RGBToHSV(color, out float h, out float s, out float v);
-                hueSlider.value = (int)(h * 360);
-                satSlider.value = (int)(s * 100);
-                valSlider.value = (int)(v * 100);
-                alphaSlider.value = (int)(color.a * 100);
-                colorElement.SetBackgroundColor(color);
-            }
+            if (!profile.ColorPickerDataDictionary.TryGetValue(data.Reference, out var color))
+                color = data.Default;
+
+            Color.RGBToHSV(color, out var h, out var s, out var v);
+            hueSlider.value = (int)(h * 360);
+            satSlider.value = (int)(s * 100);
+            valSlider.value = (int)(v * 100);
+            alphaSlider.value = (int)(color.a * 100);
+            colorElement.SetBackgroundColor(color);
 
             Action updateColor = () =>
             {

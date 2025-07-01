@@ -12,7 +12,7 @@ namespace UnityEssentials
         public SerializedDictionary<string, float> SliderDataDictionary = new();
         public SerializedDictionary<string, int> SelectionDataDictionary = new();
         public SerializedDictionary<string, Color> ColorPickerDataDictionary = new();
-        public SerializedDictionary<string, int> ColorSliderDataDictionary = new();
+        public SerializedDictionary<string, float> ColorSliderDataDictionary = new();
 
         [JsonIgnore]
         public Action OnValueChanged;

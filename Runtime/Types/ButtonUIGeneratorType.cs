@@ -6,9 +6,6 @@ namespace UnityEssentials
 {
     public class UIMenuButtonData : UIGeneratorTypeTemplate
     {
-        public string Name;
-        public string Reference;
-
         [Space]
         public Texture2D Texture;
 
@@ -21,14 +18,6 @@ namespace UnityEssentials
 
         public void InvokeAltEvent() =>
             AltEvent?.Invoke();
-
-        public UIMenuButtonData SetName(string name, string uniqueName = null)
-        {
-            uniqueName ??= name;
-            Name = name;
-            Reference = name.ToLower().Replace(" ", "_");
-            return this;
-        }
     }
 
     public static partial class UIMenuGeneratorType
