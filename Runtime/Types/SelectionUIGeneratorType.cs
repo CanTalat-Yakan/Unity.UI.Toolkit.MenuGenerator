@@ -140,6 +140,8 @@ namespace UnityEssentials
             string reference,
             int index)
         {
+            profile.OnSelectionValueChanged(reference, index);
+
             categorycategoryElement.Q<VisualElement>("Image").SetBackgroundImage(data.Texture);
             categorycategoryElement.Q<Label>().text = data.Name;
         }

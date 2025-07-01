@@ -11,7 +11,7 @@ namespace UnityEssentials
         public float MaxRange = 100;
 
         [Space]
-        [Range(0, 1)]
+        [Range(0f, 1f)]
         public float Default;
     }
 

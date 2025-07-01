@@ -8,14 +8,8 @@ namespace UnityEssentials
         [Space]
         public Gradient Gradient;
         [Space]
-        [Range(0f, 1f)]
+        [Range(0, 100)]
         public float Default;
-    }
-
-    public class UIMenuColorSliderDataGroup : UIGeneratorTypeTemplate
-    {
-        [Space]
-        public UIMenuColorSliderData[] ColorSliderData;
     }
 
     public static partial class UIMenuGeneratorType
@@ -41,7 +35,7 @@ namespace UnityEssentials
             var slider = element.Q<SliderInt>();
             slider.lowValue = 0;
             slider.highValue = 100;
-            slider.value = (int)(value * 100);
+            slider.value = (int)value;
         }
 
         private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuColorSliderData data)
