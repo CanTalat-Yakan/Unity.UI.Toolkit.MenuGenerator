@@ -32,8 +32,8 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        public static Action<UIMenu> ShowUIBuilder { get; set; }
-        public Action<UIMenuData> SetUIMenuData { get; private set; }
+        public static Action<UIMenu> ShowEditor { get; set; }
+        public Action<UIMenuData> SetData { get; private set; }
 
         [SerializeField] private UIMenuSettings _settings = new();
 
@@ -55,13 +55,13 @@ namespace UnityEssentials
         }
 
         [Button()]
-        public void OpenUIBuilder()
+        public void OpenMenuBuilder()
         {
 #if UNITY_EDITOR
             if (Data == null || Data.Equals(null))
                 Data = CreateDefault();
 
-            SetUIMenuData = (data) =>
+            SetData = (data) =>
             {
                 if (this == null) 
                     return;
@@ -70,7 +70,7 @@ namespace UnityEssentials
                 UnityEditor.Selection.activeGameObject = gameObject;
             };
 
-            ShowUIBuilder?.Invoke(this);
+            ShowEditor?.Invoke(this);
 #endif
         }
 

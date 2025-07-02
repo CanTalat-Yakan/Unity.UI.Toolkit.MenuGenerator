@@ -19,7 +19,7 @@ namespace UnityEssentials
 
         [InitializeOnLoadMethod()]
         public static void Initialize() =>
-            UIMenu.ShowUIBuilder = (menu) => ShowUtility(menu.Data, menu.SetUIMenuData);
+            UIMenu.ShowEditor = (menu) => ShowUtility(menu.Data, menu.SetData);
 
         private static void ShowUtility(UIMenuData data, Action<UIMenuData> action, UIMenuEditor editor = null)
         {
@@ -29,9 +29,7 @@ namespace UnityEssentials
 
             editor._treeView = new SimpleTreeView(data.Name);
             editor._treeView.OnRename = (item) =>
-            {
                 SetSerializedObjectName(item.UserData as ScriptableObject, item.Name, item.UniqueName);
-            };
 
             foreach (var item in data?.Root)
                 if (item != null)
