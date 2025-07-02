@@ -6,10 +6,8 @@ namespace UnityEssentials
 {
     public class UIMenuSelectionDataCategory : UIGeneratorTypeTemplate
     {
-        [Space]
         public ScriptableObject[] Data;
 
-        [Space]
         public int Default;
 
         public UIMenuSelectionDataElement GetSelectionData(int index)
@@ -17,9 +15,10 @@ namespace UnityEssentials
             foreach (var scriptableObject in Data)
                 if (scriptableObject is UIMenuSelectionDataGroup group)
                     foreach (var selections in group.Selections)
-                        for (int i = 0; i < selections.Data.Length; i++)
-                            if (selections.StartIndexID + i == index)
-                                return selections.Data[i];
+                        if (selections != null && selections.Data != null)
+                            for (int i = 0; i < selections.Data.Length; i++)
+                                if (selections.StartIndexID + i == index)
+                                    return selections.Data[i];
 
             return null;
         }
@@ -27,6 +26,7 @@ namespace UnityEssentials
 
     public class UIMenuSelectionDataGroup : UIGeneratorTypeTemplate
     {
+        [Space]
         public UIMenuSelectionData[] Selections;
     }
 
@@ -112,10 +112,25 @@ namespace UnityEssentials
             var groupBox = new GroupBox();
             groupBox.SetWidth(100f);
             groupBox.style.flexWrap = Wrap.Wrap;
+
+            if (group.Selections == null)
+                return groupBox;
+
             foreach (var selections in group.Selections)
+            {
+                if (selections == null || selections.Data == null)
+                    continue;
+
                 for (int i = 0; i < selections.Data.Length; i++)
+                {
+                    if (selections.Data[i] == null)
+                        continue;
+
                     groupBox.Add(CreateSelectionTile(
                         menu, categoryElement, category, selections.Data[i], selections.StartIndexID + i));
+                }
+            }
+
             return groupBox;
         }
 

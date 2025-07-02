@@ -37,6 +37,7 @@ namespace UnityEssentials
             AssetDatabase.Refresh();
 
             SaveScriptableObject(data, directory, fileName);
+            EnsureUnityAssetFolder(scriptableObjectDirectory);
             SaveTreeViewToDirectory(treeView, scriptableObjectDirectory);
 
             AssetDatabase.SaveAssets();
@@ -64,9 +65,11 @@ namespace UnityEssentials
                 return;
 
             if (!AssetDatabase.IsValidFolder(NormalizeAssetPath(newDirectory)))
-                AssetDatabase.CreateFolder(
-                    NormalizeAssetPath(Path.GetDirectoryName(newDirectory)),
-                    Path.GetFileName(newDirectory));
+            {
+                var parent = Path.GetDirectoryName(NormalizeAssetPath(newDirectory));
+                var name = Path.GetFileName(NormalizeAssetPath(newDirectory));
+                AssetDatabase.CreateFolder(parent, name);
+            }
 
             string newPath = Path.Combine(newDirectory, newFileName + ".asset");
             string error = AssetDatabase.MoveAsset(
@@ -115,27 +118,24 @@ namespace UnityEssentials
             if (instance == null || string.IsNullOrEmpty(directory))
                 return;
 
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            EnsureUnityAssetFolder(directory);
 
             string path = Path.Combine(directory, fileName + ".asset");
             string assetPath = AssetDatabase.GetAssetPath(instance);
 
             if (string.IsNullOrEmpty(assetPath))
-                // Not an asset yet, create it
                 AssetDatabase.CreateAsset(instance, NormalizeAssetPath(path));
             else if (NormalizeAssetPath(assetPath) != NormalizeAssetPath(path))
             {
-                // Asset exists but at a different path, move it
                 string error = AssetDatabase.MoveAsset(
                     NormalizeAssetPath(assetPath),
                     NormalizeAssetPath(path));
+
                 if (!string.IsNullOrEmpty(error))
                     Debug.LogError($"Failed to move asset from '{assetPath}' to '{path}': {error}");
             }
             else
             {
-                // Asset exists at the correct path, update it
                 EditorUtility.CopySerialized(instance, AssetDatabase.LoadAssetAtPath<T>(NormalizeAssetPath(path)));
                 EditorUtility.SetDirty(instance);
             }
@@ -247,6 +247,19 @@ namespace UnityEssentials
 
         private static string NormalizeAssetPath(string path) =>
             path.Replace('\\', '/');
+
+        private static void EnsureUnityAssetFolder(string directory)
+        {
+            string normalized = NormalizeAssetPath(directory);
+            if (!AssetDatabase.IsValidFolder(normalized))
+            {
+                string parent = Path.GetDirectoryName(normalized);
+                string name = Path.GetFileName(normalized);
+                if (!AssetDatabase.IsValidFolder(parent))
+                    EnsureUnityAssetFolder(parent); // Recursively ensure parent exists
+                AssetDatabase.CreateFolder(parent, name);
+            }
+        }
     }
 }
 #endif

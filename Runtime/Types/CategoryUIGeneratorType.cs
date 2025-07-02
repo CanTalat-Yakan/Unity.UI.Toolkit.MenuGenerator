@@ -5,8 +5,8 @@ namespace UnityEssentials
 {
     public class UIMenuCategoryData : UIGeneratorTypeTemplate
     {
-        [Space]
         public Texture2D Texture;
+
         public ScriptableObject[] Data;
     }
 

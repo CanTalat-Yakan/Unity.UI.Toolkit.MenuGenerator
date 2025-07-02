@@ -20,11 +20,10 @@ namespace UnityEssentials
         private static void ConfigureBreadcrumbVisuals(VisualElement element, string label, bool showIcon)
         {
             var button = element.Q<Button>("Button");
-            button.text = (showIcon ? "  •  " : string.Empty) + label.ToUpper();
-            element.userData = label;
+            button.text = label.ToUpper();
 
-            //var icon = element.Q<VisualElement>("Icon");
-            //icon.SetDisplayEnabled(showIcon);
+            if (!showIcon)
+                button.iconImage = null;
         }
 
         private static void ConfigureBreadcrumbInteraction(
