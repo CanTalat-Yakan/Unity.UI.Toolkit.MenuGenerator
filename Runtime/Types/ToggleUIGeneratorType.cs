@@ -33,9 +33,9 @@ namespace UnityEssentials
         private static void ConfigureToggleInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuToggleData data)
         {
             var toggle = element.Q<Toggle>("Toggle");
-            toggle.RegisterValueChangedCallback(evt =>
+            toggle.RegisterValueChangedCallback(e =>
             {
-                profile.OnToggleValueChanged(data.Reference, evt.newValue);
+                profile.OnToggleValueChanged(data.Reference, e.newValue);
             });
         }
     }
