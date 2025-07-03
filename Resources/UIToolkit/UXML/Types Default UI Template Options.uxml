@@ -1,5 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UnityEssentials/UI/UnityUIMenuGenerator/Resources/UIToolkit/Default%20UI%20Template%20USS.uss?fileID=7433441132597879392&amp;guid=0fba8d249946f55479ddb7e31b6afd1f&amp;type=3#Default UI Template USS" />
+    <Style src="Styles/Default UI Template USS.uss" />
     <engine:GroupBox class="unity-button" style="flex-direction: row; justify-content: space-between; background-color: rgba(0, 0, 0, 0.5); margin-top: 5px; margin-right: 0; margin-bottom: 15px; margin-left: 0; padding-top: 0; padding-right: 5px; padding-bottom: 0; padding-left: 20px; height: 40px; max-width: none; min-width: 550px; flex-wrap: wrap; overflow: hidden; width: 0; align-items: center;">
         <MarqueeLabel text="Label" name="Label" class="unity-button--primary" style="width: 220px; height: 24px;" />
         <engine:GroupBox style="width: 290px; justify-content: center; padding-left: 40px; padding-right: 40px; margin-right: 10px; height: 40px;">
