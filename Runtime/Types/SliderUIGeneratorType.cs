@@ -11,7 +11,6 @@ namespace UnityEssentials
         public float MaxRange = 100;
 
         [Space]
-        [Range(0f, 1f)]
         public float Default;
     }
 
@@ -32,7 +31,7 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            var defaultValue = data.Default * (data.MaxRange - data.MinRange) + data.MinRange;
+            var defaultValue = Mathf.Clamp(data.Default, data.MinRange, data.MaxRange);
             profile.Sliders.TryGetValue(data.Reference, defaultValue, out var value);
 
             if (data.IsFloat)

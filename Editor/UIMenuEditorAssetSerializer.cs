@@ -72,6 +72,10 @@ namespace UnityEssentials
             }
 
             string newPath = Path.Combine(newDirectory, newFileName + ".asset");
+            string normalizedNewPath = NormalizeAssetPath(newPath);
+            if (AssetDatabase.LoadAssetAtPath<ScriptableObject>(normalizedNewPath) != null)
+                AssetDatabase.DeleteAsset(normalizedNewPath);
+
             string error = AssetDatabase.MoveAsset(
                 NormalizeAssetPath(oldPath),
                 NormalizeAssetPath(newPath));
@@ -210,17 +214,17 @@ namespace UnityEssentials
 
         private static string GetUniqueName(SimpleTreeViewItem item)
         {
-            string name = item.UniqueName;
+            string name = "Asset ";
+
+            if (!string.IsNullOrEmpty(item.Name))
+                name = item.UniqueName + " ";
 
             var itemData = item.UserData as ScriptableObject;
             if (itemData != null)
             {
-                name += $" {(itemData as UIGeneratorTypeTemplate).ID}";
+                name += (itemData as UIGeneratorTypeTemplate).ID;
                 itemData.name = name;
             }
-
-            if (string.IsNullOrEmpty(name))
-                name = "FALLBACK";
 
             return name;
         }

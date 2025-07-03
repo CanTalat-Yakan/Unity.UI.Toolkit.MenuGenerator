@@ -26,7 +26,7 @@ namespace UnityEssentials
             "Make sure to include the Resources directory and its contents in your Build folder!";
 
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
-        public string SaveFileName = "UIMenuSettings";
+        public string SaveFileName = "UIMenu";
         public bool SaveOnChange = true;
     }
 
