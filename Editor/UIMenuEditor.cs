@@ -40,7 +40,7 @@ namespace UnityEssentials
                 .SetPreProcess(editor._treeView.PreProcess)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetPane(editor.Pane, EditorPaneStyle.Left, genericMenu: UIMenuEditorUtilities.GetGenericMenu(editor._treeView))
-                .SetBody(editor.Body)
+                .SetBody(editor.Body, EditorWindowStyle.Dark)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close);
 
@@ -84,6 +84,7 @@ namespace UnityEssentials
                 return;
 
             var isRoot = item == _treeView.RootItem;
+
             if (!isRoot)
                 SimpleTreeViewItemBreadcrumbs.Draw(item, clickedItem =>
                 {
@@ -91,7 +92,7 @@ namespace UnityEssentials
                     _treeView.Repaint();
                 });
 
-            CreateDynamicBox(item);
+            CreateDynamicBox(item, true);
 
             if (item.UserData is UIMenuCategoryData category || isRoot)
                 foreach (var child in item.Children)
@@ -116,7 +117,7 @@ namespace UnityEssentials
         private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();
         private readonly Dictionary<ScriptableObject, bool> _foldoutStates = new();
         private CustomScriptableObjectDrawer _customScriptableObjectDrawer = new();
-        private void CreateDynamicBox(SimpleTreeViewItem item)
+        private void CreateDynamicBox(SimpleTreeViewItem item, bool overwriteExpanded = false)
         {
             var itemData = item.UserData as ScriptableObject;
             if (itemData == null)
@@ -124,17 +125,25 @@ namespace UnityEssentials
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
-                isExpanded = true;
+                isExpanded = false;
                 _foldoutStates[itemData] = isExpanded;
             }
+
+            if(overwriteExpanded)
+                isExpanded = true;
 
             using (new EditorGUILayout.VerticalScope())
             {
                 using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
                 {
                     var label = item.Name == string.Empty ? item.UserTag : $"{item.Name} ({item.UserTag})";
-                    isExpanded = EditorGUILayout.Foldout(isExpanded, label, true);
-                    _foldoutStates[itemData] = isExpanded;
+                    if (overwriteExpanded)
+                        GUILayout.Label(label, EditorStyles.label); 
+                    else
+                    {
+                        isExpanded = EditorGUILayout.Foldout(isExpanded, label, true);
+                        _foldoutStates[itemData] = isExpanded;
+                    }
                 }
 
                 EditorGUI.indentLevel++;

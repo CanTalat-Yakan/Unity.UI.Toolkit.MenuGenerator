@@ -113,7 +113,7 @@ namespace UnityEssentials
         }
 
         [HideInInspector] public bool ShowAdvancedSettings = false;
-        [ContextMenu("Show Advanced Settings")]
+        [ContextMenu("Show Generator")]
         private void ShowAdvanced()
         {
             ShowAdvancedSettings = !ShowAdvancedSettings;
