@@ -49,7 +49,6 @@ namespace UnityEssentials
             SaveProfile();
 
             Generator.Initialize();
-            Generator.Fetch();
         }
 
         public UIMenuData Data;
@@ -63,7 +62,6 @@ namespace UnityEssentials
 
             GetProfile();
             Generator.Profile.OnValueChanged += () => SaveProfile();
-            Generator.Configure();
             Generator.Populate(true, Data.Name, Data.Root);
         }
 

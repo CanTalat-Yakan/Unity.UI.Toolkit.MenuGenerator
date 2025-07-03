@@ -10,7 +10,7 @@ namespace UnityEssentials
         public UIMenuDataProfile Profile;
 
         [HideInInspector] public UIDocument Document;
-        [HideInInspector] public UIElementLink Root;
+        [HideInInspector] public VisualElement Root;
         [HideInInspector] public UIElementLink Back;
         [HideInInspector] public UIElementLink Breadcrumbs;
         [HideInInspector] public UIElementLink ScrollView;
@@ -23,20 +23,21 @@ namespace UnityEssentials
         }
 
         [ContextMenu("Fetch")]
-        public void Fetch()
+        public void FetchReferences()
         {
-            Document = GetComponentInChildren<UIDocument>();
+            Document ??= GetComponentInChildren<UIDocument>();
 
-            Root = Document?.transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
-            Back = Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
-            Breadcrumbs = Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
-            ScrollView = Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
-        }
+            Root ??= Document?.rootVisualElement;
 
-        public void Configure()
-        {
-            if (Back?.LinkedElement is Button backButton)
-                backButton.clicked += () => UIMenuGeneratorType.GoBackOneBreadcrumb(this);
+            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
+            Breadcrumbs ??= Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
+
+            if (Back == null)
+            {
+                Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
+                if (Back?.LinkedElement is Button backButton)
+                    backButton.clicked += () => UIMenuGeneratorType.GoBackOneBreadcrumb(this);
+            }
         }
 
         public Action Redraw;
@@ -56,13 +57,11 @@ namespace UnityEssentials
         [ContextMenu("Show")]
         public void Show()
         {
-            Root.LinkedElement.SetDisplayEnabled(true);
         }
 
         [ContextMenu("Close")]
         public void Close()
         {
-            Root.LinkedElement.SetDisplayEnabled(false);
         }
 
         public string CurrentCategory { get; private set; }
@@ -99,8 +98,7 @@ namespace UnityEssentials
             if (element == null)
                 return;
 
-            if (Root.LinkedElement is VisualElement root)
-                root.Add(element);
+            Root.Add(element);
         }
 
         public VisualElement CreatePopup(string name)
@@ -108,7 +106,7 @@ namespace UnityEssentials
             var popup = Instantiate(Data.PopupPanelTemplate);
             var root = popup.GetComponent<UIDocument>().rootVisualElement;
             root.Q<Button>("Label").text = name.ToUpper();
-            root.Q<Button>("Back").clicked += () => Root.LinkedElement.Remove(root);
+            root.Q<Button>("Back").clicked += () => Root.Remove(root);
             return root;
         }
     }
@@ -117,6 +115,8 @@ namespace UnityEssentials
     {
         public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action redraw = null)
         {
+            FetchReferences();
+
             ClearScrollView();
 
             if (data != null && data.Length > 0)
