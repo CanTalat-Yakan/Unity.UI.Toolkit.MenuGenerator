@@ -32,7 +32,7 @@ namespace UnityEssentials
         private static void ConfigureCategoryInteraction(UIMenuGenerator menu, VisualElement element, UIMenuCategoryData data)
         {
             var button = element.Q<Button>("Button");
-            button.clicked += () => menu.PopulateHierarchy(false, data.Name, data.Data);
+            button.clicked += () => menu.Populate(false, data.Name, data.Data);
         }
     }
 }

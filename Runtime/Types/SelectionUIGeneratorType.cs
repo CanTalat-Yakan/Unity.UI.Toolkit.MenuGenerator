@@ -71,7 +71,7 @@ namespace UnityEssentials
             var button = categoryElement.Q<Button>();
             button.clicked += () =>
             {
-                menu.PopulateHierarchy(false, category.Name, null, () =>
+                menu.Populate(false, category.Name, null, () =>
                 {
                     foreach (var element in AddSelectionTiles(menu, categoryElement, category))
                         menu.AddElementToScrollView(element);

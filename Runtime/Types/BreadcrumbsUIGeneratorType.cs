@@ -38,9 +38,9 @@ namespace UnityEssentials
             {
                 ClearBreadcrumbsFromIndex(menu, index);
                 if (data != null && data.Length > 0)
-                    menu.PopulateHierarchy(isRoot, label, data, null);
+                    menu.Populate(isRoot, label, data, null);
                 else
-                    menu.PopulateHierarchy(isRoot, label, null, redraw);
+                    menu.Populate(isRoot, label, null, redraw);
             };
         }
 
@@ -49,6 +49,28 @@ namespace UnityEssentials
             if (menu.Breadcrumbs.LinkedElement is GroupBox breadcrumbs)
                 while (breadcrumbs.childCount > startIndex)
                     breadcrumbs.RemoveAt(breadcrumbs.childCount - 1);
+        }
+
+        public static void GoBackOneBreadcrumb(UIMenuGenerator menu)
+        {
+            if (menu.Breadcrumbs.LinkedElement is not GroupBox breadcrumbs)
+                return;
+
+            if (breadcrumbs.childCount == 0)
+                return;
+
+            if (breadcrumbs.childCount == 1)
+            {
+                menu.Close();
+                return;
+            }
+
+            var breadcrumbsCount = breadcrumbs.childCount - 1;
+            var previousBreadcrumbTemplate = breadcrumbs.ElementAt(breadcrumbsCount - 1);
+            foreach (var item in previousBreadcrumbTemplate.Children())
+                if (item is Button button)
+                    using (var e = new NavigationSubmitEvent() { target = button })
+                        button.SendEvent(e);
         }
     }
 }

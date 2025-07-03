@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eadbf583623844c4ebac5b7e70ac9c1f, type: 3}
   m_Name: Default Templates
   m_EditorClassIdentifier: 
+  HierarchicalMenuTemplate: {fileID: 7766515540072768600, guid: 1e56ad24ad707c94696d042482cb3035, type: 3}
   TabbedMenuTemplate: {fileID: 6370355668989841280, guid: 291e4b3ce858fa64cbfe225f27de6506, type: 3}
-  HierarchicalMenuTemplate: {fileID: 7703463562447253605, guid: 8f64d4d294c12174b932bb255c904df0, type: 3}
   ModalDialogTemplate: {fileID: 0}
   PopupPanelTemplate: {fileID: 0}
   HeaderTemplate: {fileID: 9197481963319205126, guid: c07fac5166d31d74097d0c0690f66aed, type: 3}

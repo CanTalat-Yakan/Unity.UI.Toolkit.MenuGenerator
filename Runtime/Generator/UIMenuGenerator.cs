@@ -11,6 +11,7 @@ namespace UnityEssentials
 
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public UIElementLink Root;
+        [HideInInspector] public UIElementLink Back;
         [HideInInspector] public UIElementLink Breadcrumbs;
         [HideInInspector] public UIElementLink ScrollView;
 
@@ -26,9 +27,16 @@ namespace UnityEssentials
         {
             Document = GetComponentInChildren<UIDocument>();
 
-            Root = Document.transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
-            Breadcrumbs = Document.transform.Find("VisualElement (Breadcrumbs)")?.GetComponent<UIElementLink>();
-            ScrollView = Document.transform.Find("VisualElement (ScrollView)")?.GetComponent<UIElementLink>();
+            Root = Document?.transform.Find("VisualElement (Root)")?.GetComponent<UIElementLink>();
+            Back = Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
+            Breadcrumbs = Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
+            ScrollView = Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
+        }
+
+        public void Configure()
+        {
+            if (Back?.LinkedElement is Button backButton)
+                backButton.clicked += () => UIMenuGeneratorType.GoBackOneBreadcrumb(this);
         }
 
         public Action Redraw;
@@ -36,7 +44,7 @@ namespace UnityEssentials
             Redraw = () =>
             {
                 UIMenuGeneratorType.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
-                PopulateHierarchy(prefix, label, data);
+                Populate(prefix, label, data);
             };
 
         public bool ValidateDependencies() =>
@@ -45,6 +53,18 @@ namespace UnityEssentials
 
     public partial class UIMenuGenerator : MonoBehaviour
     {
+        [ContextMenu("Show")]
+        public void Show()
+        {
+            Root.LinkedElement.SetDisplayEnabled(true);
+        }
+
+        [ContextMenu("Close")]
+        public void Close()
+        {
+            Root.LinkedElement.SetDisplayEnabled(false);
+        }
+
         public string CurrentCategory { get; private set; }
         public string PreviousCategory { get; private set; }
         private void UpdateCategoryHistory(string newCategory)
@@ -95,7 +115,7 @@ namespace UnityEssentials
 
     public partial class UIMenuGenerator : MonoBehaviour
     {
-        public void PopulateHierarchy(bool isRoot, string categoryName, ScriptableObject[] data, Action redraw = null)
+        public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action redraw = null)
         {
             ClearScrollView();
 

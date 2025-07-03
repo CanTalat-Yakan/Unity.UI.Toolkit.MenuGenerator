@@ -7,10 +7,10 @@ namespace UnityEssentials
     public class UIMenuGeneratorData : ScriptableObject
     {
         [Space]
-        // Fullscreen settings UI with top-level tabs, side navigation, central content, and contextual help.
-        public GameObject TabbedMenuTemplate;
         // Single-panel settings UI with back navigation, breadcrumb hierarchy, and drill-down structure through nested categories.
         public GameObject HierarchicalMenuTemplate;
+        // Fullscreen settings UI with top-level tabs, side navigation, central content, and contextual help.
+        public GameObject TabbedMenuTemplate;
         // Dialog-based settings UI with modal windows, header, content, and action buttons are standard structure for modal dialogs..
         public GameObject ModalDialogTemplate;
         // Popup panels for quick settings access, content area.

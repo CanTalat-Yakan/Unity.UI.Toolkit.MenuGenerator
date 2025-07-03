@@ -39,6 +39,18 @@ namespace UnityEssentials
 
         [Space]
         [SerializeField] private UIMenuType _type;
+        [OnValueChanged("_type")]
+        public void OnTypeValueChanged()
+        {
+            DestroyAllChildren();
+            InstantiateMenu();
+
+            GetProfile();
+            SaveProfile();
+
+            Generator.Initialize();
+            Generator.Fetch();
+        }
 
         public UIMenuData Data;
 
@@ -51,7 +63,8 @@ namespace UnityEssentials
 
             GetProfile();
             Generator.Profile.OnValueChanged += () => SaveProfile();
-            Generator.PopulateHierarchy(true, Data.Name, Data.Root);
+            Generator.Configure();
+            Generator.Populate(true, Data.Name, Data.Root);
         }
 
         [Button()]
@@ -81,19 +94,6 @@ namespace UnityEssentials
             data.Name = "Menu";
             data.Root = Array.Empty<ScriptableObject>();
             return data;
-        }
-
-        [OnValueChanged("_type")]
-        public void OnTypeValueChanged()
-        {
-            DestroyAllChildren();
-            InstantiateMenu();
-
-            GetProfile();
-            SaveProfile();
-
-            Generator.Initialize();
-            Generator.Fetch();
         }
 
         public UIMenuDataProfile GetProfile(string saveFileName = null)
@@ -138,6 +138,12 @@ namespace UnityEssentials
                 UIMenuType.Tabbed => Generator.Data.TabbedMenuTemplate,
                 _ => null
             };
+
+            if(type == null)
+            {
+                Debug.LogError("No template found for the selected menu type: " + _type);
+                return;
+            }
 
             var go = Instantiate(type, transform);
             go.name = _type.ToString() + " Menu UI Document";

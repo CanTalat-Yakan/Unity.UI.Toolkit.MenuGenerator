@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 2348106812002329421}
   - component: {fileID: 8108519099682610102}
   m_Layer: 5
-  m_Name: UnityEssentials_Prefab_DefaultUI
+  m_Name: UnityEssentials_Prefab_TabbedMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

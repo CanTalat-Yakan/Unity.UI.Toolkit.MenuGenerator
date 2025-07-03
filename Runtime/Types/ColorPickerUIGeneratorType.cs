@@ -51,7 +51,7 @@ namespace UnityEssentials
             var button = element.Q<Button>();
             button.clicked += () =>
             {
-                menu.PopulateHierarchy(false, data.Name, null, () =>
+                menu.Populate(false, data.Name, null, () =>
                 {
                     menu.AddElementToScrollView(CreateColorPicker(menu, data, 
                         callback: UpdateColorPickerVisuals(menu.Profile, element, data.Reference)));
