@@ -59,14 +59,14 @@ namespace UnityEssentials
         [ContextMenu("Show")]
         public void Show()
         {
-            Document.enabled = true;
+            Root?.SetDisplayEnabled(true);
             PopulateRoot();
         }
 
         [ContextMenu("Close")]
         public void Close()
         {
-            Document.enabled = false;
+            Root?.SetDisplayEnabled(false);
         }
 
         public string CurrentCategory { get; private set; }
@@ -115,27 +115,30 @@ namespace UnityEssentials
             return root;
         }
 
-        public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action redraw = null)
+        public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action customDataRedraw = null)
         {
             FetchReferences();
 
             ClearScrollView();
 
+            if (isRoot)
+                ResetCategory();
+
             if (data != null && data.Length > 0)
                 ConfigureRedraw(categoryName, !isRoot, data);
             else
             {
-                Redraw = redraw;
+                Redraw = customDataRedraw;
                 Redraw?.Invoke();
             }
 
-            UIMenuGeneratorType.AddBreadcrumb(this, categoryName, isRoot, data, redraw);
+            UIMenuGeneratorType.AddBreadcrumb(this, categoryName, isRoot, data, customDataRedraw);
 
             UpdateCategoryHistory(categoryName);
-
             if (data != null && data.Length != 0)
                 foreach (var item in data)
                     ProcessDataItem(item);
+            Debug.Log($"Populating menu for category: {categoryName} + {data.Length} + {ScrollView.LinkedElement.childCount}");
         }
 
         private void ProcessDataItem(ScriptableObject data) =>
