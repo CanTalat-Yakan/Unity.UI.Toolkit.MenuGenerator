@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,6 +13,16 @@ namespace UnityEssentials
 
         [Space]
         public int Default;
+
+        public string GetOption(int index) =>
+            GetChoices()[index] ?? string.Empty;
+
+        public List<string> GetChoices()
+        {
+            var choices = Options.ToList();
+            if (Reverse) choices.Reverse();
+            return choices ?? new List<string>();
+        }
     }
 
     public static partial class UIMenuGeneratorType
@@ -31,23 +42,20 @@ namespace UnityEssentials
 
             var dropdown = element.Q<DropdownField>("Options");
 
-            if(data.Options == null || data.Options.Length == 0)
+            if (data.Options == null || data.Options.Length == 0)
                 return;
 
             profile.Options.TryGetValue(data.Reference, data.Default, out var index);
 
-            dropdown.choices = data.Options.ToList();
+            dropdown.choices = data.GetChoices();
             dropdown.index = index;
-            dropdown.value = data.Options[index];
         }
 
         private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)
         {
-            var dropdownField = element.Q<DropdownField>("Options");
-            dropdownField.RegisterValueChangedCallback(e =>
-            {
-                profile.OnOptionsValueChanged(data.Reference, dropdownField.index);
-            });
+            var dropdown = element.Q<DropdownField>("Options");
+            dropdown.RegisterValueChangedCallback(e =>
+                profile.OnOptionsValueChanged(data.Reference, dropdown.index));
 
             var buttonLeft = element.Q<Button>("Left");
             buttonLeft.clicked += () =>
@@ -56,10 +64,11 @@ namespace UnityEssentials
 
                 profile.Options.TryGetValue(data.Reference, data.Default, out var index);
 
-                index = ProcessIndex(!data.Reverse ? index - 1 : index + 1, length);
-                profile.OnOptionsValueChanged(data.Reference, ProcessIndex(index, length));
+                int offset = data.Reverse ? -1 : 1;
+                index = ProcessIndex(index - offset, length);
+                profile.OnOptionsValueChanged(data.Reference, index);
 
-                dropdownField.index = index;
+                dropdown.index = index;
             };
 
             var buttonRight = element.Q<Button>("Right");
@@ -69,26 +78,29 @@ namespace UnityEssentials
 
                 profile.Options.TryGetValue(data.Reference, data.Default, out var index);
 
-                index = ProcessIndex(!data.Reverse ? index + 1 : index - 1, length);
+                int offset = data.Reverse ? -1 : 1;
+                index = ProcessIndex(index + offset, length);
                 profile.OnOptionsValueChanged(data.Reference, index);
 
-                dropdownField.index = index;
+                dropdown.index = index;
             };
         }
 
         private static int ProcessIndex(int index, int maxIndex, int minIndex = 0)
         {
-            if(maxIndex <= 0)
+            if (maxIndex <= 0)
                 return 0; // Avoid division by zero or negative index
 
             // Ensure the index is within the bounds
             int range = maxIndex - minIndex;
 
             if (index < minIndex)
-                index += range * ((minIndex - index) / range + 1); // Adjust for negative values
+                // Adjust for negative values
+                index += range * ((minIndex - index) / range + 1);
 
             if (index >= maxIndex)
-                index -= range * ((index - maxIndex) / range + 1); // Adjust for values larger than maxIndex
+                // Adjust for values larger than maxIndex
+                index -= range * ((index - maxIndex) / range + 1); 
 
             return index;
         }

@@ -35,6 +35,8 @@ namespace UnityEssentials
                 if (item != null)
                     editor._treeView?.AddItem(UIMenuEditorUtilities.CreateItem(item, editor._treeView));
 
+            editor._treeView?.SetSelectedItems(0);
+
             editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800)).ShowUtility();
             editor.Window
                 .SetPreProcess(editor._treeView.PreProcess)
@@ -117,7 +119,7 @@ namespace UnityEssentials
         private readonly Dictionary<ScriptableObject, Editor> _editorCache = new();
         private readonly Dictionary<ScriptableObject, bool> _foldoutStates = new();
         private CustomScriptableObjectDrawer _customScriptableObjectDrawer = new();
-        private void CreateDynamicBox(SimpleTreeViewItem item, bool overwriteExpanded = false)
+        private void CreateDynamicBox(SimpleTreeViewItem item, bool isFocused = false)
         {
             var itemData = item.UserData as ScriptableObject;
             if (itemData == null)
@@ -125,49 +127,54 @@ namespace UnityEssentials
 
             if (!_foldoutStates.TryGetValue(itemData, out bool isExpanded))
             {
-                isExpanded = false;
+                isExpanded = isFocused;
                 _foldoutStates[itemData] = isExpanded;
             }
-
-            if(overwriteExpanded)
-                isExpanded = true;
+            else if (isFocused && !isExpanded)
+                _foldoutStates[itemData] = isExpanded = true;
 
             using (new EditorGUILayout.VerticalScope())
             {
-                using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    var label = item.Name == string.Empty ? item.UserTag : $"{item.Name} ({item.UserTag})";
-                    if (overwriteExpanded)
-                        GUILayout.Label(label, EditorStyles.label); 
-                    else
+                    if (!isFocused && item.icon != null)
                     {
-                        isExpanded = EditorGUILayout.Foldout(isExpanded, label, true);
-                        _foldoutStates[itemData] = isExpanded;
+                        const float iconSize = 24f;
+                        GUILayout.Space(20f);
+                        GUILayout.Label(item.icon, GUILayout.Width(iconSize), GUILayout.Height(iconSize));
+                        GUILayout.Space(-44f);
                     }
+
+                    var label = item.Name == string.Empty ? item.UserTag : $"{item.Name} ({item.UserTag})";
+                    var labelOffset = isFocused || item.icon == null ? " " : "       ";
+                    var guiContent = new GUIContent(labelOffset + label);
+
+                    if (!isFocused)
+                        using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
+                            _foldoutStates[itemData] = isExpanded = EditorGUILayout.Foldout(isExpanded, guiContent, true);
+                    else GUILayout.Label(guiContent, EditorStyles.boldLabel);
                 }
 
                 EditorGUI.indentLevel++;
+                if (isExpanded)
                 {
-                    if (isExpanded)
+                    if (!_editorCache.TryGetValue(itemData, out Editor editor) || editor == null)
                     {
-                        if (!_editorCache.TryGetValue(itemData, out Editor editor) || editor == null)
-                        {
-                            editor = Editor.CreateEditor(itemData);
-                            _editorCache[itemData] = editor;
-                        }
-
-                        var drawArrays = true;
-                        drawArrays &= itemData is not UIMenuCategoryData;
-                        drawArrays &= itemData is not UIMenuSelectionDataCategory;
-
-                        var drawReference = true;
-                        if (itemData is UIGeneratorTypeTemplate data)
-                            drawReference = data.HasReference;
-
-                        _customScriptableObjectDrawer.Draw(editor, drawArrays, drawReference);
-
-                        GUILayout.Space(10);
+                        editor = Editor.CreateEditor(itemData);
+                        _editorCache[itemData] = editor;
                     }
+
+                    var drawArrays = true;
+                    drawArrays &= itemData is not UIMenuCategoryData;
+                    drawArrays &= itemData is not UIMenuSelectionDataCategory;
+
+                    var drawReference = true;
+                    if (itemData is UIGeneratorTypeTemplate data)
+                        drawReference = data.HasReference;
+
+                    _customScriptableObjectDrawer.Draw(editor, drawArrays, drawReference);
+
+                    GUILayout.Space(10);
                 }
                 EditorGUI.indentLevel--;
             }
