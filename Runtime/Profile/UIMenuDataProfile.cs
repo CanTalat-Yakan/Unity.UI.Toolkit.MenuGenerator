@@ -17,7 +17,7 @@ namespace UnityEssentials
         [JsonIgnore]
         public Action OnValueChanged;
 
-        public void CopyValues<T>(T source) where T : UIMenuDataProfile
+        public void CopyFrom<T>(T source) where T : UIMenuDataProfile
         {
             Toggles.CopyFrom(source.Toggles?.Dictionary);
             Inputs.CopyFrom(source.Inputs?.Dictionary);
@@ -26,6 +26,17 @@ namespace UnityEssentials
             Selections.CopyFrom(source.Selections?.Dictionary);
             ColorPickers.CopyFrom(source.ColorPickers?.Dictionary);
             ColorSliders.CopyFrom(source.ColorSliders?.Dictionary);
+        }
+
+        public void AddFrom<T>(T source) where T : UIMenuDataProfile
+        {
+            Toggles.AddFrom(source.Toggles?.Dictionary);
+            Inputs.AddFrom(source.Inputs?.Dictionary);
+            Options.AddFrom(source.Options?.Dictionary);
+            Sliders.AddFrom(source.Sliders?.Dictionary);
+            Selections.AddFrom(source.Selections?.Dictionary);
+            ColorPickers.AddFrom(source.ColorPickers?.Dictionary);
+            ColorSliders.AddFrom(source.ColorSliders?.Dictionary);
         }
 
         public virtual void OnToggleValueChanged(string reference, bool value)

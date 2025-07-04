@@ -11,6 +11,9 @@ namespace UnityEssentials
 
         [Space]
         public Color Default;
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
+            profile.ColorPickers.Add(Reference, Default);
     }
 
     public static partial class UIMenuGeneratorType

@@ -26,7 +26,7 @@ namespace UnityEssentials
             var filePath = Path.Combine(directoryPath, $"{fileName}.json");
 
             data = ScriptableObject.CreateInstance<T>();
-            data.name = fileName + " AutoCreated";
+            data.name = fileName + " Serialized";
             if (!File.Exists(filePath))
                 return false;
             var json = File.ReadAllText(filePath);
@@ -38,7 +38,7 @@ namespace UnityEssentials
             data = JsonConvert.DeserializeObject<T>(json, settings);
             if(data == null)
                 return false;
-            data.name = fileName + " AutoCreated";
+            data.name = fileName + " Serialized";
             return true;
         }
 

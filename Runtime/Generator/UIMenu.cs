@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -23,34 +24,34 @@ namespace UnityEssentials
         [SerializeField]
         private string _info;
 
-        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
+        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Inside;
+        public string SaveFileName = "Menu";
+        public bool SaveOnChange = true;
+
         [OnValueChanged("SaveFileMode")]
         public void OnSaveFileModeValueChanged()
         {
             switch (SaveFileMode)
             {
                 case UIProfileSaveMode.None:
-                    _info = 
+                    _info =
                         "No save file will be created. " +
                         "The profile will not persist between sessions and will not be saved to disk.";
                     break;
                 case UIProfileSaveMode.Outside:
                     _info =
-                        "A save file will be created outside the Asset folder, " +
-                        "within the Resources directory.";
+                        "A save file will be created outside the Assets/Build_Data folder, " +
+                        "within the automatically created directory called Resources.";
                     break;
                 case UIProfileSaveMode.Inside:
                     _info =
-                        "A save file will be created inside the Asset folder, " +
-                        "within the Resources directory.";
+                        "A save file will be created inside the Assets/Build_Data folder, " +
+                        "within the automatically created directory called Resources.";
                     break;
                 default:
                     break;
             }
         }
-
-        public string SaveFileName = "Menu";
-        public bool SaveOnChange = true;
     }
 
     public class UIMenu : MonoBehaviour
@@ -62,21 +63,14 @@ namespace UnityEssentials
 
         [Space]
         [SerializeField] private UIMenuType _type;
-        [OnValueChanged("_type")]
-        public void OnTypeValueChanged()
-        {
-            DestroyAllChildren();
-            InstantiateMenu();
-
-            GetProfile();
-            SaveProfile();
-
-            Generator.Initialize();
-        }
 
         public UIMenuData Data;
 
-        [HideInInspector] public UIMenuGenerator Generator => GetComponent<UIMenuGenerator>();
+        public UIMenuDataProfile Profile => Generator.Profile;
+        public UIMenuDataProfile DefaultProfile => Generator.Default;
+
+        private UIMenuGenerator _generator;
+        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
 
         public void Start()
         {
@@ -97,15 +91,27 @@ namespace UnityEssentials
 
             SetData = (data) =>
             {
-                if (this == null) 
+                if (this == null)
                     return;
 
                 Data = data;
-                UnityEditor.Selection.activeGameObject = gameObject;
+                Selection.activeGameObject = gameObject;
             };
 
             ShowEditor?.Invoke(this);
 #endif
+        }
+
+        [OnValueChanged("_type")]
+        public void OnTypeValueChanged()
+        {
+            DestroyAllChildren();
+            InstantiateMenu();
+
+            GetProfile();
+            SaveProfile();
+
+            Generator.Initialize();
         }
 
         private UIMenuData CreateDefault()
@@ -119,19 +125,27 @@ namespace UnityEssentials
 
         public UIMenuDataProfile GetProfile(string saveFileName = null)
         {
-            if (_settings.SaveFileMode != UIProfileSaveMode.None)
-                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile,
-                    saveFileName ??= _settings.SaveFileName, 
-                    _settings.SaveFileMode == UIProfileSaveMode.Outside);
+            Generator.Default ??= CreateProfileInstance("Default");
+            foreach (var data in Data.Root)
+                AddToDefaultProfileRecursively(data);
 
-            return Generator.Profile ??= ScriptableObject.CreateInstance<UIMenuDataProfile>();
+            if (_settings.SaveFileMode != UIProfileSaveMode.None)
+            {
+                var fileName = saveFileName ?? _settings.SaveFileName;
+                var parentDirectory = _settings.SaveFileMode == UIProfileSaveMode.Outside;
+
+                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, fileName, parentDirectory);
+                Generator.Profile.AddFrom(Generator.Default);
+            }
+
+            return Generator.Profile ??= Generator.Default;
         }
 
         public void SaveProfile(string saveFileName = null)
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
                 UIMenuDataProfileSerializer.SerializeData(Generator.Profile,
-                    saveFileName ??= _settings.SaveFileName, 
+                    saveFileName ??= _settings.SaveFileName,
                     _settings.SaveFileMode == UIProfileSaveMode.Outside);
         }
 
@@ -141,6 +155,25 @@ namespace UnityEssentials
         {
             ShowAdvancedSettings = !ShowAdvancedSettings;
             GetComponent<UIMenuGenerator>().hideFlags = ShowAdvancedSettings ? HideFlags.None : HideFlags.HideInInspector;
+        }
+
+        private UIMenuDataProfile CreateProfileInstance(string name = "Profile")
+        {
+            var profile = ScriptableObject.CreateInstance<UIMenuDataProfile>();
+            profile.name = name + " AutoCreated";
+            return profile;
+        }
+
+        private void AddToDefaultProfileRecursively(ScriptableObject data)
+        {
+            var field = data.GetType().GetField("Data");
+            var children = field?.GetValue(data) as ScriptableObject[];
+            if (children != null && children.Length > 0)
+                foreach (var child in children)
+                    AddToDefaultProfileRecursively(child);
+
+            var type = data as UIGeneratorTypeTemplate;
+            type?.ProfileAddDefault(Generator.Default);
         }
 
         private void DestroyAllChildren()
@@ -160,7 +193,7 @@ namespace UnityEssentials
                 _ => null
             };
 
-            if(type == null)
+            if (type == null)
             {
                 Debug.LogError("No template found for the selected menu type: " + _type);
                 return;

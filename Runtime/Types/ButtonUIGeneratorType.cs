@@ -18,6 +18,8 @@ namespace UnityEssentials
 
         public void InvokeAltEvent() =>
             AltEvent?.Invoke();
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
     }
 
     public static partial class UIMenuGeneratorType

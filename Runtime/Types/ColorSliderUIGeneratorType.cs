@@ -10,6 +10,9 @@ namespace UnityEssentials
         [Space]
         [Range(0, 100)]
         public float Default;
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
+            profile.ColorSliders.Add(Reference, Default);
     }
 
     public static partial class UIMenuGeneratorType

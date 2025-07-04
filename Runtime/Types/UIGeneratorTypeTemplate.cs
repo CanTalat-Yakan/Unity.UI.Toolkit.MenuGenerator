@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIGeneratorTypeTemplate : ScriptableObject
+    public abstract class UIGeneratorTypeTemplate : ScriptableObject
     {
         [HideInInspector, SerializeField] public bool HasReference;
         [HideInInspector, SerializeField] public string ID;
@@ -28,5 +28,7 @@ namespace UnityEssentials
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
         }
+
+        public abstract void ProfileAddDefault(UIMenuDataProfile profile);
     }
 }

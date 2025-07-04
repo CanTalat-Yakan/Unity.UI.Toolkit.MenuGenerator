@@ -12,6 +12,9 @@ namespace UnityEssentials
 
         [Space]
         public float Default;
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
+            profile.Sliders.Add(Reference, Mathf.Clamp(Default, MinRange, MaxRange));
     }
 
     public static partial class UIMenuGeneratorType

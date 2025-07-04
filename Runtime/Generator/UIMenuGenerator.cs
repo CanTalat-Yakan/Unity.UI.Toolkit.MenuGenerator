@@ -7,7 +7,10 @@ namespace UnityEssentials
     public partial class UIMenuGenerator : MonoBehaviour
     {
         public UIMenuGeneratorData Data;
+
+        [Space]
         public UIMenuDataProfile Profile;
+        public UIMenuDataProfile Default;
 
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;

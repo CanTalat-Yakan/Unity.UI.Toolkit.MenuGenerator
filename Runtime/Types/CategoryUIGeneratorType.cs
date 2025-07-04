@@ -8,6 +8,8 @@ namespace UnityEssentials
         public Texture2D Texture;
 
         public ScriptableObject[] Data;
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
     }
 
     public static partial class UIMenuGeneratorType

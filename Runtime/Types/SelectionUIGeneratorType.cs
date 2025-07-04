@@ -10,7 +10,7 @@ namespace UnityEssentials
 
         public int Default;
 
-        public UIMenuSelectionDataElement GetSelectionData(int index)
+        public UIMenuSelectionDataElement GetSelection(int index)
         {
             foreach (var scriptableObject in Data)
                 if (scriptableObject is UIMenuSelectionDataGroup group)
@@ -22,12 +22,17 @@ namespace UnityEssentials
 
             return null;
         }
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
+            profile.Selections.Add(Reference, Default);
     }
 
     public class UIMenuSelectionDataGroup : UIGeneratorTypeTemplate
     {
         [Space]
         public UIMenuSelectionData[] Selections;
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
     }
 
     public static partial class UIMenuGeneratorType
@@ -55,7 +60,7 @@ namespace UnityEssentials
 
             profile.Selections.TryGetValue(category.Reference, category.Default, out var index);
 
-            var selectionData = category.GetSelectionData(index);
+            var selectionData = category.GetSelection(index);
             if (selectionData == null)
                 return;
 

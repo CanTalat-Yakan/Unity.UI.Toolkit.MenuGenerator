@@ -7,6 +7,9 @@ namespace UnityEssentials
     {
         [Space]
         public string Default;
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
+            profile.Inputs.Add(Reference, Default);
     }
 
     public static partial class UIMenuGeneratorType

@@ -23,6 +23,9 @@ namespace UnityEssentials
             if (Reverse) choices.Reverse();
             return choices ?? new List<string>();
         }
+
+        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
+            profile.Options.Add(Reference, Default);
     }
 
     public static partial class UIMenuGeneratorType
