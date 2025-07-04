@@ -60,6 +60,7 @@ namespace UnityEssentials
 
         [Space]
         [SerializeField] private UIMenuType _type;
+        [OnValueChanged("_type")] public void OnTypeValueChanged() => Initialize();
 
         public UIMenuData Data;
 
@@ -103,8 +104,7 @@ namespace UnityEssentials
 #endif
         }
 
-        [OnValueChanged("_type")]
-        public void OnTypeValueChanged()
+        public void Initialize()
         {
             DestroyAllChildren();
             InstantiateMenu();
@@ -124,6 +124,7 @@ namespace UnityEssentials
             return data;
         }
 
+        public Action<UIMenuDataProfile> OnProfileChanged;
         public UIMenuDataProfile GetProfile(string saveFileName = null)
         {
             Generator.Default ??= CreateProfileInstance("Default");
@@ -139,7 +140,9 @@ namespace UnityEssentials
                 Generator.Profile.AddFrom(Generator.Default);
             }
 
-            return Generator.Profile ??= Generator.Default;
+            Generator.Profile ??= Generator.Default;
+            OnProfileChanged?.Invoke(Generator.Profile);
+            return Generator.Profile;
         }
 
         public void SaveProfile(string saveFileName = null)

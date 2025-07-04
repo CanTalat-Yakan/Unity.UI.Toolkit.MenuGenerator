@@ -19,6 +19,9 @@ namespace UnityEssentials
 
         public void CopyFrom<T>(T source) where T : UIMenuDataProfile
         {
+            if(source == null) 
+                return;
+
             Toggles.CopyFrom(source.Toggles?.Dictionary);
             Inputs.CopyFrom(source.Inputs?.Dictionary);
             Options.CopyFrom(source.Options?.Dictionary);
@@ -30,6 +33,9 @@ namespace UnityEssentials
 
         public void AddFrom<T>(T source) where T : UIMenuDataProfile
         {
+            if (source == null)
+                return;
+
             Toggles.AddFrom(source.Toggles?.Dictionary);
             Inputs.AddFrom(source.Inputs?.Dictionary);
             Options.AddFrom(source.Options?.Dictionary);
@@ -39,45 +45,66 @@ namespace UnityEssentials
             ColorSliders.AddFrom(source.ColorSliders?.Dictionary);
         }
 
+        [JsonIgnore]
+        public Action<string, bool> OnToggleValueChangedEvent;
         public virtual void OnToggleValueChanged(string reference, bool value)
         {
             Toggles[reference] = value;
+            OnToggleValueChangedEvent?.Invoke(reference, value);
             OnValueChanged?.Invoke();
         }
 
+        [JsonIgnore]
+        public Action<string, string> OnInputValueChangedEvent;
         public virtual void OnInputValueChanged(string reference, string input)
         {
             Inputs[reference] = input;
+            OnInputValueChangedEvent?.Invoke(reference, input);
             OnValueChanged?.Invoke();
         }
 
+        [JsonIgnore]
+        public Action<string, int> OnOptionsValueChangedEvent;
         public virtual void OnOptionsValueChanged(string reference, int index)
         {
             Options[reference] = index;
+            OnOptionsValueChangedEvent?.Invoke(reference, index);
             OnValueChanged?.Invoke();
         }
 
+        [JsonIgnore]
+        public Action<string, float> OnSliderValueChangedEvent;
         public virtual void OnSliderValueChanged(string reference, float value)
         {
             Sliders[reference] = value;
+            OnSliderValueChangedEvent?.Invoke(reference, value);
             OnValueChanged?.Invoke();
         }
 
+        [JsonIgnore]
+        public Action<string, int> OnSelectionValueChangedEvent;
         public virtual void OnSelectionValueChanged(string reference, int index)
         {
             Selections[reference] = index;
+            OnSelectionValueChangedEvent?.Invoke(reference, index);
             OnValueChanged?.Invoke();
         }
 
+        [JsonIgnore]
+        public Action<string, Color> OnColorPickerValueChangedEvent;
         public virtual void OnColorPickerValueChanged(string reference, Color color)
         {
             ColorPickers[reference] = color;
+            OnColorPickerValueChangedEvent?.Invoke(reference, color);
             OnValueChanged?.Invoke();
         }
 
+        [JsonIgnore]
+        public Action<string, int> OnColorSliderValueChangedEvent;
         public virtual void OnColorSliderValueChanged(string reference, int value)
         {
             ColorSliders[reference] = value;
+            OnColorSliderValueChangedEvent?.Invoke(reference, value);
             OnValueChanged?.Invoke();
         }
     }
