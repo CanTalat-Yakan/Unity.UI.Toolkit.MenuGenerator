@@ -26,8 +26,35 @@ namespace UnityEssentials
             "Make sure to include the Resources directory and its contents in your Build folder!";
 
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
+        [OnValueChanged("SaveFileMode")]
+        public void OnSaveFileModeValueChanged()
+        {
+            switch (SaveFileMode)
+            {
+                case UIProfileSaveMode.None:
+                    _info = "No save file will be created. " +
+                        "The profile will not persist between sessions and will not be saved to disk.";
+                    break;
+                case UIProfileSaveMode.Outside:
+                    _info = "A save file will be created outside the Asset folder, " +
+                        "within the Resources directory. Make sure to include the Resources directory and its contents in your Build folder!";
+                    break;
+                case UIProfileSaveMode.Inside:
+                    _info = "A save file will be created inside the Asset folder, " +
+                        "within the Resources directory. Make sure to include the Resources directory and its contents in your Build folder!";
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public string SaveFileName = "Menu";
         public bool SaveOnChange = true;
+        [OnValueChanged("SaveOnChange")]
+        public void OnChanged()
+        {
+            Debug.Log("TEst");
+        }
     }
 
     public class UIMenu : MonoBehaviour
