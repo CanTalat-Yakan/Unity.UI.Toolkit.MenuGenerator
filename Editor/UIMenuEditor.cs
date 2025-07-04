@@ -107,9 +107,13 @@ namespace UnityEssentials
                 {
                     GUILayout.FlexibleSpace();
                     if (GUILayout.Button("Add Item", GUILayout.Width(200), GUILayout.Height(24)))
+                    {
                         if (item.ContextMenu != null)
                             item.ContextMenu.DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                         else UIMenuEditorUtilities.GetGenericMenu(_treeView).DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
+
+                        Window.BodyScrollPosition = new Vector2(0, float.MaxValue);
+                    }
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.Space(10);
