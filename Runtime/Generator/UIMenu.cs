@@ -21,9 +21,7 @@ namespace UnityEssentials
     {
         [Info]
         [SerializeField]
-        private string _info = "This component manages and automatically creates a save file " +
-            "and is stored outside the Asset folder, within the Resources directory.\n" +
-            "Make sure to include the Resources directory and its contents in your Build folder!";
+        private string _info;
 
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
         [OnValueChanged("SaveFileMode")]
@@ -32,16 +30,19 @@ namespace UnityEssentials
             switch (SaveFileMode)
             {
                 case UIProfileSaveMode.None:
-                    _info = "No save file will be created. " +
+                    _info = 
+                        "No save file will be created. " +
                         "The profile will not persist between sessions and will not be saved to disk.";
                     break;
                 case UIProfileSaveMode.Outside:
-                    _info = "A save file will be created outside the Asset folder, " +
-                        "within the Resources directory. Make sure to include the Resources directory and its contents in your Build folder!";
+                    _info =
+                        "A save file will be created outside the Asset folder, " +
+                        "within the Resources directory.";
                     break;
                 case UIProfileSaveMode.Inside:
-                    _info = "A save file will be created inside the Asset folder, " +
-                        "within the Resources directory. Make sure to include the Resources directory and its contents in your Build folder!";
+                    _info =
+                        "A save file will be created inside the Asset folder, " +
+                        "within the Resources directory.";
                     break;
                 default:
                     break;
