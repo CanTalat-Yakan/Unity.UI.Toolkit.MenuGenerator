@@ -56,9 +56,6 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        public static Action<UIMenu> ShowEditor { get; set; }
-        public Action<UIMenuData> SetData { get; private set; }
-
         [SerializeField] private UIMenuSettings _settings = new();
 
         [Space]
@@ -72,6 +69,9 @@ namespace UnityEssentials
         private UIMenuGenerator _generator;
         [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
 
+        public static Action<UIMenu> ShowEditor { get; set; }
+        public Action<UIMenuData> SetData { get; private set; }
+
         public void Start()
         {
             if (Data == null)
@@ -79,7 +79,8 @@ namespace UnityEssentials
 
             GetProfile();
             Generator.Profile.OnValueChanged += () => SaveProfile();
-            Generator.Populate(true, Data.Name, Data.Root);
+            Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
+            Generator.Show();
         }
 
         [Button()]

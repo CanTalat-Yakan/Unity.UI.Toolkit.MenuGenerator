@@ -18,6 +18,8 @@ namespace UnityEssentials
         [HideInInspector] public UIElementLink Breadcrumbs;
         [HideInInspector] public UIElementLink ScrollView;
 
+        public Action PopulateRoot;
+
         [ContextMenu("Initialize")]
         public void Initialize()
         {
@@ -53,18 +55,18 @@ namespace UnityEssentials
 
         public bool ValidateDependencies() =>
             Data != null && Document != null;
-    }
 
-    public partial class UIMenuGenerator : MonoBehaviour
-    {
         [ContextMenu("Show")]
         public void Show()
         {
+            Document.enabled = true;
+            PopulateRoot();
         }
 
         [ContextMenu("Close")]
         public void Close()
         {
+            Document.enabled = false;
         }
 
         public string CurrentCategory { get; private set; }
@@ -112,10 +114,7 @@ namespace UnityEssentials
             root.Q<Button>("Back").clicked += () => Root.Remove(root);
             return root;
         }
-    }
 
-    public partial class UIMenuGenerator : MonoBehaviour
-    {
         public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action redraw = null)
         {
             FetchReferences();
