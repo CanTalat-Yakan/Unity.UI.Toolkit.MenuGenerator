@@ -51,11 +51,6 @@ namespace UnityEssentials
 
         public string SaveFileName = "Menu";
         public bool SaveOnChange = true;
-        [OnValueChanged("SaveOnChange")]
-        public void OnChanged()
-        {
-            Debug.Log("TEst");
-        }
     }
 
     public class UIMenu : MonoBehaviour
