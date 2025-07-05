@@ -66,6 +66,7 @@ namespace UnityEssentials
                 ShowUtility(_data, SetUIMenuData, this);
             if (GUILayout.Button("  Apply  ", EditorStyles.toolbarButton))
             {
+                _data.Name = _treeView.RootItem.Name;
                 UIMenuEditorAssetSerializer.Save(_data, _treeView);
                 UIMenuEditorUtilities.PopulateDataFromTree(_data, _treeView);
                 SetUIMenuData?.Invoke(_data);
@@ -191,7 +192,7 @@ namespace UnityEssentials
 
             if (name == string.Empty)
                 name = uniqueName;
-
+            Debug.Log($"Setting name for {item.name} to {name} with unique name {uniqueName}");
             item.GetType().GetMethod("SetName")?.Invoke(item, new object[] { name, uniqueName });
         }
     }

@@ -98,7 +98,10 @@ namespace UnityEssentials
             foreach (var data in Data.GetDataItems())
                 if (data is UIGeneratorTypeTemplate dataTemplate)
                     if(dataTemplate.IsDynamic)
+                    {
                         dataTemplate.ApplyDynamicReset();
+                        dataTemplate.IsDynamic = false;
+                    }
         }
 #endif
 
