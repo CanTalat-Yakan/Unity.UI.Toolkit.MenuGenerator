@@ -95,8 +95,8 @@ namespace UnityEssentials
 
         private void OnExitPlayMode()
         {
-            foreach (var data in Data.GetDataItems())
-                if (data is UIGeneratorTypeTemplate dataTemplate)
+            foreach (var item in Data.GetDataItems())
+                if (item is UIGeneratorTypeTemplate dataTemplate)
                     if(dataTemplate.IsDynamic)
                     {
                         dataTemplate.ApplyDynamicReset();
