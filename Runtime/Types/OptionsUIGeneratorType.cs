@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,12 +21,15 @@ namespace UnityEssentials
         public List<string> GetChoices()
         {
             var choices = Options.ToList();
-            if (Reverse) choices.Reverse();
-            return choices ?? new List<string>();
+            if (Reverse) choices?.Reverse();
+            return choices ?? new List<string>() { "NA" };
         }
 
         public override void ProfileAddDefault(UIMenuDataProfile profile) =>
             profile.Options.Add(Reference, Default);
+
+        public override void ApplyDynamicReset() =>
+            Options = Array.Empty<string>();
     }
 
     public static partial class UIMenuGeneratorType
@@ -103,7 +107,7 @@ namespace UnityEssentials
 
             if (index >= maxIndex)
                 // Adjust for values larger than maxIndex
-                index -= range * ((index - maxIndex) / range + 1); 
+                index -= range * ((index - maxIndex) / range + 1);
 
             return index;
         }

@@ -15,6 +15,8 @@ namespace UnityEssentials
 
         public override void ProfileAddDefault(UIMenuDataProfile profile) =>
             profile.Sliders.Add(Reference, Mathf.Clamp(Default, MinRange, MaxRange));
+
+        public override void ApplyDynamicReset() { }
     }
 
     public static partial class UIMenuGeneratorType

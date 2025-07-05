@@ -60,7 +60,7 @@ namespace UnityEssentials
         public void Show()
         {
             Root?.SetDisplayEnabled(true);
-            PopulateRoot();
+            PopulateRoot?.Invoke();
         }
 
         [ContextMenu("Close")]
@@ -138,7 +138,6 @@ namespace UnityEssentials
             if (data != null && data.Length != 0)
                 foreach (var item in data)
                     ProcessDataItem(item);
-            Debug.Log($"Populating menu for category: {categoryName} + {data.Length} + {ScrollView.LinkedElement.childCount}");
         }
 
         private void ProcessDataItem(ScriptableObject data) =>

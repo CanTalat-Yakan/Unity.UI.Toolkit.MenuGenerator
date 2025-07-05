@@ -25,7 +25,6 @@ namespace UnityEssentials
         private string _info;
 
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Inside;
-        public string SaveFileName = "Menu";
         public bool SaveOnChange = true;
 
         [OnValueChanged("SaveFileMode")]
@@ -62,6 +61,7 @@ namespace UnityEssentials
         [SerializeField] private UIMenuType _type;
         [OnValueChanged("_type")] public void OnTypeValueChanged() => Initialize();
 
+        public string Name = "Menu";
         public UIMenuData Data;
 
         public UIMenuDataProfile Profile => Generator.Profile;
@@ -73,7 +73,7 @@ namespace UnityEssentials
         public static Action<UIMenu> ShowEditor { get; set; }
         public Action<UIMenuData> SetData { get; private set; }
 
-        public void Start()
+        public void Awake()
         {
             if (Data == null)
                 return;
@@ -81,8 +81,26 @@ namespace UnityEssentials
             GetProfile();
             Generator.Profile.OnValueChanged += () => SaveProfile();
             Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
-            Generator.Show();
         }
+
+        public void Start() =>
+            Generator.Show();
+
+#if UNITY_EDITOR
+        private void OnDisable()
+        {
+            if (Application.isPlaying)
+                OnExitPlayMode();
+        }
+
+        private void OnExitPlayMode()
+        {
+            foreach (var data in Data.GetDataItems())
+                if (data is UIGeneratorTypeTemplate dataTemplate)
+                    if(dataTemplate.IsDynamic)
+                        dataTemplate.ApplyDynamicReset();
+        }
+#endif
 
         [Button()]
         public void OpenMenuBuilder()
@@ -128,12 +146,14 @@ namespace UnityEssentials
         public UIMenuDataProfile GetProfile(string saveFileName = null)
         {
             Generator.Default ??= CreateProfileInstance("Default");
-            foreach (var data in Data.Root)
-                AddToDefaultProfileRecursively(data);
+
+            foreach (var data in Data.GetDataItems())
+                if(data is UIGeneratorTypeTemplate dataTemplate)
+                    dataTemplate.ProfileAddDefault(Generator.Default);
 
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
             {
-                var fileName = saveFileName ?? _settings.SaveFileName;
+                var fileName = saveFileName ?? Name;
                 var parentDirectory = _settings.SaveFileMode == UIProfileSaveMode.Outside;
 
                 UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, fileName, parentDirectory);
@@ -149,7 +169,7 @@ namespace UnityEssentials
         {
             if (_settings.SaveFileMode != UIProfileSaveMode.None)
                 UIMenuDataProfileSerializer.SerializeData(Generator.Profile,
-                    saveFileName ??= _settings.SaveFileName,
+                    saveFileName ??= Name,
                     _settings.SaveFileMode == UIProfileSaveMode.Outside);
         }
 
@@ -166,18 +186,6 @@ namespace UnityEssentials
             var profile = ScriptableObject.CreateInstance<UIMenuDataProfile>();
             profile.name = name + " AutoCreated";
             return profile;
-        }
-
-        private void AddToDefaultProfileRecursively(ScriptableObject data)
-        {
-            var field = data.GetType().GetField("Data");
-            var children = field?.GetValue(data) as ScriptableObject[];
-            if (children != null && children.Length > 0)
-                foreach (var child in children)
-                    AddToDefaultProfileRecursively(child);
-
-            var type = data as UIGeneratorTypeTemplate;
-            type?.ProfileAddDefault(Generator.Default);
         }
 
         private void DestroyAllChildren()

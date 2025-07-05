@@ -5,6 +5,7 @@ namespace UnityEssentials
 {
     public abstract class UIGeneratorTypeTemplate : ScriptableObject
     {
+        [HideInInspector, SerializeField] public bool IsDynamic;
         [HideInInspector, SerializeField] public bool HasReference;
         [HideInInspector, SerializeField] public string ID;
         [HideInInspector, SerializeField] public string Name;
@@ -30,5 +31,7 @@ namespace UnityEssentials
         }
 
         public abstract void ProfileAddDefault(UIMenuDataProfile profile);
+
+        public abstract void ApplyDynamicReset();
     }
 }

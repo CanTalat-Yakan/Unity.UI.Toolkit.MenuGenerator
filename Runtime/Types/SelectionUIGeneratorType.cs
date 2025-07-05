@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,7 +15,7 @@ namespace UnityEssentials
         {
             foreach (var scriptableObject in Data)
                 if (scriptableObject is UIMenuSelectionDataGroup group)
-                    foreach (var selections in group.Selections)
+                    foreach (var selections in group.GetSelections())
                         if (selections != null && selections.Data != null)
                             for (int i = 0; i < selections.Data.Length; i++)
                                 if (selections.StartIndexID + i == index)
@@ -25,14 +26,27 @@ namespace UnityEssentials
 
         public override void ProfileAddDefault(UIMenuDataProfile profile) =>
             profile.Selections.Add(Reference, Default);
+
+        public override void ApplyDynamicReset() { }
     }
 
     public class UIMenuSelectionDataGroup : UIGeneratorTypeTemplate
     {
         [Space]
+        public bool Reverse;
         public UIMenuSelectionData[] Selections;
 
+        public List<UIMenuSelectionData> GetSelections()
+        {
+            var list = Selections != null ? new List<UIMenuSelectionData>(Selections) : new List<UIMenuSelectionData>();
+            if (Reverse) list.Reverse();
+            return list;
+        }
+
         public override void ProfileAddDefault(UIMenuDataProfile profile) { }
+
+        public override void ApplyDynamicReset() =>
+            Selections = Array.Empty<UIMenuSelectionData>();
     }
 
     public static partial class UIMenuGeneratorType
@@ -118,10 +132,11 @@ namespace UnityEssentials
             groupBox.SetWidth(100f);
             groupBox.style.flexWrap = Wrap.Wrap;
 
-            if (group.Selections == null)
+            var selectionsList = group.GetSelections();
+            if (selectionsList == null)
                 return groupBox;
 
-            foreach (var selections in group.Selections)
+            foreach (var selections in selectionsList)
             {
                 if (selections == null || selections.Data == null)
                     continue;

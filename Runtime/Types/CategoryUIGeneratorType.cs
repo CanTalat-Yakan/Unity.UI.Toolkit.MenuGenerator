@@ -10,6 +10,8 @@ namespace UnityEssentials
         public ScriptableObject[] Data;
 
         public override void ProfileAddDefault(UIMenuDataProfile profile) { }
+
+        public override void ApplyDynamicReset() { }
     }
 
     public static partial class UIMenuGeneratorType
