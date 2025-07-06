@@ -1,14 +1,31 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace UnityEssentials
 {
     public class OptionsDataEvent : MonoBehaviour
     {
-        [SerializeField] private UIMenuOptionsData Data;
-        [SerializeField] private UnityEvent<UIMenuOptionsData> Event;
+        public UIMenuData MenuData;
+        public string Reference;
 
-        public void OnEnable() =>
-            Event?.Invoke(Data);
+        [Space]
+        public bool Reverse;
+        public string[] Options;
+
+        [Space]
+        public int Default;
+
+        private UIMenuOptionsData _optionsData;
+        [HideInInspector] public UIMenuOptionsData OptionsData => _optionsData;
+
+        public void Awake()
+        {
+            if (MenuData.GetDataByReference(Reference, out _optionsData))
+            {
+                OptionsData.IsDynamic = true;
+                OptionsData.Reverse = Reverse;
+                OptionsData.Options = Options;
+                OptionsData.Default = Default;
+            }
+        }
     }
 }

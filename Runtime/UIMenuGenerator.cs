@@ -4,13 +4,10 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
+    [RequireComponent(typeof(UIMenu))]
     public partial class UIMenuGenerator : MonoBehaviour
     {
         public UIMenuGeneratorData Data;
-
-        [Space]
-        public UIMenuDataProfile Profile;
-        public UIMenuDataProfile Default;
 
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;
@@ -19,6 +16,12 @@ namespace UnityEssentials
         [HideInInspector] public UIElementLink ScrollView;
 
         public Action PopulateRoot;
+
+        [HideInInspector] public UIMenu Menu { get; private set; }
+        [HideInInspector] public UIMenuDataProfile Profile => Menu.Profile;
+
+        public void OnEnable() =>
+            Menu = GetComponent<UIMenu>();
 
         [ContextMenu("Initialize")]
         public void Initialize()
@@ -106,14 +109,14 @@ namespace UnityEssentials
             Root.Add(element);
         }
 
-        public VisualElement CreatePopup(string name)
-        {
-            var popup = Instantiate(Data.PopupPanelTemplate);
-            var root = popup.GetComponent<UIDocument>().rootVisualElement;
-            root.Q<Button>("Label").text = name.ToUpper();
-            root.Q<Button>("Back").clicked += () => Root.Remove(root);
-            return root;
-        }
+        //public VisualElement CreatePopup(string name)
+        //{
+        //    var popup = Instantiate(Data.PopupPanelTemplate);
+        //    var root = popup.GetComponent<UIDocument>().rootVisualElement;
+        //    root.Q<Button>("Label").text = name.ToUpper();
+        //    root.Q<Button>("Back").clicked += () => Root.Remove(root);
+        //    return root;
+        //}
 
         public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action customDataRedraw = null)
         {

@@ -55,31 +55,32 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        [SerializeField] private UIMenuSettings _settings = new();
+        public UIMenuSettings Settings = new();
 
         [Space]
-        [SerializeField] private UIMenuType _type;
-        [OnValueChanged("_type")] public void OnTypeValueChanged() => Initialize();
+        public UIMenuType Type;
+        [OnValueChanged("Type")] public void OnTypeValueChanged() => Initialize();
 
         public string Name = "Menu";
         public UIMenuData Data;
 
-        public UIMenuDataProfile Profile => Generator.Profile;
-        public UIMenuDataProfile DefaultProfile => Generator.Default;
+        public UIMenuDataProfile Profile => Provider.Profile;
+        public UIMenuDataProfile DefaultProfile => Provider.Default;
 
-        private UIMenuGenerator _generator;
-        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
+        [HideInInspector] public UIMenuGenerator Generator { get; private set; }
+        [HideInInspector] public UIMenuDataProfileProvider Provider { get; private set; }
 
         public static Action<UIMenu> ShowEditor { get; set; }
         public Action<UIMenuData> SetData { get; private set; }
 
-        public void Awake()
+        public void OnEnable()
         {
             if (Data == null)
                 return;
 
-            GetProfile();
-            Generator.Profile.OnValueChanged += () => SaveProfile();
+            Generator ??= GetComponent<UIMenuGenerator>();
+            Provider ??= GetComponent<UIMenuDataProfileProvider>();
+
             Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
 
@@ -130,9 +131,6 @@ namespace UnityEssentials
             DestroyAllChildren();
             InstantiateMenu();
 
-            GetProfile();
-            SaveProfile();
-
             Generator.Initialize();
         }
 
@@ -145,52 +143,6 @@ namespace UnityEssentials
             return data;
         }
 
-        public Action<UIMenuDataProfile> OnProfileChanged;
-        public UIMenuDataProfile GetProfile(string saveFileName = null)
-        {
-            Generator.Default ??= CreateProfileInstance("Default");
-
-            foreach (var data in Data.GetDataItems())
-                if(data is UIGeneratorTypeTemplate dataTemplate)
-                    dataTemplate.ProfileAddDefault(Generator.Default);
-
-            if (_settings.SaveFileMode != UIProfileSaveMode.None)
-            {
-                var fileName = saveFileName ?? Name;
-                var parentDirectory = _settings.SaveFileMode == UIProfileSaveMode.Outside;
-
-                UIMenuDataProfileSerializer.DeserializeData(out Generator.Profile, fileName, parentDirectory);
-                Generator.Profile.AddFrom(Generator.Default);
-            }
-
-            Generator.Profile ??= Generator.Default;
-            OnProfileChanged?.Invoke(Generator.Profile);
-            return Generator.Profile;
-        }
-
-        public void SaveProfile(string saveFileName = null)
-        {
-            if (_settings.SaveFileMode != UIProfileSaveMode.None)
-                UIMenuDataProfileSerializer.SerializeData(Generator.Profile,
-                    saveFileName ??= Name,
-                    _settings.SaveFileMode == UIProfileSaveMode.Outside);
-        }
-
-        [HideInInspector] public bool ShowAdvancedSettings = false;
-        [ContextMenu("Show Generator")]
-        private void ShowAdvanced()
-        {
-            ShowAdvancedSettings = !ShowAdvancedSettings;
-            GetComponent<UIMenuGenerator>().hideFlags = ShowAdvancedSettings ? HideFlags.None : HideFlags.HideInInspector;
-        }
-
-        private UIMenuDataProfile CreateProfileInstance(string name = "Profile")
-        {
-            var profile = ScriptableObject.CreateInstance<UIMenuDataProfile>();
-            profile.name = name + " AutoCreated";
-            return profile;
-        }
-
         private void DestroyAllChildren()
         {
             while (transform.childCount > 0)
@@ -201,7 +153,7 @@ namespace UnityEssentials
 
         private void InstantiateMenu()
         {
-            var type = _type switch
+            var type = Type switch
             {
                 UIMenuType.Hierarchical => Generator.Data.HierarchicalMenuTemplate,
                 UIMenuType.Tabbed => Generator.Data.TabbedMenuTemplate,
@@ -210,12 +162,12 @@ namespace UnityEssentials
 
             if (type == null)
             {
-                Debug.LogError("No template found for the selected menu type: " + _type);
+                Debug.LogError("No template found for the selected menu type: " + Type);
                 return;
             }
 
             var go = Instantiate(type, transform);
-            go.name = _type.ToString() + " Menu UI Document";
+            go.name = Type.ToString() + " Menu UI Document";
         }
     }
 }

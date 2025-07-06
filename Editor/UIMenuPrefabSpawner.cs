@@ -16,7 +16,6 @@ namespace UnityEssentials
             generator.hideFlags = HideFlags.HideInInspector;
             generator.Initialize();
             menu.Initialize();
-            provider.Menu = menu;
             Undo.RegisterCreatedObjectUndo(go, "Create UI Menu");
             Selection.activeObject = go;
         }

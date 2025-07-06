@@ -4,56 +4,85 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
+    [RequireComponent(typeof(UIMenu))]
     public class UIMenuDataProfileProvider : MonoBehaviour
     {
-        public UIMenu Menu;
-        [OnValueChanged("_menu")] public void OnMenuValueChanged() => SetProfile(Menu?.Profile);
-
-        [Space]
         public UIMenuDataProfile Profile;
+        public UIMenuDataProfile Default;
 
-        public void Start()
+        public Action OnProfileChanged;
+
+        [HideInInspector] public UIMenu Menu { get; private set; }
+
+        public void OnEnable()
         {
-           if (Menu == null)
-                return;
+            Menu = GetComponent<UIMenu>();
+            if (Menu.Settings.SaveOnChange)
+                OnProfileChanged += SaveProfile;
 
-           SetProfile(Menu.Profile);
-           Menu.OnProfileChanged += SetProfile;
+            LoadProfile();
         }
 
-        public Action OnMenuChanged;
-        public void SetMenu(UIMenu menu)
-        {
-            if(menu == null)
-                return;
-
-            Menu.OnProfileChanged -= SetProfile;
-            Menu = menu;
-            Menu.OnProfileChanged += SetProfile;
-            OnMenuChanged?.Invoke();
-        }
-
-        private static Dictionary<string, UIMenuDataProfile> profileCache = new();
+        private static Dictionary<string, UIMenuDataProfile> _profileCache = new();
         public static UIMenuDataProfile GetProfile(string name)
         {
-            if (!profileCache.TryGetValue(name, out var profile))
+            if (!_profileCache.TryGetValue(name, out var profile))
                 return null;
 
             return profile;
         }
 
-        public static Action OnProfileChanged;
         public void SetProfile(UIMenuDataProfile profile)
         {
-            if(profile == null)
+            if (profile == null)
                 return;
 
             Profile = profile;
-            profileCache[Menu.name] = profile;
+            _profileCache[Menu.name] = profile;
             OnProfileChanged?.Invoke();
         }
 
         public void ResetProfile() =>
             Profile?.CopyFrom(Menu?.DefaultProfile);
+
+        public UIMenuDataProfile LoadProfile()
+        {
+            Default ??= CreateProfileInstance("Default");
+
+            foreach (var data in Menu.Data.GetDataItems())
+                if (data is UIGeneratorTypeTemplate dataTemplate)
+                    dataTemplate.ProfileAddDefault(Default);
+
+            if (Menu.Settings.SaveFileMode != UIProfileSaveMode.None)
+            {
+                var fileName = Menu.Name;
+                var parentDirectory = Menu.Settings.SaveFileMode == UIProfileSaveMode.Outside;
+
+                UIMenuDataProfileSerializer.DeserializeData(out Profile, fileName, parentDirectory);
+                Profile.AddFrom(Default);
+            }
+
+            Profile ??= Default;
+            OnProfileChanged?.Invoke();
+            return Profile;
+        }
+
+        public void SaveProfile()
+        {
+            if (Menu.Settings.SaveFileMode != UIProfileSaveMode.None)
+            {
+                var fileName = Menu.Name;
+                var parentDirectory = Menu.Settings.SaveFileMode == UIProfileSaveMode.Outside;
+
+                UIMenuDataProfileSerializer.SerializeData(Profile, fileName, parentDirectory);
+            }
+        }
+
+        private UIMenuDataProfile CreateProfileInstance(string name = "Profile")
+        {
+            var profile = ScriptableObject.CreateInstance<UIMenuDataProfile>();
+            profile.name = name + " AutoCreated";
+            return profile;
+        }
     }
 }
