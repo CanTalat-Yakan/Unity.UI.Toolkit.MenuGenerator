@@ -3,15 +3,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSpacerData : UIGeneratorTypeTemplate
-    {
-        public int Height = 20;
-
-        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
-
-        public override void ApplyDynamicReset() { }
-    }
-
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateSpacer(UIMenuGenerator menu, int height)

@@ -4,20 +4,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorPickerData : UIGeneratorTypeTemplate
-    {
-        [Space]
-        public bool HasAlpha;
-
-        [Space]
-        public Color Default;
-
-        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
-            profile.ColorPickers.Add(Reference, Default);
-
-        public override void ApplyDynamicReset() { }
-    }
-
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateColorPickerButton(UIMenuGenerator menu, UIMenuColorPickerData data)

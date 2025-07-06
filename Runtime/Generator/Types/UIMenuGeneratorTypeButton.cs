@@ -1,29 +1,7 @@
-using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuButtonData : UIGeneratorTypeTemplate
-    {
-        [Space]
-        public Texture2D Texture;
-
-        [Space]
-        public UnityEvent Event;
-        public UnityEvent AltEvent;
-
-        public void InvokeEvent() =>
-            Event?.Invoke();
-
-        public void InvokeAltEvent() =>
-            AltEvent?.Invoke();
-
-        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
-
-        public override void ApplyDynamicReset() { }
-    }
-
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateButton(UIMenuGenerator menu, UIMenuButtonData data)

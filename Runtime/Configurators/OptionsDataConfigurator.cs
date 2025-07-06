@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class OptionsDataEvent : MonoBehaviour
+    public class OptionsDataConfigurator : MonoBehaviour
     {
         public UIMenuData MenuData;
         public string Reference;
@@ -19,7 +19,7 @@ namespace UnityEssentials
 
         public void Awake()
         {
-            if (MenuData.GetDataByReference(Reference, out _optionsData))
+            if (MenuData?.GetDataByReference(Reference, out _optionsData) ?? false)
             {
                 OptionsData.IsDynamic = true;
                 OptionsData.Reverse = Reverse;

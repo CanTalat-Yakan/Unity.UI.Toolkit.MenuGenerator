@@ -2,15 +2,6 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuHeaderData : UIGeneratorTypeTemplate
-    {
-        public int MarginTop = 20;
-
-        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
-
-        public override void ApplyDynamicReset() { }
-    }
-
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateHeader(UIMenuGenerator menu, UIMenuHeaderData data)

@@ -1,54 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionDataCategory : UIGeneratorTypeTemplate
-    {
-        public ScriptableObject[] Data;
-
-        public int Default;
-
-        public UIMenuSelectionDataElement GetSelection(int index)
-        {
-            foreach (var scriptableObject in Data)
-                if (scriptableObject is UIMenuSelectionDataGroup group)
-                    foreach (var selections in group.GetSelections())
-                        if (selections != null && selections.Data != null)
-                            for (int i = 0; i < selections.Data.Length; i++)
-                                if (selections.StartIndexID + i == index)
-                                    return selections.Data[i];
-
-            return null;
-        }
-
-        public override void ProfileAddDefault(UIMenuDataProfile profile) =>
-            profile.Selections.Add(Reference, Default);
-
-        public override void ApplyDynamicReset() { }
-    }
-
-    public class UIMenuSelectionDataGroup : UIGeneratorTypeTemplate
-    {
-        [Space]
-        public bool Reverse;
-        public UIMenuSelectionData[] Selections;
-
-        public List<UIMenuSelectionData> GetSelections()
-        {
-            var list = Selections != null ? new List<UIMenuSelectionData>(Selections) : new List<UIMenuSelectionData>();
-            if (Reverse) list.Reverse();
-            return list;
-        }
-
-        public override void ProfileAddDefault(UIMenuDataProfile profile) { }
-
-        public override void ApplyDynamicReset() =>
-            Selections = Array.Empty<UIMenuSelectionData>();
-    }
-
     public static partial class UIMenuGeneratorType
     {
         public static VisualElement CreateSelectionCategory(
