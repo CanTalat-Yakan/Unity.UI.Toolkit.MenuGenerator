@@ -1,0 +1,37 @@
+using UnityEditor;
+using UnityEngine;
+
+namespace UnityEssentials
+{
+    public abstract class UIGeneratorTypeTemplate : ScriptableObject
+    {
+        [HideInInspector, SerializeField] public bool IsDynamic;
+        [HideInInspector, SerializeField] public bool HasReference;
+        [HideInInspector, SerializeField] public string ID;
+        [HideInInspector, SerializeField] public string Name;
+        public string Reference;
+
+        public static T Initialize<T>(string name = null, string uniqueName = null, bool hasReference = true) where T : UIGeneratorTypeTemplate
+        {
+            var generatorType = CreateInstance<T>();
+            generatorType.HasReference = hasReference;
+            generatorType.ID = GUID.Generate().ToString();
+            generatorType.SetName(name ?? string.Empty, uniqueName);
+            return generatorType;
+        }
+
+        public void SetName(string name, string uniqueName = null)
+        {
+            uniqueName ??= name;
+            Name = name;
+            Reference = uniqueName.ToLower().Replace(" ", "_");
+
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
+        }
+
+        public virtual object GetDefault() => null;
+
+        public virtual void ApplyDynamicReset() { }
+    }
+}

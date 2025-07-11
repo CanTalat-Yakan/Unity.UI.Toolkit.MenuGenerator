@@ -67,8 +67,11 @@ namespace UnityEssentials
         public UIMenuDataProfile Profile => Provider.Profile;
         public UIMenuDataProfile DefaultProfile => Provider.Default;
 
-        [HideInInspector] public UIMenuGenerator Generator { get; private set; }
-        [HideInInspector] public UIMenuDataProfileProvider Provider { get; private set; }
+        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
+        private UIMenuGenerator _generator;
+
+        [HideInInspector] public UIMenuDataProfileProvider Provider => _provider ??= GetComponent<UIMenuDataProfileProvider>();
+        private UIMenuDataProfileProvider _provider;
 
         public static Action<UIMenu> ShowEditor { get; set; }
         public Action<UIMenuData> SetData { get; private set; }
@@ -77,9 +80,6 @@ namespace UnityEssentials
         {
             if (Data == null)
                 return;
-
-            Generator ??= GetComponent<UIMenuGenerator>();
-            Provider ??= GetComponent<UIMenuDataProfileProvider>();
 
             Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
