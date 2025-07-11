@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionDataGroup : UIGeneratorTypeTemplate
+    public class UIMenuSelectionDataGroup : UIMenuGeneratorTypeTemplate
     {
         [Space]
         public bool Reverse;

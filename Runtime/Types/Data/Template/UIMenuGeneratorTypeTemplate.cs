@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public abstract class UIGeneratorTypeTemplate : ScriptableObject
+    public class UIMenuGeneratorTypeTemplate : ScriptableObject
     {
-        [HideInInspector, SerializeField] public bool IsDynamic;
-        [HideInInspector, SerializeField] public bool HasReference;
-        [HideInInspector, SerializeField] public string ID;
-        [HideInInspector, SerializeField] public string Name;
+        [HideInInspector] public bool IsDynamic;
+        [HideInInspector] public bool HasReference;
+        [HideInInspector] public string ID;
+        [HideInInspector] public string Name;
         public string Reference;
 
-        public static T Initialize<T>(string name = null, string uniqueName = null, bool hasReference = true) where T : UIGeneratorTypeTemplate
+        public static T Initialize<T>(string name = null, string uniqueName = null, bool hasReference = true) where T : UIMenuGeneratorTypeTemplate
         {
             var generatorType = CreateInstance<T>();
             generatorType.HasReference = hasReference;

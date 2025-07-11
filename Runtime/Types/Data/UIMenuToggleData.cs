@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuToggleData : UIGeneratorTypeTemplate
+    public class UIMenuToggleData : UIMenuGeneratorTypeTemplate
     {
         [Space]
         public bool Default;

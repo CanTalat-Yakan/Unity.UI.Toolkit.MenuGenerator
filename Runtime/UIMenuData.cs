@@ -1,19 +1,18 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace UnityEssentials
 {
     public class UIMenuData : ScriptableObject
     {
-        [HideInInspector, SerializeField] public string Name = "Menu";
-        [HideInInspector, SerializeField] public ScriptableObject[] Root = { };
+        [HideInInspector] public string Name = "Menu";
+        [HideInInspector] public ScriptableObject[] Root = { };
 
         public bool GetDataByReference<T>(string reference, out T data) where T : ScriptableObject
         {
             data = null;
             foreach (var item in GetDataItems())
-                if (item is UIGeneratorTypeTemplate dataTemplate)
+                if (item is UIMenuGeneratorTypeTemplate dataTemplate)
                     if (dataTemplate.Reference == reference)
                         if (item is T typedData)
                         {

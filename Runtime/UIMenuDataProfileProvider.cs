@@ -51,7 +51,7 @@ namespace UnityEssentials
             Profile ??= CreateProfileInstance("Profile");
 
             foreach (var data in Menu.Data.GetDataItems())
-                if (data is UIGeneratorTypeTemplate dataTemplate)
+                if (data is UIMenuGeneratorTypeTemplate dataTemplate)
                     Default.AddData(dataTemplate.Reference, dataTemplate.GetDefault());
 
             if (Menu.Settings.SaveFileMode != UIProfileSaveMode.None)
