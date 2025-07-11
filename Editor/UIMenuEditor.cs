@@ -136,7 +136,7 @@ namespace UnityEssentials
                 _foldoutStates[itemData] = isExpanded;
             }
             else if (isFocused && !isExpanded)
-                _foldoutStates[itemData] = isExpanded = true;
+                isExpanded = true;
 
             using (new EditorGUILayout.VerticalScope())
             {
