@@ -7,7 +7,7 @@ namespace UnityEssentials
     {
         public static VisualElement CreateSelectionCategory(
             UIMenuGenerator menu,
-            UIMenuSelectionDataCategory category)
+            UIMenuSelectionCategoryData category)
         {
             var categoryElement = menu.Data.SelectionCategoryTemplate.CloneTree();
             ConfigureSelectionCategoryVisuals(menu.Profile, categoryElement, category);
@@ -18,7 +18,7 @@ namespace UnityEssentials
         private static void ConfigureSelectionCategoryVisuals(
             UIMenuDataProfile profile,
             VisualElement categoryElement,
-            UIMenuSelectionDataCategory category)
+            UIMenuSelectionCategoryData category)
         {
             var button = categoryElement.Q<Button>("Button");
             button.text = category.Name.ToUpper();
@@ -39,7 +39,7 @@ namespace UnityEssentials
         private static void ConfigureSelectionCategoryInteraction(
             UIMenuGenerator menu,
             VisualElement categoryElement,
-            UIMenuSelectionDataCategory category)
+            UIMenuSelectionCategoryData category)
         {
             var button = categoryElement.Q<Button>();
             button.clicked += () =>
@@ -59,7 +59,7 @@ namespace UnityEssentials
         public static IEnumerable<VisualElement> AddSelectionTiles(
             UIMenuGenerator menu,
             VisualElement categoryElement,
-            UIMenuSelectionDataCategory category)
+            UIMenuSelectionCategoryData category)
         {
             foreach (var scriptableObject in category.Data)
                 switch (scriptableObject)
@@ -70,17 +70,17 @@ namespace UnityEssentials
                     case UIMenuColorPickerData pickerData:
                         yield return CreateColorPickerButton(menu, pickerData.Name, pickerData.Reference);
                         break;
-                    case UIMenuSelectionDataGroup group:
+                    case UIMenuSelectionGroupData group:
                         yield return CreateGroupBoxSelectionTiles(group, menu, categoryElement, category);
                         break;
                 }
         }
 
         private static VisualElement CreateGroupBoxSelectionTiles(
-            UIMenuSelectionDataGroup group,
+            UIMenuSelectionGroupData group,
             UIMenuGenerator menu,
             VisualElement categoryElement,
-            UIMenuSelectionDataCategory category)
+            UIMenuSelectionCategoryData category)
         {
             var groupBox = new GroupBox();
             groupBox.SetWidth(100f);
@@ -111,7 +111,7 @@ namespace UnityEssentials
         private static VisualElement CreateSelectionTile(
             UIMenuGenerator menu,
             VisualElement categorycategoryElement,
-            UIMenuSelectionDataCategory category,
+            UIMenuSelectionCategoryData category,
             UIMenuSelectionDataElement data,
             int index)
         {

@@ -171,7 +171,7 @@ namespace UnityEssentials
 
                     var drawArrays = true;
                     drawArrays &= itemData is not UIMenuCategoryData;
-                    drawArrays &= itemData is not UIMenuSelectionDataCategory;
+                    drawArrays &= itemData is not UIMenuSelectionCategoryData;
 
                     var drawReference = true;
                     if (itemData is UIMenuGeneratorTypeTemplate data)

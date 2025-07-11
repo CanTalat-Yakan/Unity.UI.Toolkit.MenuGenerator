@@ -67,8 +67,8 @@ namespace UnityEssentials
                 UIMenuInputData inputData => CreateItemRecursive(CreateInput(treeView, inputData.Name), inputData, treeView, parent),
                 UIMenuSliderData sliderData => CreateItemRecursive(CreateSlider(treeView, sliderData.Name), sliderData, treeView, parent),
                 UIMenuToggleData toggleData => CreateItemRecursive(CreateToggle(treeView, toggleData.Name), toggleData, treeView, parent),
-                UIMenuSelectionDataCategory selectionDataCategory => CreateItemRecursive(CreateSelectionCategory(treeView, selectionDataCategory.Name), selectionDataCategory, treeView, parent),
-                UIMenuSelectionDataGroup selectionDataGroup => CreateItemRecursive(CreateSelectionGroup(treeView, selectionDataGroup.Name), selectionDataGroup, treeView, parent),
+                UIMenuSelectionCategoryData selectionDataCategory => CreateItemRecursive(CreateSelectionCategory(treeView, selectionDataCategory.Name), selectionDataCategory, treeView, parent),
+                UIMenuSelectionGroupData selectionDataGroup => CreateItemRecursive(CreateSelectionGroup(treeView, selectionDataGroup.Name), selectionDataGroup, treeView, parent),
                 UIMenuColorPickerData colorPickerData => CreateItemRecursive(CreateColorPicker(treeView, colorPickerData.Name), colorPickerData, treeView, parent),
                 UIMenuColorSliderData colorSliderData => CreateItemRecursive(CreateColorSlider(treeView, colorSliderData.Name), colorSliderData, treeView, parent),
                 _ => null
@@ -225,7 +225,7 @@ namespace UnityEssentials
         public static void AddSelectionCategory(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSelectionCategory(treeView), parent, true);
         private static Type[] SupportedTypes = { typeof(UIMenuHeaderData), typeof(UIMenuSpacerData),
-              typeof(UIMenuSelectionDataGroup), typeof(UIMenuColorSliderData), typeof(UIMenuColorPickerData) };
+              typeof(UIMenuSelectionGroupData), typeof(UIMenuColorSliderData), typeof(UIMenuColorPickerData) };
         public static SimpleTreeViewItem CreateSelectionCategory(SimpleTreeView treeView, string name = "Selection Category") =>
             new SimpleTreeViewItem()
                 .SetName(name, out var uniqueName)
@@ -233,7 +233,7 @@ namespace UnityEssentials
                 .Support(SupportedTypes)
                 .SetContextMenu(GetSelectionGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(UIMenuGeneratorTypeTemplate.Initialize<UIMenuSelectionDataCategory>(name, uniqueName, hasReference: false));
+                .SetUserData(UIMenuGeneratorTypeTemplate.Initialize<UIMenuSelectionCategoryData>(name, uniqueName, hasReference: false));
 
         public static void AddSelectionGroup(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateSelectionGroup(treeView), parent, false);
@@ -244,7 +244,7 @@ namespace UnityEssentials
                 .Support(allowChildren: false)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Selection.ToString())
-                .SetUserData(UIMenuGeneratorTypeTemplate.Initialize<UIMenuSelectionDataGroup>(name, uniqueName));
+                .SetUserData(UIMenuGeneratorTypeTemplate.Initialize<UIMenuSelectionGroupData>(name, uniqueName));
 
         public static void AddColorPicker(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateColorPicker(treeView), parent, false);

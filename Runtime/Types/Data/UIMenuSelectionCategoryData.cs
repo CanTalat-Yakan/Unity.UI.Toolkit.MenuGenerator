@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionDataCategory : UIMenuGeneratorTypeTemplate
+    public class UIMenuSelectionCategoryData : UIMenuGeneratorTypeTemplate
     {
         public ScriptableObject[] Data;
 
@@ -11,7 +11,7 @@ namespace UnityEssentials
         public UIMenuSelectionDataElement GetSelection(int index)
         {
             foreach (var scriptableObject in Data)
-                if (scriptableObject is UIMenuSelectionDataGroup group)
+                if (scriptableObject is UIMenuSelectionGroupData group)
                     foreach (var selections in group.GetSelections())
                         if (selections != null && selections.Data != null)
                             for (int i = 0; i < selections.Data.Length; i++)

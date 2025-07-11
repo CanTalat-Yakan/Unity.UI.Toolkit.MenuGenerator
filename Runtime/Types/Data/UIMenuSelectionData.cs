@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -13,12 +14,29 @@ namespace UnityEssentials
         public GameObject Source;
     }
 
-    [CreateAssetMenu(fileName = "SelectionData_", menuName = "UI/Selection", order = 0)]
+    [CreateAssetMenu(fileName = "SelectionData_", menuName = "Menu/Selection", order = 0)]
     public class UIMenuSelectionData : ScriptableObject
     {
         [Tooltip("The starting index is added to the element's index to determine the final Selection ID")]
         public int StartIndexID;
 
         public UIMenuSelectionDataElement[] Data;
+    }
+
+    public class UIMenuSelectionGroupData : UIMenuGeneratorTypeTemplate
+    {
+        [Space]
+        public bool Reverse;
+        public UIMenuSelectionData[] Selections;
+
+        public List<UIMenuSelectionData> GetSelections()
+        {
+            List<UIMenuSelectionData> list = Selections != null ? new(Selections) : new();
+            if (Reverse) list.Reverse();
+            return list;
+        }
+
+        public override void ApplyDynamicReset() =>
+            Selections = Array.Empty<UIMenuSelectionData>();
     }
 }

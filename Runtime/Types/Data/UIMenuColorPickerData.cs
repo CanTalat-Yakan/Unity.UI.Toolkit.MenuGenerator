@@ -11,5 +11,11 @@ namespace UnityEssentials
         public Color Default;
 
         public override object GetDefault() => Default;
+
+        public override void ApplyDynamicReset()
+        {
+            Default = Color.white;
+            HasAlpha = false;
+        }
     }
 }

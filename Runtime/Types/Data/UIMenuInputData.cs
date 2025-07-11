@@ -8,5 +8,8 @@ namespace UnityEssentials
         public string Default;
 
         public override object GetDefault() => Default;
+
+        public override void ApplyDynamicReset() =>
+            Default = string.Empty;
     }
 }

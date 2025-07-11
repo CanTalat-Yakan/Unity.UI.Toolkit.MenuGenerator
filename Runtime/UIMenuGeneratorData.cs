@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [CreateAssetMenu(fileName = "UIGeneratorData", menuName = "UI/Templates Provider", order = 100)]
+    [CreateAssetMenu(fileName = "UIGeneratorData", menuName = "Menu/Templates Provider", order = 100)]
     public class UIMenuGeneratorData : ScriptableObject
     {
         [Space]

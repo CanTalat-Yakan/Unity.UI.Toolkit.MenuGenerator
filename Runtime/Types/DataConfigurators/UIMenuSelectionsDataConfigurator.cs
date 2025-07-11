@@ -11,8 +11,8 @@ namespace UnityEssentials
         public bool Reverse;
         public UIMenuSelectionData[] Selections;
 
-        private UIMenuSelectionDataGroup _selectionGroup;
-        [HideInInspector] public UIMenuSelectionDataGroup SelectionGroup => _selectionGroup;
+        private UIMenuSelectionGroupData _selectionGroup;
+        [HideInInspector] public UIMenuSelectionGroupData SelectionGroup => _selectionGroup;
 
         public void Awake()
         {
