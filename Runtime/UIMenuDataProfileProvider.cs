@@ -12,15 +12,13 @@ namespace UnityEssentials
 
         public Action OnProfileChanged;
 
-        [HideInInspector] public UIMenu Menu { get; private set; }
+        [HideInInspector] public UIMenu Menu => _menu ??= GetComponent<UIMenu>();
+        private UIMenu _menu;
 
         public void OnEnable()
         {
-            Menu = GetComponent<UIMenu>();
-            if (Menu.Settings.SaveOnChange)
-                OnProfileChanged += SaveProfile;
-
             LoadProfile();
+            Profile.OnValueChanged += SaveProfile;
         }
 
         private static Dictionary<string, UIMenuDataProfile> _profileCache = new();
@@ -37,7 +35,10 @@ namespace UnityEssentials
             if (profile == null)
                 return;
 
+            Profile.OnValueChanged -= SaveProfile;
             Profile = profile;
+            Profile.OnValueChanged += SaveProfile;
+
             _profileCache[Menu.name] = profile;
             OnProfileChanged?.Invoke();
         }
