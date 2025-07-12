@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,50 +18,15 @@ namespace UnityEssentials
         Tabbed,
     }
 
-    [Serializable]
-    public class UIMenuSettings
-    {
-        [Info]
-        [SerializeField]
-        private string _info;
-
-        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Inside;
-        public bool SaveOnChange = true;
-
-        [OnValueChanged("SaveFileMode")]
-        public void OnSaveFileModeValueChanged()
-        {
-            switch (SaveFileMode)
-            {
-                case UIProfileSaveMode.None:
-                    _info =
-                        "No save file will be created. " +
-                        "The profile will not persist between sessions and will not be saved to disk.";
-                    break;
-                case UIProfileSaveMode.Outside:
-                    _info =
-                        "A save file will be created outside the Assets/Build_Data folder, " +
-                        "within the automatically created directory called Resources.";
-                    break;
-                case UIProfileSaveMode.Inside:
-                    _info =
-                        "A save file will be created inside the Assets/Build_Data folder, " +
-                        "within the automatically created directory called Resources.";
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     public class UIMenu : MonoBehaviour
     {
-        public UIMenuSettings Settings = new();
+        public static Dictionary<string, UIMenu> Instances { get; private set; } = new();
 
         [Space]
         public UIMenuType Type;
         [OnValueChanged("Type")] public void OnTypeValueChanged() => Initialize();
 
+        [Space]
         public string Name = "Menu";
         public UIMenuData Data;
 
@@ -81,6 +47,8 @@ namespace UnityEssentials
             if (Data == null)
                 return;
 
+            Instances.Add(Name, this);
+
             Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
 
@@ -98,7 +66,7 @@ namespace UnityEssentials
         {
             foreach (var item in Data.GetDataItems())
                 if (item is UIMenuGeneratorTypeTemplate dataTemplate)
-                    if(dataTemplate.IsDynamic)
+                    if (dataTemplate.IsDynamic)
                     {
                         dataTemplate.ApplyDynamicReset();
                         dataTemplate.IsDynamic = false;

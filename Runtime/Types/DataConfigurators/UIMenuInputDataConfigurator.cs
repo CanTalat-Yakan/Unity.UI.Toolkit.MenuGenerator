@@ -4,7 +4,7 @@ namespace UnityEssentials
 {
     public class UIMenuInputDataConfigurator : MonoBehaviour
     {
-        public UIMenuData MenuData;
+        public string MenuName;
         public string Reference;
 
         [Space]
@@ -15,7 +15,10 @@ namespace UnityEssentials
 
         public void Awake()
         {
-            if (MenuData?.GetDataByReference(Reference, out _inputData) ?? false)
+            if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
+                return;
+
+            if (menu.Data?.GetDataByReference(Reference, out _inputData) ?? false)
             {
                 InputData.IsDynamic = true;
                 InputData.Default = Default;

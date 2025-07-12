@@ -4,19 +4,63 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
+    [Serializable]
+    public class UIMenuSettings
+    {
+        [Info]
+        [SerializeField]
+        private string _info;
+
+        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
+        public bool SaveOnChange = true;
+
+        [OnValueChanged("SaveFileMode")]
+        public void OnSaveFileModeValueChanged()
+        {
+            switch (SaveFileMode)
+            {
+                case UIProfileSaveMode.None:
+                    _info =
+                        "No save file will be created. " +
+                        "The profile will not persist between sessions and will not be saved to disk.";
+                    break;
+                case UIProfileSaveMode.Outside:
+                    _info =
+                        "A save file will be created outside the Assets/Build_Data folder, " +
+                        "within the automatically created directory called Resources.";
+                    break;
+                case UIProfileSaveMode.Inside:
+                    _info =
+                        "A save file will be created inside the Assets/Build_Data folder, " +
+                        "within the automatically created directory called Resources.";
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     [RequireComponent(typeof(UIMenu))]
     public class UIMenuDataProfileProvider : MonoBehaviour
     {
+        public UIMenuSettings Settings = new();
+
+        [Space]
+        public string Name = "Menu";
+        public UIMenuData Data;
+
+        [Space]
         public UIMenuDataProfile Profile;
         public UIMenuDataProfile Default;
 
         public Action OnProfileChanged;
 
-        [HideInInspector] public UIMenu Menu => _menu ??= GetComponent<UIMenu>();
-        private UIMenu _menu;
-
         public void OnEnable()
         {
+            var menu = GetComponent<UIMenu>();
+            if(menu != null )
+                Data = menu.Data;
+
             LoadProfile();
             Profile.OnValueChanged += SaveProfile;
         }
@@ -39,32 +83,30 @@ namespace UnityEssentials
             Profile = profile;
             Profile.OnValueChanged += SaveProfile;
 
-            _profileCache[Menu.name] = profile;
+            _profileCache[Name] = profile;
             OnProfileChanged?.Invoke();
         }
 
         public void ResetProfile() =>
-            Profile?.Data.CopyFrom(Menu?.DefaultProfile.Data);
+            Profile?.Data.CopyFrom(Default.Data);
 
         public UIMenuDataProfile LoadProfile()
         {
             Default ??= CreateProfileInstance("Default");
             Profile ??= CreateProfileInstance("Profile");
 
-            foreach (var data in Menu.Data.GetDataItems())
+            foreach (var data in Data.GetDataItems())
                 if (data is UIMenuGeneratorTypeTemplate dataTemplate)
                     Default.AddData(dataTemplate.Reference, dataTemplate.GetDefault());
 
-            if (Menu.Settings.SaveFileMode != UIProfileSaveMode.None)
+            if (Settings.SaveFileMode != UIProfileSaveMode.None)
             {
-                var fileName = Menu.Name;
-                var parentDirectory = Menu.Settings.SaveFileMode == UIProfileSaveMode.Outside;
-
+                var parentDirectory = Settings.SaveFileMode == UIProfileSaveMode.Outside;
                 var serializedData = (SerializedDictionary<string, object>)default;
-                UIMenuDataProfileSerializer.DeserializeData(out serializedData, fileName, parentDirectory);
+                UIMenuDataProfileSerializer.DeserializeData(out serializedData, Name, parentDirectory);
                 Profile.Data.CopyFrom(serializedData);
                 Profile.Data.AddFrom(Default.Data);
-                Profile.name = fileName + " Serialized";
+                Profile.name = Name + " Serialized";
             }
 
             Profile ??= Default;
@@ -74,10 +116,10 @@ namespace UnityEssentials
 
         public void SaveProfile()
         {
-            if (Menu.Settings.SaveFileMode != UIProfileSaveMode.None)
+            if (Settings.SaveFileMode != UIProfileSaveMode.None)
             {
-                var fileName = Menu.Name;
-                var parentDirectory = Menu.Settings.SaveFileMode == UIProfileSaveMode.Outside;
+                var fileName = Name;
+                var parentDirectory = Settings.SaveFileMode == UIProfileSaveMode.Outside;
 
                 UIMenuDataProfileSerializer.SerializeData(Profile.Data, fileName, parentDirectory);
             }

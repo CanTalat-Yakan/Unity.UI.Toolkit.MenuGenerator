@@ -4,7 +4,7 @@ namespace UnityEssentials
 {
     public class UIMenuSelectionsDataConfigurator : MonoBehaviour
     {
-        public UIMenuData MenuData;
+        public string MenuName;
         public string Reference;
 
         [Space]
@@ -16,7 +16,10 @@ namespace UnityEssentials
 
         public void Awake()
         {
-            if (MenuData?.GetDataByReference(Reference, out _selectionGroup) ?? false)
+            if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
+                return;
+
+            if (menu.Data?.GetDataByReference(Reference, out _selectionGroup) ?? false)
             {
                 SelectionGroup.IsDynamic = true;
                 SelectionGroup.Reverse = Reverse;

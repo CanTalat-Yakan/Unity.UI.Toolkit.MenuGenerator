@@ -4,7 +4,7 @@ namespace UnityEssentials
 {
     public class UIMenuSelectionsCategoryDataConfigurator : MonoBehaviour
     {
-        public UIMenuData MenuData;
+        public string MenuName;
         public string Reference;
 
         [Space]
@@ -15,7 +15,10 @@ namespace UnityEssentials
 
         public void Awake()
         {
-            if (MenuData?.GetDataByReference(Reference, out _selectionCategory) ?? false)
+            if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
+                return;
+
+            if (menu.Data?.GetDataByReference(Reference, out _selectionCategory) ?? false)
             {
                 SelectionCategory.IsDynamic = true;
                 SelectionCategory.Default = Default;
