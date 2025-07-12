@@ -1,4 +1,4 @@
-using UnityEditor;
+using System;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -15,7 +15,7 @@ namespace UnityEssentials
         {
             var generatorType = CreateInstance<T>();
             generatorType.HasReference = hasReference;
-            generatorType.ID = GUID.Generate().ToString();
+            generatorType.ID = Guid.NewGuid().ToString();
             generatorType.SetName(name ?? string.Empty, uniqueName);
             return generatorType;
         }
@@ -26,12 +26,13 @@ namespace UnityEssentials
             Name = name;
             Reference = uniqueName.ToLower().Replace(" ", "_");
 
-            EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssets();
+#endif
         }
 
         public virtual object GetDefault() => null;
-
         public virtual void ApplyDynamicReset() { }
     }
 }
