@@ -4,9 +4,11 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateToggle(UIMenuGenerator menu, UIMenuToggleData data)
+        public static VisualElement CreateToggle(UIMenuDataGenerator menu, UIMenuToggleData data)
         {
-            var element = menu.Data.ToggleTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Types_UI_";
+            var name = path + "Toggle_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureToggleVisuals(menu.Profile, element, data);
             ConfigureToggleInteraction(menu.Profile, element, data);
             return element;
@@ -26,9 +28,9 @@ namespace UnityEssentials
         private static void ConfigureToggleInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuToggleData data)
         {
             var toggle = element.Q<Toggle>("Toggle");
-            toggle.RegisterValueChangedCallback(e =>
+            toggle.RegisterValueChangedCallback((evt) =>
             {
-                profile.OnToggleValueChanged(data.Reference, e.newValue);
+                profile.OnToggleValueChanged(data.Reference, evt.newValue);
             });
         }
     }

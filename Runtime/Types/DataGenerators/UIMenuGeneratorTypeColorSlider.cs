@@ -4,9 +4,11 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateColorSlider(UIMenuGenerator menu, UIMenuColorSliderData data)
+        public static VisualElement CreateColorSlider(UIMenuDataGenerator menu, UIMenuColorSliderData data)
         {
-            var element = menu.Data.ColorSliderTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Types_UI_";
+            var name = path + "ColorSlider_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureSliderVisuals(menu.Profile, element, data);
             ConfigureSliderInteraction(menu.Profile, element, data);
             return element;
@@ -32,11 +34,11 @@ namespace UnityEssentials
         {
             var icon = element.Q<VisualElement>("Icon");
             var slider = element.Q<SliderInt>();
-            slider.RegisterValueChangedCallback(e =>
+            slider.RegisterValueChangedCallback((evt) =>
             {
-                icon.SetBackgroundColor(data.Gradient.Evaluate(e.newValue / 100f));
+                icon.SetBackgroundColor(data.Gradient.Evaluate(evt.newValue / 100f));
 
-                profile.OnColorSliderValueChanged(data.Reference, e.newValue);
+                profile.OnColorSliderValueChanged(data.Reference, evt.newValue);
             });
         }
     }

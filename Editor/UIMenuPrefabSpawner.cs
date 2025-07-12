@@ -11,10 +11,9 @@ namespace UnityEssentials
         {
             var go = new GameObject("UI Menu");
             var menu = go.AddComponent<UIMenu>();
-            var generator = go.AddComponent<UIMenuGenerator>();
             var provider = go.AddComponent<UIMenuDataProfileProvider>();
+            var generator = go.AddComponent<UIMenuDataGenerator>();
             generator.hideFlags = HideFlags.HideInInspector;
-            generator.Initialize();
             menu.Initialize();
             Undo.RegisterCreatedObjectUndo(go, "Create UI Menu");
             Selection.activeObject = go;

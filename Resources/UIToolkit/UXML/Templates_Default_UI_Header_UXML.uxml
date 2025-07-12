@@ -1,4 +1,4 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="Styles/Default UI Template USS.uss" />
+    <Style src="Styles/Default_UI_Template_USS.uss" />
     <engine:Label text="Label" name="Label" style="margin-top: 5px; margin-bottom: 0; padding-right: 0; padding-bottom: 2px; padding-left: 20px; margin-left: 20px;" />
 </engine:UXML>

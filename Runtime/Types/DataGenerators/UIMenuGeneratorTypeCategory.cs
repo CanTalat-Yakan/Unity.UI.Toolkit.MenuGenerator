@@ -4,9 +4,11 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateCategory(UIMenuGenerator menu, UIMenuCategoryData data)
+        public static VisualElement CreateCategory(UIMenuDataGenerator menu, UIMenuCategoryData data)
         {
-            var element = menu.Data.CategoryTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Default_UI_";
+            var name = path + "Category_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureCategoryVisuals(element, data);
             ConfigureCategoryInteraction(menu, element, data);
             return element;
@@ -21,7 +23,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private static void ConfigureCategoryInteraction(UIMenuGenerator menu, VisualElement element, UIMenuCategoryData data)
+        private static void ConfigureCategoryInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuCategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => menu.Populate(false, data.Name, data.Data);

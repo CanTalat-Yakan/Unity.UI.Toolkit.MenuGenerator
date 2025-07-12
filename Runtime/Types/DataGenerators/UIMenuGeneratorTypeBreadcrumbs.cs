@@ -6,12 +6,14 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static void AddBreadcrumb(UIMenuGenerator menu, string label, bool isRoot, ScriptableObject[] data, Action redraw)
+        public static void AddBreadcrumb(UIMenuDataGenerator menu, string label, bool isRoot, ScriptableObject[] data, Action redraw)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;
 
-            var element = menu.Data.BreadcrumbTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Default_UI_";
+            var name = path + "Breadcrumb_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureBreadcrumbVisuals(element, label, !isRoot);
             ConfigureBreadcrumbInteraction(menu, element, container.childCount, isRoot, label, data, redraw);
             container.Add(element);
@@ -27,7 +29,7 @@ namespace UnityEssentials
         }
 
         private static void ConfigureBreadcrumbInteraction(
-            UIMenuGenerator menu,
+            UIMenuDataGenerator menu,
             VisualElement element,
             int index, bool isRoot, string label,
             ScriptableObject[] data,
@@ -44,14 +46,14 @@ namespace UnityEssentials
             };
         }
 
-        public static void ClearBreadcrumbsFromIndex(UIMenuGenerator menu, int startIndex = 0)
+        public static void ClearBreadcrumbsFromIndex(UIMenuDataGenerator menu, int startIndex = 0)
         {
             if (menu.Breadcrumbs.LinkedElement is GroupBox breadcrumbs)
                 while (breadcrumbs.childCount > startIndex)
                     breadcrumbs.RemoveAt(breadcrumbs.childCount - 1);
         }
 
-        public static void GoBackOneBreadcrumb(UIMenuGenerator menu)
+        public static void GoBackOneBreadcrumb(UIMenuDataGenerator menu)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox breadcrumbs)
                 return;

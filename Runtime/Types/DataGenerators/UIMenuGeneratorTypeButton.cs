@@ -4,9 +4,11 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateButton(UIMenuGenerator menu, UIMenuButtonData data)
+        public static VisualElement CreateButton(UIMenuDataGenerator menu, UIMenuButtonData data)
         {
-            var element = menu.Data.ButtonTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Default_UI_";
+            var name = path + "Button_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureButtonVisuals(element, data);
             ConfigureButtonInteraction(element, data);
             return element;

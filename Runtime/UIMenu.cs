@@ -30,11 +30,14 @@ namespace UnityEssentials
         public string Name = "Menu";
         public UIMenuData Data;
 
+        [OnValueChanged("Name")]
+        public void OnNameValueChanged() => GetComponent<UIMenuDataProfileProvider>().Name = Name;
+
         public UIMenuDataProfile Profile => Provider.Profile;
         public UIMenuDataProfile DefaultProfile => Provider.Default;
 
-        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
-        private UIMenuGenerator _generator;
+        [HideInInspector] public UIMenuDataGenerator Generator => _generator ??= GetComponent<UIMenuDataGenerator>();
+        private UIMenuDataGenerator _generator;
 
         [HideInInspector] public UIMenuDataProfileProvider Provider => _provider ??= GetComponent<UIMenuDataProfileProvider>();
         private UIMenuDataProfileProvider _provider;
@@ -98,8 +101,6 @@ namespace UnityEssentials
         {
             DestroyAllChildren();
             InstantiateMenu();
-
-            Generator.Initialize();
         }
 
         private UIMenuData CreateDefault()
@@ -121,21 +122,18 @@ namespace UnityEssentials
 
         private void InstantiateMenu()
         {
-            var type = Type switch
+            var name = Type.ToString() + " Menu UI Document";
+            var prefab = Type switch
             {
-                UIMenuType.Hierarchical => Generator.Data.HierarchicalMenuTemplate,
-                UIMenuType.Tabbed => Generator.Data.TabbedMenuTemplate,
+                UIMenuType.Hierarchical => "UnityEssentials_Prefab_HierarchicalMenu",
+                UIMenuType.Tabbed => "UnityEssentials_Prefab_TabbedMenu",
                 _ => null
             };
 
-            if (type == null)
-            {
-                Debug.LogError("No template found for the selected menu type: " + Type);
+            if (prefab == null)
                 return;
-            }
 
-            var go = Instantiate(type, transform);
-            go.name = Type.ToString() + " Menu UI Document";
+            ResourceLoader.InstantiatePrefab(prefab, name, transform);
         }
     }
 }

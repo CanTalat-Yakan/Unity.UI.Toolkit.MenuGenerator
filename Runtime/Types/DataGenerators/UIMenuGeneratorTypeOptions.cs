@@ -1,14 +1,14 @@
-using System;
-using System.Linq;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateOptions(UIMenuGenerator menu, UIMenuOptionsData data)
+        public static VisualElement CreateOptions(UIMenuDataGenerator menu, UIMenuOptionsData data)
         {
-            var element = menu.Data.OptionsTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Types_UI_";
+            var name = path + "Options_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureOptionsVisuals(menu.Profile, element, data);
             ConfigureOptionsInteraction(menu.Profile, element, data);
             return element;

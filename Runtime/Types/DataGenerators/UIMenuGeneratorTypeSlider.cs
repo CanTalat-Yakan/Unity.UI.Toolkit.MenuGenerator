@@ -5,11 +5,11 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateSlider(UIMenuGenerator menu, UIMenuSliderData data)
+        public static VisualElement CreateSlider(UIMenuDataGenerator menu, UIMenuSliderData data)
         {
-            var element = data.IsFloat
-                ? menu.Data.SliderTemplate.CloneTree()
-                : menu.Data.SliderIntTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Types_UI_";
+            var name = path + (data.IsFloat ? "Slider_UXML" : "SliderInt_UXML");
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureSliderVisuals(menu.Profile, element, data);
             ConfigureSliderInteraction(menu.Profile, element, data);
             return element;
@@ -45,14 +45,14 @@ namespace UnityEssentials
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
-                slider.RegisterValueChangedCallback(e =>
-                    profile.OnSliderValueChanged(data.Reference, e.newValue));
+                slider.RegisterValueChangedCallback((evt) =>
+                    profile.OnSliderValueChanged(data.Reference, evt.newValue));
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
-                sliderInt.RegisterValueChangedCallback(e =>
-                    profile.OnSliderValueChanged(data.Reference, e.newValue));
+                sliderInt.RegisterValueChangedCallback((evt) =>
+                    profile.OnSliderValueChanged(data.Reference, evt.newValue));
             }
         }
     }

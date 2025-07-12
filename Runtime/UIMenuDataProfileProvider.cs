@@ -49,6 +49,9 @@ namespace UnityEssentials
         public string Name = "Menu";
         public UIMenuData Data;
 
+        [OnValueChanged("Name")]
+        public void OnNameValueChanged() => GetComponent<UIMenu>().Name = Name;
+
         [Space]
         public UIMenuDataProfile Profile;
         public UIMenuDataProfile Default;

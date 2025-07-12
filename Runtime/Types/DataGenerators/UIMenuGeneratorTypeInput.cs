@@ -4,9 +4,11 @@ namespace UnityEssentials
 {
     public static partial class UIMenuGeneratorType
     {
-        public static VisualElement CreateInput(UIMenuGenerator menu, UIMenuInputData data)
+        public static VisualElement CreateInput(UIMenuDataGenerator menu, UIMenuInputData data)
         {
-            var element = menu.Data.InputTemplate.CloneTree();
+            var path = "UIToolkit/UXML/Templates_Types_UI_";
+            var name = path + "Input_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
             ConfigureInputVisuals(menu.Profile, element, data);
             ConfigureInputInteraction(menu.Profile, element, data);
             return element;
@@ -30,8 +32,8 @@ namespace UnityEssentials
         private static void ConfigureInputInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuInputData data)
         {
             var textField = element.Q<TextField>("Input");
-            textField.RegisterValueChangedCallback((e) =>
-                profile.OnInputValueChanged(data.Reference, e.newValue));
+            textField.RegisterValueChangedCallback((evt) =>
+                profile.OnInputValueChanged(data.Reference, evt.newValue));
         }
     }
 }

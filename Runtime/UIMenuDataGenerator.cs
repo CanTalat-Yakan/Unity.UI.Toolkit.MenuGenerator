@@ -5,10 +5,8 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [RequireComponent(typeof(UIMenu))]
-    public partial class UIMenuGenerator : MonoBehaviour
+    public partial class UIMenuDataGenerator : MonoBehaviour
     {
-        public UIMenuGeneratorData Data;
-
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;
         [HideInInspector] public UIElementLink Back;
@@ -22,13 +20,6 @@ namespace UnityEssentials
 
         public void OnEnable() =>
             Menu = GetComponent<UIMenu>();
-
-        [ContextMenu("Initialize")]
-        public void Initialize()
-        {
-            Data = ResourceLoader.LoadResource<UIMenuGeneratorData>("UnityEssentials_UIGeneratorData_DefaultUI");
-            Data.name = "Default Templates";
-        }
 
         [ContextMenu("Fetch")]
         public void FetchReferences()
@@ -55,9 +46,6 @@ namespace UnityEssentials
                 UIMenuGeneratorType.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
                 Populate(prefix, label, data);
             };
-
-        public bool ValidateDependencies() =>
-            Data != null && Document != null;
 
         [ContextMenu("Show")]
         public void Show()
@@ -108,15 +96,6 @@ namespace UnityEssentials
 
             Root.Add(element);
         }
-
-        //public VisualElement CreatePopup(string name)
-        //{
-        //    var popup = Instantiate(Data.PopupPanelTemplate);
-        //    var root = popup.GetComponent<UIDocument>().rootVisualElement;
-        //    root.Q<Button>("Label").text = name.ToUpper();
-        //    root.Q<Button>("Back").clicked += () => Root.Remove(root);
-        //    return root;
-        //}
 
         public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action customDataRedraw = null)
         {

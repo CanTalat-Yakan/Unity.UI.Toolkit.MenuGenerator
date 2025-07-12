@@ -1,5 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="Styles/Default UI Template USS.uss" />
+    <Style src="Styles/Default_UI_Template_USS.uss" />
     <engine:GroupBox class="unity-button" style="flex-direction: row; justify-content: space-between; background-color: rgba(0, 0, 0, 0.5); margin-top: 5px; margin-right: 0; margin-bottom: 15px; margin-left: 0; padding-top: 0; padding-right: 60px; padding-bottom: 0; padding-left: 20px; height: 40px; max-width: none; min-width: 550px; flex-wrap: wrap; overflow: hidden; width: 0; align-items: center;">
         <MarqueeLabel text="Label" name="Label" class="unity-button--primary" style="width: 220px; height: 24px;" />
         <engine:SliderInt value="0" high-value="100" show-input-field="false" low-value="0" name="Slider" class="unity-slider" style="min-height: auto; width: 240px; height: 40px;" />
