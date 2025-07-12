@@ -48,6 +48,7 @@ namespace UnityEssentials
             };
 
         [ContextMenu("Show")]
+        [Button]
         public void Show()
         {
             Root?.SetDisplayEnabled(true);
@@ -55,6 +56,7 @@ namespace UnityEssentials
         }
 
         [ContextMenu("Close")]
+        [Button]
         public void Close()
         {
             Root?.SetDisplayEnabled(false);
