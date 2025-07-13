@@ -7,8 +7,7 @@ namespace UnityEssentials
     public class UIMenuSliderDataGenerator : UIMenuGeneratorTypeBase<UIMenuSliderData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory()
-        {
+        public static void Factory() =>
             UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuSliderData sliderData)
@@ -17,10 +16,9 @@ namespace UnityEssentials
                 using (var sliderDataGenerator = new UIMenuSliderDataGenerator())
                     generator.AddElementToScrollView(sliderDataGenerator.CreateElement(generator, sliderData));
             };
-        }
 
-        public const string SliderResourcePath = Path + "Slider_UXML";
-        public const string SliderIntResourcePath = Path + "SliderInt_UXML";
+        public static readonly string SliderResourcePath = Path + "Slider_UXML";
+        public static readonly string SliderIntResourcePath = Path + "SliderInt_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSliderData data)
         {
             var resourcePath = data.IsFloat ? SliderResourcePath : SliderIntResourcePath;

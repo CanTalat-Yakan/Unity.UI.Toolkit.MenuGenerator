@@ -7,8 +7,7 @@ namespace UnityEssentials
     public class UIMenuColorPickerButtonDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorPickerData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory()
-        {
+        public static void Factory() =>
             UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuColorPickerData colorPickerData)
@@ -17,12 +16,11 @@ namespace UnityEssentials
                 using (var colorPickerDataGenerator = new UIMenuColorPickerButtonDataGenerator())
                     generator.AddElementToScrollView(colorPickerDataGenerator.CreateElement(generator, colorPickerData));
             };
-        }
 
+        public static readonly string ResourcePath = Path + "ColorPickerButton_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorPickerData data)
         {
-            var resourcePath = Path + "ColorPickerButton_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;

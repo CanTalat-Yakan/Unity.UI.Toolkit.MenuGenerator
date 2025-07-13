@@ -39,10 +39,10 @@ namespace UnityEssentials
             }
         }
 
+        public static readonly string ResourcePath = Path + "SelectionTile_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSelectionGeneratorData data)
         {
-            var resourcePath = Path + "SelectionTile_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;

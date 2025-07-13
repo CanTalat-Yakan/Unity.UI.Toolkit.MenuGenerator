@@ -7,8 +7,7 @@ namespace UnityEssentials
     public class UIMenuSpacerDataGenerator : UIMenuGeneratorTypeBase<UIMenuSpacerData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory()
-        {
+        public static void Factory() =>
             UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuSpacerData spacerData)
@@ -17,11 +16,10 @@ namespace UnityEssentials
                 using (var spacerDataGenerator = new UIMenuSpacerDataGenerator())
                     generator.AddElementToScrollView(spacerDataGenerator.CreateElement(generator, spacerData));
             };
-        }
 
+        public static readonly string ResourcePath = Path + "Spacer_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSpacerData data)
         {
-            const string ResourcePath = Path + "Spacer_UXML";
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             return element;

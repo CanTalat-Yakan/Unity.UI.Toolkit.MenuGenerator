@@ -6,10 +6,10 @@ namespace UnityEssentials
 {
     public class UIMenuColorPickerDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorPickerData>, IDisposable
     {
+        public static readonly string ResourcePath = Path + "ColorPicker_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorPickerData data)
         {
-            var resourcePath = Path + "ColorPicker_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;

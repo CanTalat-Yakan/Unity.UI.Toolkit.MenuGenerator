@@ -8,8 +8,7 @@ namespace UnityEssentials
     public class UIMenuSelectionCategoryDataGenerator : UIMenuGeneratorTypeBase<UIMenuSelectionCategoryData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory()
-        {
+        public static void Factory() =>
             UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuSelectionCategoryData selectionCategoryData)
@@ -18,12 +17,11 @@ namespace UnityEssentials
                 using (var selectionCategoryDataGenerator = new UIMenuSelectionCategoryDataGenerator())
                     generator.AddElementToScrollView(selectionCategoryDataGenerator.CreateElement(generator, selectionCategoryData));
             };
-        }
 
+        public static readonly string ResourcePath = Path + "SelectionCategory_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSelectionCategoryData data)
         {
-            var resourcePath = Path + "SelectionCategory_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;

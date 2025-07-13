@@ -35,9 +35,9 @@ namespace UnityEssentials
             container.Add(element);
         }
 
+        public static readonly string ResourcePath = Path + "Breadcrumb_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuBreadcrumbGeneratorData data)
         {
-            const string ResourcePath = Path + "Breadcrumb_UXML";
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);

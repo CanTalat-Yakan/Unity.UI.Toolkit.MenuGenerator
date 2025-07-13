@@ -7,8 +7,7 @@ namespace UnityEssentials
     public class UIMenuColorSliderDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorSliderData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory()
-        {
+        public static void Factory() =>
             UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuColorSliderData colorSliderData)
@@ -17,11 +16,10 @@ namespace UnityEssentials
                 using (var colorSliderDataGenerator = new UIMenuColorSliderDataGenerator())
                     generator.AddElementToScrollView(colorSliderDataGenerator.CreateElement(generator, colorSliderData));
             };
-        }
 
+        public static readonly string ResourcePath = Path + "ColorSlider_UXML";
         public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorSliderData data)
         {
-            const string ResourcePath = Path + "ColorSlider_UXML";
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
