@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -27,16 +27,19 @@ namespace UnityEssentials
     {
         [Space]
         public bool Reverse;
-        public UIMenuSelectionData[] Selections;
+        public UIMenuSelectionData Selections;
 
-        public List<UIMenuSelectionData> GetSelections()
+        public UIMenuSelectionData GetSelections()
         {
-            List<UIMenuSelectionData> list = Selections != null ? new(Selections) : new();
-            if (Reverse) list.Reverse();
-            return list;
+            if (!Reverse)
+                return Selections;
+
+            var list = Selections.Data.ToList();
+            list.Reverse();
+            return new() { StartIndexID = Selections.StartIndexID, Data = list.ToArray() };
         }
 
         public override void ApplyDynamicReset() =>
-            Selections = Array.Empty<UIMenuSelectionData>();
+            Selections = null;
     }
 }

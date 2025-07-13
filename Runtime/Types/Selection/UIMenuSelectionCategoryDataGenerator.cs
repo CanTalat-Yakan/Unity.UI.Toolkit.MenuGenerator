@@ -1,35 +1,45 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuSelectionCategoryDataGenerator : UIMenuGeneratorTypeBase<UIMenuSelectionCategoryData>, IDisposable
     {
-        public static VisualElement CreateSelectionCategory(
-            UIMenuDataGenerator menu,
-            UIMenuSelectionCategoryData category)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "SelectionCategory_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureSelectionCategoryVisuals(menu.Profile, element, category);
-            ConfigureSelectionCategoryInteraction(menu, element, category);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuSelectionCategoryData selectionCategoryData)
+                    return;
+
+                using (var selectionCategoryDataGenerator = new UIMenuSelectionCategoryDataGenerator())
+                    generator.AddElementToScrollView(selectionCategoryDataGenerator.CreateElement(generator, selectionCategoryData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSelectionCategoryData data)
+        {
+            var resourcePath = Path + "SelectionCategory_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureSelectionCategoryVisuals(
-            UIMenuDataProfile profile,
-            VisualElement categoryElement,
-            UIMenuSelectionCategoryData category)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
         {
-            var button = categoryElement.Q<Button>("Button");
-            button.text = category.Name.ToUpper();
+            var button = element.Q<Button>("Button");
+            button.text = data.Name.ToUpper();
 
-            var image = categoryElement.Q<VisualElement>("Image");
-            var label = categoryElement.Q<Label>("Label");
+            var image = element.Q<VisualElement>("Image");
+            var label = element.Q<Label>("Label");
 
-            var index = profile.GetData(category.Reference, category.Default);
+            var index = menu.Profile.GetData(data.Reference, data.Default);
 
-            var selectionData = category.GetSelection(index);
+            var selectionData = data.GetSelection(index);
             if (selectionData == null)
                 return;
 
@@ -37,20 +47,52 @@ namespace UnityEssentials
             label.text = selectionData.Name;
         }
 
-        private static void ConfigureSelectionCategoryInteraction(
-            UIMenuDataGenerator menu,
-            VisualElement categoryElement,
-            UIMenuSelectionCategoryData category)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
         {
-            var button = categoryElement.Q<Button>();
+            var button = element.Q<Button>();
             button.clicked += () =>
             {
-                menu.Populate(false, category.Name, null, () =>
+                menu.Populate(false, data.Name, null, () =>
                 {
-                    foreach (var element in CreateSelectionTiles(menu, categoryElement, category))
+                    List<VisualElement> elements = new();
+                    foreach (var scriptableObject in data.Data)
+                        switch (scriptableObject)
+                        {
+                            case UIMenuColorSliderData sliderData:
+                                using (var colorSliderGenerator = new UIMenuColorSliderDataGenerator())
+                                    elements.Add(colorSliderGenerator.CreateElement(menu, sliderData));
+                                break;
+                            case UIMenuColorPickerData pickerData:
+                                using (var colorPickerGenerator = new UIMenuColorPickerDataGenerator())
+                                    elements.Add(colorPickerGenerator.CreateElement(menu, pickerData));
+                                break;
+                            case UIMenuSelectionGroupData group:
+                                using (var selectionGenerator = new UIMenuSelectionDataGenerator())
+                                {
+                                    var selectionElements = selectionGenerator.CreateElements(menu, data, group);
+                                    elements.Add(WrapInGroupBox(selectionElements));
+                                }
+                                break;
+                        }
+
+                    foreach (var element in elements)
                         menu.AddElementToScrollView(element);
                 });
             };
         }
+
+        private static VisualElement WrapInGroupBox(IEnumerable<VisualElement> elements)
+        {
+            var groupBox = new GroupBox();
+            groupBox.SetWidth(100f);
+            groupBox.style.flexWrap = Wrap.Wrap;
+
+            foreach (var element in elements)
+                groupBox.Add(element);
+
+            return groupBox;
+        }
+
+        public void Dispose() { }
     }
 }

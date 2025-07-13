@@ -15,6 +15,8 @@ namespace UnityEssentials
 
         public Action PopulateRoot;
 
+        private UIMenuBreadcrumbDataGenerator _breadcrumbDataGenerator = new();
+
         [HideInInspector] public UIMenu Menu { get; private set; }
         [HideInInspector] public UIMenuDataProfile Profile => Menu.Profile;
 
@@ -35,7 +37,7 @@ namespace UnityEssentials
             {
                 Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
                 if (Back?.LinkedElement is Button backButton)
-                    backButton.clicked += () => UIMenuGeneratorType.GoBackOneBreadcrumb(this);
+                    backButton.clicked += () => _breadcrumbDataGenerator.GoBackOneBreadcrumb(this);
             }
         }
 
@@ -43,7 +45,7 @@ namespace UnityEssentials
         private void ConfigureRedraw(string label, bool prefix, ScriptableObject[] data) =>
             Redraw = () =>
             {
-                UIMenuGeneratorType.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                _breadcrumbDataGenerator.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
                 Populate(prefix, label, data);
             };
 
@@ -73,7 +75,7 @@ namespace UnityEssentials
         public void ResetCategory()
         {
             CurrentCategory = null;
-            UIMenuGeneratorType.ClearBreadcrumbsFromIndex(this);
+            _breadcrumbDataGenerator.ClearBreadcrumbsFromIndex(this);
         }
 
         public void ClearScrollView()
@@ -116,7 +118,7 @@ namespace UnityEssentials
                 Redraw?.Invoke();
             }
 
-            UIMenuGeneratorType.AddBreadcrumb(this, categoryName, isRoot, data, customDataRedraw);
+            _breadcrumbDataGenerator.AddBreadcrumb(this, categoryName, isRoot, data, customDataRedraw);
 
             UpdateCategoryHistory(categoryName);
             if (data != null && data.Length != 0)
@@ -124,21 +126,8 @@ namespace UnityEssentials
                     ProcessDataItem(item);
         }
 
+        public static Action<UIMenuDataGenerator, ScriptableObject> RegisterTypeFactory;
         private void ProcessDataItem(ScriptableObject data) =>
-            AddElementToScrollView(data switch
-            {
-                UIMenuCategoryData category => UIMenuGeneratorType.CreateCategory(this, category),
-                UIMenuHeaderData header => UIMenuGeneratorType.CreateHeader(this, header),
-                UIMenuSpacerData spacer => UIMenuGeneratorType.CreateSpacer(this, spacer),
-                UIMenuButtonData button => UIMenuGeneratorType.CreateButton(this, button),
-                UIMenuToggleData toggle => UIMenuGeneratorType.CreateToggle(this, toggle),
-                UIMenuInputData input => UIMenuGeneratorType.CreateInput(this, input),
-                UIMenuOptionsData options => UIMenuGeneratorType.CreateOptions(this, options),
-                UIMenuSliderData slider => UIMenuGeneratorType.CreateSlider(this, slider),
-                UIMenuSelectionCategoryData selectionCategory => UIMenuGeneratorType.CreateSelectionCategory(this, selectionCategory),
-                UIMenuColorPickerData colorCategory => UIMenuGeneratorType.CreateColorPickerButton(this, colorCategory),
-                UIMenuColorSliderData colorSliderData => UIMenuGeneratorType.CreateColorSlider(this, colorSliderData),
-                _ => null
-            });
+            RegisterTypeFactory?.Invoke(this, data);
     }
 }

@@ -1,20 +1,34 @@
+using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuCategoryDataGenerator : UIMenuGeneratorTypeBase<UIMenuCategoryData>, IDisposable
     {
-        public static VisualElement CreateCategory(UIMenuDataGenerator menu, UIMenuCategoryData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Default_UI_";
-            var name = path + "Category_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureCategoryVisuals(element, data);
-            ConfigureCategoryInteraction(menu, element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuCategoryData categoryData)
+                    return;
+
+                using (var categoryDataGenerator = new UIMenuCategoryDataGenerator())
+                    generator.AddElementToScrollView(categoryDataGenerator.CreateElement(generator, categoryData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuCategoryData data)
+        {
+            const string ResourcePath = Path + "Category_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureCategoryVisuals(VisualElement element, UIMenuCategoryData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuCategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -23,10 +37,12 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        private static void ConfigureCategoryInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuCategoryData data)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuCategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => menu.Populate(false, data.Name, data.Data);
         }
+
+        public void Dispose() { }
     }
 }

@@ -1,91 +1,68 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuSelectionGeneratorData : UIMenuTypeBase
     {
-        private static VisualElement CreateSelectionTile(
-            UIMenuDataGenerator menu,
-            VisualElement categoryElement,
-            UIMenuSelectionCategoryData categoryData,
-            UIMenuSelectionDataElement elementData,
-            int index)
-        {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "SelectionTile_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            element.Q<Label>().text = elementData.Name;
-            element.Q<VisualElement>("Image").SetBackgroundImage(elementData.Texture);
-            element.Q<Button>().clicked += () => UpdateSelectionTileVisuals(
-                menu.Profile, categoryElement, elementData, categoryData.Reference, index);
+        public UIMenuSelectionCategoryData CategoryData;
+        public UIMenuSelectionDataElement ElementData;
 
+        [Space]
+        public int Index;
+    }
+
+    public class UIMenuSelectionDataGenerator : UIMenuGeneratorTypeBase<UIMenuSelectionGeneratorData>, IDisposable
+    {
+        public IEnumerable<VisualElement> CreateElements(
+            UIMenuDataGenerator menu,
+            UIMenuSelectionCategoryData categoryData,
+            UIMenuSelectionGroupData groupData)
+        {
+            var selections = groupData.GetSelections();
+            for (int i = 0; i < selections.Data.Length; i++)
+            {
+                var selectionElement = selections.Data[i];
+                if (selectionElement == null)
+                    continue;
+
+                var selectionGeneratorData = new UIMenuSelectionGeneratorData
+                {
+                    CategoryData = categoryData,
+                    ElementData = selectionElement,
+                    Index = selections.StartIndexID + i
+                };
+
+                yield return CreateElement(menu, selectionGeneratorData);
+            }
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSelectionGeneratorData data)
+        {
+            var resourcePath = Path + "SelectionTile_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void UpdateSelectionTileVisuals(
-            UIMenuDataProfile profile,
-            VisualElement categoryElement,
-            UIMenuSelectionDataElement elementData,
-            string reference,
-            int index)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
         {
-            profile.OnSelectionValueChanged(reference, index);
+            var label = element.Q<Label>("Label");
+            label.text = data.ElementData.Name;
 
-            categoryElement.Q<VisualElement>("Image").SetBackgroundImage(elementData.Texture);
-            categoryElement.Q<Label>().text = elementData.Name;
+            var image = element.Q<VisualElement>("Image");
+            image.SetBackgroundImage(data.ElementData.Texture);
         }
 
-        public static IEnumerable<VisualElement> CreateSelectionTiles(
-            UIMenuDataGenerator menu,
-            VisualElement categoryElement,
-            UIMenuSelectionCategoryData categoryData)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
         {
-            foreach (var scriptableObject in categoryData.Data)
-                switch (scriptableObject)
-                {
-                    case UIMenuColorSliderData sliderData:
-                        yield return CreateColorSlider(menu, sliderData);
-                        break;
-                    case UIMenuColorPickerData pickerData:
-                        yield return CreateColorPickerButton(menu, pickerData.Name, pickerData.Reference);
-                        break;
-                    case UIMenuSelectionGroupData group:
-                        yield return CreateGroupBoxSelectionTiles(group, menu, categoryElement, categoryData);
-                        break;
-                }
+            var button = element.Q<Button>("Button");
+            button.clicked += () => menu.Profile.OnSelectionValueChanged(data.CategoryData.Reference, data.Index);
         }
 
-        private static VisualElement CreateGroupBoxSelectionTiles(
-            UIMenuSelectionGroupData group,
-            UIMenuDataGenerator menu,
-            VisualElement categoryElement,
-            UIMenuSelectionCategoryData categoryData)
-        {
-            var groupBox = new GroupBox();
-            groupBox.SetWidth(100f);
-            groupBox.style.flexWrap = Wrap.Wrap;
-
-            var selectionsList = group.GetSelections();
-            if (selectionsList == null)
-                return groupBox;
-
-            foreach (var selections in selectionsList)
-            {
-                if (selections == null || selections.Data == null)
-                    continue;
-
-                for (int i = 0; i < selections.Data.Length; i++)
-                {
-                    if (selections.Data[i] == null)
-                        continue;
-
-                    groupBox.Add(CreateSelectionTile(
-                        menu, categoryElement, categoryData, selections.Data[i], selections.StartIndexID + i));
-                }
-            }
-
-            return groupBox;
-        }
+        public void Dispose() { }
     }
 }

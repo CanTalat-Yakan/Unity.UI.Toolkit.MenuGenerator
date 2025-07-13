@@ -1,20 +1,34 @@
+using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuOptionsDataGenerator : UIMenuGeneratorTypeBase<UIMenuOptionsData>, IDisposable
     {
-        public static VisualElement CreateOptions(UIMenuDataGenerator menu, UIMenuOptionsData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "Options_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureOptionsVisuals(menu.Profile, element, data);
-            ConfigureOptionsInteraction(menu.Profile, element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuOptionsData optionsData)
+                    return;
+
+                using (var optionsDataGenerator = new UIMenuOptionsDataGenerator())
+                    generator.AddElementToScrollView(optionsDataGenerator.CreateElement(generator, optionsData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuOptionsData data)
+        {
+            var resourcePath = Path + "Options_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureOptionsVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -24,27 +38,27 @@ namespace UnityEssentials
             if (data.Options == null || data.Options.Length == 0)
                 return;
 
-            var index = profile.GetData(data.Reference, data.Default);
+            var index = menu.Profile.GetData(data.Reference, data.Default);
 
             dropdown.choices = data.GetChoices();
             dropdown.index = index;
         }
 
-        private static void ConfigureOptionsInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuOptionsData data)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var dropdown = element.Q<DropdownField>("Options");
             dropdown.RegisterValueChangedCallback(e =>
-                profile.OnOptionsValueChanged(data.Reference, dropdown.index));
+                menu.Profile.OnOptionsValueChanged(data.Reference, dropdown.index));
 
             var buttonLeft = element.Q<Button>("Left");
             buttonLeft.clicked += () =>
             {
                 var length = data.Options.Length;
 
-                var index = profile.GetData(data.Reference, data.Default);
+                var index = menu.Profile.GetData(data.Reference, data.Default);
 
                 index = ProcessIndex(index - 1, length);
-                profile.OnOptionsValueChanged(data.Reference, index);
+                menu.Profile.OnOptionsValueChanged(data.Reference, index);
 
                 dropdown.index = index;
             };
@@ -54,10 +68,10 @@ namespace UnityEssentials
             {
                 var length = data.Options.Length;
 
-                var index = profile.GetData(data.Reference, data.Default);
+                var index = menu.Profile.GetData(data.Reference, data.Default);
 
                 index = ProcessIndex(index + 1, length);
-                profile.OnOptionsValueChanged(data.Reference, index);
+                menu.Profile.OnOptionsValueChanged(data.Reference, index);
 
                 dropdown.index = index;
             };
@@ -66,20 +80,19 @@ namespace UnityEssentials
         private static int ProcessIndex(int index, int maxIndex, int minIndex = 0)
         {
             if (maxIndex <= 0)
-                return 0; // Avoid division by zero or negative index
+                return 0;
 
-            // Ensure the index is within the bounds
             int range = maxIndex - minIndex;
 
             if (index < minIndex)
-                // Adjust for negative values
                 index += range * ((minIndex - index) / range + 1);
 
             if (index >= maxIndex)
-                // Adjust for values larger than maxIndex
                 index -= range * ((index - maxIndex) / range + 1);
 
             return index;
         }
+
+        public void Dispose() { }
     }
 }

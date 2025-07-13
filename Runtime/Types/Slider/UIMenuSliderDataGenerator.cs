@@ -1,28 +1,44 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuSliderDataGenerator : UIMenuGeneratorTypeBase<UIMenuSliderData>, IDisposable
     {
-        public static VisualElement CreateSlider(UIMenuDataGenerator menu, UIMenuSliderData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + (data.IsFloat ? "Slider_UXML" : "SliderInt_UXML");
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureSliderVisuals(menu.Profile, element, data);
-            ConfigureSliderInteraction(menu.Profile, element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuSliderData sliderData)
+                    return;
+
+                using (var sliderDataGenerator = new UIMenuSliderDataGenerator())
+                    generator.AddElementToScrollView(sliderDataGenerator.CreateElement(generator, sliderData));
+            };
+        }
+
+        public const string SliderResourcePath = Path + "Slider_UXML";
+        public const string SliderIntResourcePath = Path + "SliderInt_UXML";
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSliderData data)
+        {
+            var resourcePath = data.IsFloat ? SliderResourcePath : SliderIntResourcePath;
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuSliderData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
             var defaultValue = Mathf.Clamp(data.Default, data.MinRange, data.MaxRange);
+            defaultValue = data.IsFloat ? defaultValue : (int)defaultValue;
 
-            var value = profile.GetData(data.Reference, defaultValue);
+            var value = menu.Profile.GetData(data.Reference, defaultValue);
 
             if (data.IsFloat)
             {
@@ -40,20 +56,22 @@ namespace UnityEssentials
             }
         }
 
-        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuSliderData data)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSliderData data)
         {
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
                 slider.RegisterValueChangedCallback((evt) =>
-                    profile.OnSliderValueChanged(data.Reference, evt.newValue));
+                    menu.Profile.OnSliderValueChanged(data.Reference, evt.newValue));
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
                 sliderInt.RegisterValueChangedCallback((evt) =>
-                    profile.OnSliderValueChanged(data.Reference, evt.newValue));
+                    menu.Profile.OnSliderValueChanged(data.Reference, evt.newValue));
             }
         }
+
+        public void Dispose() { }
     }
 }

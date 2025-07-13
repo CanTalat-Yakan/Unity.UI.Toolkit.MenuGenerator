@@ -4,43 +4,46 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuColorPickerDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorPickerData>, IDisposable
     {
-        private static VisualElement CreateColorPicker(
-            UIMenuDataGenerator menu,
-            UIMenuColorPickerData data,
-            Action<string, Color> callback)
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorPickerData data)
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "ColorPicker_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureColorSliders(menu.Profile, element, data, callback);
-            ConfigureColorPresets(menu.Profile, element, data, callback);
+            var resourcePath = Path + "ColorPicker_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureColorSliders(
-            UIMenuDataProfile profile,
-            VisualElement picker,
-            UIMenuColorPickerData data,
-            Action<string, Color> callback)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
-            var hueSlider = picker.Q<SliderInt>("HueSlider");
-            var satSlider = picker.Q<SliderInt>("SaturationSlider");
-            var valSlider = picker.Q<SliderInt>("ValueSlider");
-            var alphaSlider = picker.Q<SliderInt>("AlphaSlider");
-            var colorElement = picker.Q<VisualElement>("Color");
+            var hueSlider = element.Q<SliderInt>("HueSlider");
+            var satSlider = element.Q<SliderInt>("SaturationSlider");
+            var valSlider = element.Q<SliderInt>("ValueSlider");
+            var alphaSlider = element.Q<SliderInt>("AlphaSlider");
+            var colorElement = element.Q<VisualElement>("Color");
 
-            picker.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
+            element.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
-            var color = profile.GetData(data.Reference, data.Default);
+            var color = menu.Profile.GetData(data.Reference, data.Default);
 
             Color.RGBToHSV(color, out var h, out var s, out var v);
             hueSlider.value = (int)(h * 360);
             satSlider.value = (int)(s * 100);
             valSlider.value = (int)(v * 100);
             alphaSlider.value = (int)(color.a * 100);
+
             colorElement.SetBackgroundColor(color);
+        }
+
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
+        {
+            var presetButtons = element.Query<Button>(name: "ColorPresetButton").ToList();
+            var hueSlider = element.Q<SliderInt>("HueSlider");
+            var satSlider = element.Q<SliderInt>("SaturationSlider");
+            var valSlider = element.Q<SliderInt>("ValueSlider");
+            var alphaSlider = element.Q<SliderInt>("AlphaSlider");
+            var colorElement = element.Q<VisualElement>("Color");
 
             Action updateColor = () =>
             {
@@ -50,30 +53,15 @@ namespace UnityEssentials
                     valSlider.value / 100f);
                 newColor.a = alphaSlider.value / 100f;
 
-                callback.Invoke(data.Reference, newColor);
-
                 colorElement.SetBackgroundColor(newColor);
 
-                profile.OnColorPickerValueChanged(data.Reference, newColor);
+                menu.Profile.OnColorPickerValueChanged(data.Reference, newColor);
             };
 
             hueSlider.RegisterValueChangedCallback(_ => updateColor());
             satSlider.RegisterValueChangedCallback(_ => updateColor());
             valSlider.RegisterValueChangedCallback(_ => updateColor());
             alphaSlider.RegisterValueChangedCallback(_ => updateColor());
-        }
-
-        private static void ConfigureColorPresets(
-            UIMenuDataProfile profile,
-            VisualElement picker,
-            UIMenuColorPickerData data,
-            Action<string, Color> callback)
-        {
-            var presetButtons = picker.Query<Button>(name: "ColorPresetButton").ToList();
-            var hueSlider = picker.Q<SliderInt>("HueSlider");
-            var satSlider = picker.Q<SliderInt>("SaturationSlider");
-            var valSlider = picker.Q<SliderInt>("ValueSlider");
-            var alphaSlider = picker.Q<SliderInt>("AlphaSlider");
 
             foreach (var button in presetButtons)
                 button.clicked += () =>
@@ -92,10 +80,10 @@ namespace UnityEssentials
                         valSlider.value / 100f);
                     updatedColor.a = alphaSlider.value / 100f;
 
-                    callback.Invoke(data.Reference, updatedColor);
-
-                    profile.OnColorPickerValueChanged(data.Reference, updatedColor);
+                    menu.Profile.OnColorPickerValueChanged(data.Reference, updatedColor);
                 };
         }
+
+        public void Dispose() { }
     }
 }

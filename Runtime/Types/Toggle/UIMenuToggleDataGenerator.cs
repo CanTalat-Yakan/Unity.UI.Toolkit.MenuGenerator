@@ -1,37 +1,53 @@
+using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuToggleDataGenerator : UIMenuGeneratorTypeBase<UIMenuToggleData>, IDisposable
     {
-        public static VisualElement CreateToggle(UIMenuDataGenerator menu, UIMenuToggleData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "Toggle_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureToggleVisuals(menu.Profile, element, data);
-            ConfigureToggleInteraction(menu.Profile, element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuToggleData toggleData)
+                    return;
+
+                using (var toggleDataGenerator = new UIMenuToggleDataGenerator())
+                    generator.AddElementToScrollView(toggleDataGenerator.CreateElement(generator, toggleData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuToggleData data)
+        {
+            const string ResourcePath = Path + "Toggle_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureToggleVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuToggleData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuToggleData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            var value = profile.GetData(data.Reference, data.Default);
-            
+            var value = menu.Profile.GetData(data.Reference, data.Default);
+
             var toggle = element.Q<Toggle>("Toggle");
             toggle.value = value;
         }
 
-        private static void ConfigureToggleInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuToggleData data)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuToggleData data)
         {
             var toggle = element.Q<Toggle>("Toggle");
             toggle.RegisterValueChangedCallback((evt) =>
             {
-                profile.OnToggleValueChanged(data.Reference, evt.newValue);
+                menu.Profile.OnToggleValueChanged(data.Reference, evt.newValue);
             });
         }
+
+        public void Dispose() { }
     }
 }

@@ -1,23 +1,41 @@
+using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuHeaderDataGenerator : UIMenuGeneratorTypeBase<UIMenuHeaderData>, IDisposable
     {
-        public static VisualElement CreateHeader(UIMenuDataGenerator menu, UIMenuHeaderData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Default_UI_";
-            var name = path + "Header_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureHeaderVisuals(element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuHeaderData headerData)
+                    return;
+
+                using (var headerDataGenerator = new UIMenuHeaderDataGenerator())
+                    generator.AddElementToScrollView(headerDataGenerator.CreateElement(generator, headerData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuHeaderData data)
+        {
+            const string resourcePath = Path + "Header_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
             return element;
         }
 
-        private static void ConfigureHeaderVisuals(VisualElement element, UIMenuHeaderData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuHeaderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
             label.style.marginTop = data.MarginTop;
         }
+
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuHeaderData data) { }
+
+        public void Dispose() { }
     }
 }

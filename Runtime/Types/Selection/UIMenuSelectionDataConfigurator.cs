@@ -9,7 +9,7 @@ namespace UnityEssentials
 
         [Space]
         public bool Reverse;
-        public UIMenuSelectionData[] Selections;
+        public UIMenuSelectionData Selections;
 
         private UIMenuSelectionGroupData _selectionGroup;
         [HideInInspector] public UIMenuSelectionGroupData SelectionGroup => _selectionGroup;

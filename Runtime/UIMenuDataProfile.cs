@@ -6,7 +6,7 @@ namespace UnityEssentials
 {
     public class UIMenuDataProfile : ScriptableObject
     {
-        public SerializedDictionary<string, object> Data = new();
+        [HideInInspector] public SerializedDictionary<string, object> Data = new();
 
         [JsonIgnore]
         public Action OnValueChanged;
@@ -15,17 +15,19 @@ namespace UnityEssentials
         {
             if (value == null)
                 return;
-            if (Data.ContainsKey(reference))
-                Data[reference] = value;
-            else Data.Add(reference, value);
+            Data[reference] = value;
             OnValueChanged?.Invoke();
         }
 
         public T GetData<T>(string reference, T defaultValue = default)
         {
-            if (Data.TryGetValue(reference, out var value) && value is T typedValue)
-                return typedValue;
-            Data[reference] = defaultValue;
+            if (Data.TryGetValue(reference, out var value))
+                if(value is T typedValue)
+                    return typedValue;
+            else if (value is IConvertible convertibleValue)
+                return (T)Convert.ChangeType(convertibleValue, typeof(T));
+            else if (value is Enum enumValue && typeof(T).IsEnum)
+                return (T)(object)enumValue;
             return defaultValue;
         }
 

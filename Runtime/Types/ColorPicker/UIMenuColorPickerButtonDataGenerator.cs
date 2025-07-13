@@ -4,40 +4,41 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuColorPickerButtonDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorPickerData>, IDisposable
     {
-        public static VisualElement CreateColorPickerButton(UIMenuDataGenerator menu, UIMenuColorPickerData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "ColorPickerButton_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureColorPickerButtonVisuals(menu.Profile, element, data);
-            ConfigureColorPickerButtonInteraction(menu, element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuColorPickerData colorPickerData)
+                    return;
+
+                using (var colorPickerDataGenerator = new UIMenuColorPickerButtonDataGenerator())
+                    generator.AddElementToScrollView(colorPickerDataGenerator.CreateElement(generator, colorPickerData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorPickerData data)
+        {
+            var resourcePath = Path + "ColorPickerButton_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static VisualElement CreateColorPickerButton(UIMenuDataGenerator menu, string name, string reference)
-        {
-            var data = new UIMenuColorPickerData()
-            {
-                Name = name,
-                Reference = reference,
-            };
-
-            return CreateColorPickerButton(menu, data);
-        }
-
-        private static void ConfigureColorPickerButtonVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuColorPickerData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
 
-            var color = profile.GetData(data.Reference, data.Default);
+            var color = menu.Profile.GetData(data.Reference, data.Default);
             var colorElement = element.Q<VisualElement>("Color");
             colorElement.SetBackgroundColor(color);
         }
 
-        private static void ConfigureColorPickerButtonInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var colorElement = element.Q<VisualElement>("Color");
             var button = element.Q<Button>("Button");
@@ -45,23 +46,12 @@ namespace UnityEssentials
             {
                 menu.Populate(false, data.Name, null, () =>
                 {
-                    menu.AddElementToScrollView(CreateColorPicker(menu, data, 
-                        callback: UpdateColorPickerButtonVisuals(menu.Profile, colorElement, data.Reference)));
+                    using (var colorPickerGenerator = new UIMenuColorPickerDataGenerator())
+                        menu.AddElementToScrollView(colorPickerGenerator.CreateElement(menu, data));
                 });
             };
         }
 
-        private static Action<string, Color> UpdateColorPickerButtonVisuals(
-            UIMenuDataProfile profile,
-            VisualElement element,
-            string reference)
-        {
-            return (string reference, Color color) =>
-            {
-                element.SetBackgroundColor(color);
-
-                profile.OnColorPickerValueChanged(reference, color);
-            };
-        }
+        public void Dispose() { }
     }
 }

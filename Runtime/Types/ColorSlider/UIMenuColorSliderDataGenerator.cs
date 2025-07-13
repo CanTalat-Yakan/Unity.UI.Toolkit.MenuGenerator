@@ -1,25 +1,39 @@
+using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuColorSliderDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorSliderData>, IDisposable
     {
-        public static VisualElement CreateColorSlider(UIMenuDataGenerator menu, UIMenuColorSliderData data)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var path = "UIToolkit/UXML/Templates_Types_UI_";
-            var name = path + "ColorSlider_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureSliderVisuals(menu.Profile, element, data);
-            ConfigureSliderInteraction(menu.Profile, element, data);
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuColorSliderData colorSliderData)
+                    return;
+
+                using (var colorSliderDataGenerator = new UIMenuColorSliderDataGenerator())
+                    generator.AddElementToScrollView(colorSliderDataGenerator.CreateElement(generator, colorSliderData));
+            };
+        }
+
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorSliderData data)
+        {
+            const string ResourcePath = Path + "ColorSlider_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
+            ConfigureInteraction(menu, element, data);
             return element;
         }
 
-        private static void ConfigureSliderVisuals(UIMenuDataProfile profile, VisualElement element, UIMenuColorSliderData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuColorSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            var value = profile.GetData(data.Reference, data.Default);
+            var value = menu.Profile.GetData(data.Reference, data.Default);
 
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
@@ -30,7 +44,7 @@ namespace UnityEssentials
             slider.value = (int)value;
         }
 
-        private static void ConfigureSliderInteraction(UIMenuDataProfile profile, VisualElement element, UIMenuColorSliderData data)
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorSliderData data)
         {
             var icon = element.Q<VisualElement>("Icon");
             var slider = element.Q<SliderInt>();
@@ -38,8 +52,10 @@ namespace UnityEssentials
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(evt.newValue / 100f));
 
-                profile.OnColorSliderValueChanged(data.Reference, evt.newValue);
+                menu.Profile.OnColorSliderValueChanged(data.Reference, evt.newValue);
             });
         }
+
+        public void Dispose() { }
     }
 }

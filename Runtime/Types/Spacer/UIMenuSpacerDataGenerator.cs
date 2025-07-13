@@ -1,31 +1,40 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public static partial class UIMenuGeneratorType
+    public class UIMenuSpacerDataGenerator : UIMenuGeneratorTypeBase<UIMenuSpacerData>, IDisposable
     {
-        public static VisualElement CreateSpacer(UIMenuDataGenerator menu, int height)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Factory()
         {
-            var data = ScriptableObject.CreateInstance<UIMenuSpacerData>();
-            data.Height = height;
+            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            {
+                if (data is not UIMenuSpacerData spacerData)
+                    return;
 
-            return CreateSpacer(menu, data);
+                using (var spacerDataGenerator = new UIMenuSpacerDataGenerator())
+                    generator.AddElementToScrollView(spacerDataGenerator.CreateElement(generator, spacerData));
+            };
         }
 
-        public static VisualElement CreateSpacer(UIMenuDataGenerator menu, UIMenuSpacerData data)
+        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSpacerData data)
         {
-            var path = "UIToolkit/UXML/Templates_Default_UI_";
-            var name = path + "Spacer_UXML";
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(name).CloneTree();
-            ConfigureOptionsVisuals(element, data);
+            const string ResourcePath = Path + "Spacer_UXML";
+            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
+            ConfigureVisuals(menu, element, data);
             return element;
         }
 
-        private static void ConfigureOptionsVisuals(VisualElement element, UIMenuSpacerData data)
+        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSpacerData data)
         {
             var spacer = element.Q<VisualElement>("Spacer");
             spacer.SetHeight(data.Height);
         }
+
+        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSpacerData data) { }
+
+        public void Dispose() { }
     }
 }
