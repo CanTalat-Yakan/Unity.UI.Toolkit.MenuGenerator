@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionsCategoryDataConfigurator : MonoBehaviour
+    public class UIMenuSelectionCategoryDataConfigurator : MonoBehaviour
     {
         public string MenuName;
         public string Reference;

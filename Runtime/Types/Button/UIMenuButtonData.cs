@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace UnityEssentials
 {
-    public class UIMenuButtonData : UIMenuGeneratorTypeTemplate
+    public class UIMenuButtonData : UIMenuTypeBase
     {
         [Space]
         public Texture2D Texture;

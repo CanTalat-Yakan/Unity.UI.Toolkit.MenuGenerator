@@ -222,7 +222,7 @@ namespace UnityEssentials
             var itemData = item.UserData as ScriptableObject;
             if (itemData != null)
             {
-                name += (itemData as UIMenuGeneratorTypeTemplate).ID;
+                name += (itemData as UIMenuTypeBase).ID;
                 itemData.name = name;
             }
 

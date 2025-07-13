@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorPickerData : UIMenuGeneratorTypeTemplate
+    public class UIMenuColorPickerData : UIMenuTypeBase
     {
         [Space]
         public bool HasAlpha;

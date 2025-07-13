@@ -1,6 +1,6 @@
 namespace UnityEssentials
 {
-    public class UIMenuHeaderData : UIMenuGeneratorTypeTemplate
+    public class UIMenuHeaderData : UIMenuTypeBase
     {
         public int MarginTop = 20;
     }

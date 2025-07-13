@@ -174,7 +174,7 @@ namespace UnityEssentials
                     drawArrays &= itemData is not UIMenuSelectionCategoryData;
 
                     var drawReference = true;
-                    if (itemData is UIMenuGeneratorTypeTemplate data)
+                    if (itemData is UIMenuTypeBase data)
                         drawReference = data.HasReference;
 
                     _customScriptableObjectDrawer.Draw(editor, drawArrays, drawReference);

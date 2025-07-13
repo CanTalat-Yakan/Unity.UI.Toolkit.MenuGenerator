@@ -1,6 +1,6 @@
 namespace UnityEssentials
 {
-    public class UIMenuSpacerData : UIMenuGeneratorTypeTemplate
+    public class UIMenuSpacerData : UIMenuTypeBase
     {
         public int Height = 20;
     }

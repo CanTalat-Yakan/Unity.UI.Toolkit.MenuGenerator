@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorPickerDataConfigurator : MonoBehaviour
+    public class UIMenuColorPickerButtonDataConfigurator : MonoBehaviour
     {
         public string MenuName;
         public string Reference;
