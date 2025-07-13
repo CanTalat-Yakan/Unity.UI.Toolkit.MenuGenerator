@@ -41,7 +41,7 @@ namespace UnityEssentials
     }
 
     [RequireComponent(typeof(UIMenu))]
-    public class UIMenuDataProfileProvider : MonoBehaviour
+    public class UIMenuProfileProvider : MonoBehaviour
     {
         public UIMenuSettings Settings = new();
 
@@ -53,8 +53,8 @@ namespace UnityEssentials
         public void OnNameValueChanged() => GetComponent<UIMenu>().Name = Name;
 
         [Space]
-        public UIMenuDataProfile Profile;
-        public UIMenuDataProfile Default;
+        public UIMenuProfile Profile;
+        public UIMenuProfile Default;
 
         public Action OnProfileChanged;
 
@@ -68,8 +68,8 @@ namespace UnityEssentials
             Profile.OnValueChanged += SaveProfile;
         }
 
-        private static Dictionary<string, UIMenuDataProfile> _profileCache = new();
-        public static UIMenuDataProfile GetProfile(string name)
+        private static Dictionary<string, UIMenuProfile> _profileCache = new();
+        public static UIMenuProfile GetProfile(string name)
         {
             if (!_profileCache.TryGetValue(name, out var profile))
                 return null;
@@ -77,7 +77,7 @@ namespace UnityEssentials
             return profile;
         }
 
-        public void SetProfile(UIMenuDataProfile profile)
+        public void SetProfile(UIMenuProfile profile)
         {
             if (profile == null)
                 return;
@@ -93,20 +93,20 @@ namespace UnityEssentials
         public void ResetProfile() =>
             Profile?.Data.CopyFrom(Default.Data);
 
-        public UIMenuDataProfile LoadProfile()
+        public UIMenuProfile LoadProfile()
         {
             Default ??= CreateProfileInstance("Default");
             Profile ??= CreateProfileInstance("Profile");
 
             foreach (var data in Data.GetDataItems())
-                if (data is UIMenuTypeBase dataTemplate)
+                if (data is UIMenuTypeDataBase dataTemplate)
                     Default.AddData(dataTemplate.Reference, dataTemplate.GetDefault());
 
             if (Settings.SaveFileMode != UIProfileSaveMode.None)
             {
                 var parentDirectory = Settings.SaveFileMode == UIProfileSaveMode.Outside;
                 var serializedData = (SerializedDictionary<string, object>)default;
-                UIMenuDataProfileSerializer.DeserializeData(out serializedData, Name, parentDirectory);
+                UIMenuProfileSerializer.DeserializeData(out serializedData, Name, parentDirectory);
                 Profile.Data.CopyFrom(serializedData);
                 Profile.Data.AddFrom(Default.Data);
                 Profile.name = Name + " Serialized";
@@ -124,13 +124,13 @@ namespace UnityEssentials
                 var fileName = Name;
                 var parentDirectory = Settings.SaveFileMode == UIProfileSaveMode.Outside;
 
-                UIMenuDataProfileSerializer.SerializeData(Profile.Data, fileName, parentDirectory);
+                UIMenuProfileSerializer.SerializeData(Profile.Data, fileName, parentDirectory);
             }
         }
 
-        private UIMenuDataProfile CreateProfileInstance(string name = "Profile")
+        private UIMenuProfile CreateProfileInstance(string name = "Profile")
         {
-            var profile = ScriptableObject.CreateInstance<UIMenuDataProfile>();
+            var profile = ScriptableObject.CreateInstance<UIMenuProfile>();
             profile.name = name + " AutoCreated";
             return profile;
         }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuToggleData : UIMenuTypeBase
+    public class UIMenuToggleData : UIMenuTypeDataBase
     {
         [Space]
         public bool Default;

@@ -12,7 +12,7 @@ namespace UnityEssentials
         {
             data = null;
             foreach (var item in GetDataItems())
-                if (item is UIMenuTypeBase dataTemplate)
+                if (item is UIMenuTypeDataBase dataTemplate)
                     if (dataTemplate.Reference == reference)
                         if (item is T typedData)
                         {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuCategoryData : UIMenuTypeBase
+    public class UIMenuCategoryData : UIMenuTypeDataBase
     {
         public Texture2D Texture;
 

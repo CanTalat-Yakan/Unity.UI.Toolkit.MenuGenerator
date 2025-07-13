@@ -5,11 +5,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionCategoryDataGenerator : UIMenuGeneratorTypeBase<UIMenuSelectionCategoryData>, IDisposable
+    public class UIMenuSelectionCategoryDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuSelectionCategoryData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuSelectionCategoryData selectionCategoryData)
                     return;
@@ -19,7 +19,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "SelectionCategory_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSelectionCategoryData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuSelectionCategoryData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -27,7 +27,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -45,7 +45,7 @@ namespace UnityEssentials
             label.text = selectionData.Name;
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
         {
             var button = element.Q<Button>();
             button.clicked += () =>

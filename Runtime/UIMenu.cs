@@ -31,16 +31,16 @@ namespace UnityEssentials
         public UIMenuData Data;
 
         [OnValueChanged("Name")]
-        public void OnNameValueChanged() => GetComponent<UIMenuDataProfileProvider>().Name = Name;
+        public void OnNameValueChanged() => GetComponent<UIMenuProfileProvider>().Name = Name;
 
-        public UIMenuDataProfile Profile => Provider.Profile;
-        public UIMenuDataProfile DefaultProfile => Provider.Default;
+        public UIMenuProfile Profile => Provider.Profile;
+        public UIMenuProfile DefaultProfile => Provider.Default;
 
-        [HideInInspector] public UIMenuDataGenerator Generator => _generator ??= GetComponent<UIMenuDataGenerator>();
-        private UIMenuDataGenerator _generator;
+        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
+        private UIMenuGenerator _generator;
 
-        [HideInInspector] public UIMenuDataProfileProvider Provider => _provider ??= GetComponent<UIMenuDataProfileProvider>();
-        private UIMenuDataProfileProvider _provider;
+        [HideInInspector] public UIMenuProfileProvider Provider => _provider ??= GetComponent<UIMenuProfileProvider>();
+        private UIMenuProfileProvider _provider;
 
         public static Action<UIMenu> ShowEditor { get; set; }
         public Action<UIMenuData> SetData { get; private set; }
@@ -68,7 +68,7 @@ namespace UnityEssentials
         private void OnExitPlayMode()
         {
             foreach (var item in Data.GetDataItems())
-                if (item is UIMenuTypeBase dataTemplate)
+                if (item is UIMenuTypeDataBase dataTemplate)
                     if (dataTemplate.IsDynamic)
                     {
                         dataTemplate.ApplyDynamicReset();

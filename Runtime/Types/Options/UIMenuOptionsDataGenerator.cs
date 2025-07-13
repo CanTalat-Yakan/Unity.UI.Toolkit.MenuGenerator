@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuOptionsDataGenerator : UIMenuGeneratorTypeBase<UIMenuOptionsData>, IDisposable
+    public class UIMenuOptionsDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuOptionsData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuOptionsData optionsData)
                     return;
@@ -18,7 +18,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "Options_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuOptionsData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuOptionsData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -26,7 +26,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuOptionsData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -42,7 +42,7 @@ namespace UnityEssentials
             dropdown.index = index;
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuOptionsData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var dropdown = element.Q<DropdownField>("Options");
             dropdown.RegisterValueChangedCallback(e =>

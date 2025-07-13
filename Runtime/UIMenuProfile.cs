@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
-    public class UIMenuDataProfile : ScriptableObject
+    public class UIMenuProfile : ScriptableObject
     {
         [HideInInspector] public SerializedDictionary<string, object> Data = new();
 

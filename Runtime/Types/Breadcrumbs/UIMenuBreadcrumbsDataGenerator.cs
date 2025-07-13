@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuBreadcrumbGeneratorData : UIMenuTypeBase
+    public class UIMenuBreadcrumbGeneratorData : UIMenuTypeDataBase
     {
         public ScriptableObject[] Data;
         public Action Redraw;
@@ -15,9 +15,9 @@ namespace UnityEssentials
         public int Index;
     }
 
-    public class UIMenuBreadcrumbDataGenerator : UIMenuGeneratorTypeBase<UIMenuBreadcrumbGeneratorData>
+    public class UIMenuBreadcrumbDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuBreadcrumbGeneratorData>
     {
-        public void AddBreadcrumb(UIMenuDataGenerator menu, string label, bool isRoot, ScriptableObject[] data, Action redraw)
+        public void AddBreadcrumb(UIMenuGenerator menu, string label, bool isRoot, ScriptableObject[] data, Action redraw)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;
@@ -36,7 +36,7 @@ namespace UnityEssentials
         }
 
         public static readonly string ResourcePath = Path + "Breadcrumb_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuBreadcrumbGeneratorData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuBreadcrumbGeneratorData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -44,7 +44,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Label.ToUpper();
@@ -53,7 +53,7 @@ namespace UnityEssentials
                 button.iconImage = null;
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
         {
             var button = element.Q<Button>();
             button.clicked += () =>
@@ -66,14 +66,14 @@ namespace UnityEssentials
             };
         }
 
-        public void ClearBreadcrumbsFromIndex(UIMenuDataGenerator menu, int startIndex = 0)
+        public void ClearBreadcrumbsFromIndex(UIMenuGenerator menu, int startIndex = 0)
         {
             if (menu.Breadcrumbs.LinkedElement is GroupBox container)
                 while (container.childCount > startIndex)
                     container.RemoveAt(container.childCount - 1);
         }
 
-        public void GoBackOneBreadcrumb(UIMenuDataGenerator menu)
+        public void GoBackOneBreadcrumb(UIMenuGenerator menu)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;

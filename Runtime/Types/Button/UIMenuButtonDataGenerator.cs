@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuButtonDataGenerator : UIMenuGeneratorTypeBase<UIMenuButtonData>, IDisposable
+    public class UIMenuButtonDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuButtonData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuButtonData buttonData)
                     return;
@@ -18,7 +18,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "Button_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuButtonData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuButtonData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -26,7 +26,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuButtonData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuButtonData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -35,7 +35,7 @@ namespace UnityEssentials
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuButtonData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuButtonData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => data.InvokeEvent();

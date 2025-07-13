@@ -222,7 +222,7 @@ namespace UnityEssentials
             var itemData = item.UserData as ScriptableObject;
             if (itemData != null)
             {
-                name += (itemData as UIMenuTypeBase).ID;
+                name += (itemData as UIMenuTypeDataBase).ID;
                 itemData.name = name;
             }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSliderData : UIMenuTypeBase
+    public class UIMenuSliderData : UIMenuTypeDataBase
     {
         [Space]
         public bool IsFloat;

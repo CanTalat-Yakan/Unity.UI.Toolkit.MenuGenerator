@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionGeneratorData : UIMenuTypeBase
+    public class UIMenuSelectionGeneratorData : UIMenuTypeDataBase
     {
         public UIMenuSelectionCategoryData CategoryData;
         public UIMenuSelectionDataElement ElementData;
@@ -14,10 +14,10 @@ namespace UnityEssentials
         public int Index;
     }
 
-    public class UIMenuSelectionDataGenerator : UIMenuGeneratorTypeBase<UIMenuSelectionGeneratorData>, IDisposable
+    public class UIMenuSelectionDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuSelectionGeneratorData>, IDisposable
     {
         public IEnumerable<VisualElement> CreateElements(
-            UIMenuDataGenerator menu,
+            UIMenuGenerator menu,
             UIMenuSelectionCategoryData categoryData,
             UIMenuSelectionGroupData groupData)
         {
@@ -40,7 +40,7 @@ namespace UnityEssentials
         }
 
         public static readonly string ResourcePath = Path + "SelectionTile_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSelectionGeneratorData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuSelectionGeneratorData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -48,7 +48,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.ElementData.Name;
@@ -57,7 +57,7 @@ namespace UnityEssentials
             image.SetBackgroundImage(data.ElementData.Texture);
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => menu.Profile.OnSelectionValueChanged(data.CategoryData.Reference, data.Index);

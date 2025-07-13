@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuToggleDataGenerator : UIMenuGeneratorTypeBase<UIMenuToggleData>, IDisposable
+    public class UIMenuToggleDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuToggleData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuToggleData toggleData)
                     return;
@@ -18,7 +18,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "Toggle_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuToggleData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuToggleData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -26,7 +26,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuToggleData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuToggleData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -37,7 +37,7 @@ namespace UnityEssentials
             toggle.value = value;
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuToggleData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuToggleData data)
         {
             var toggle = element.Q<Toggle>("Toggle");
             toggle.RegisterValueChangedCallback((evt) =>

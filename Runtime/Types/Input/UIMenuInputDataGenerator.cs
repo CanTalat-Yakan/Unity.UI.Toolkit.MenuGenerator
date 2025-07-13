@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuInputDataGenerator : UIMenuGeneratorTypeBase<UIMenuInputData>, IDisposable
+    public class UIMenuInputDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuInputData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuInputData inputData)
                     return;
@@ -18,7 +18,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "Input_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuInputData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuInputData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -26,7 +26,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuInputData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuInputData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -41,7 +41,7 @@ namespace UnityEssentials
             inputField.value = input;
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuInputData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuInputData data)
         {
             var textField = element.Q<TextField>("Input");
             textField.RegisterValueChangedCallback((evt) =>

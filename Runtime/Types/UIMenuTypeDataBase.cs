@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuTypeBase : ScriptableObject
+    public class UIMenuTypeDataBase : ScriptableObject
     {
         [HideInInspector] public bool IsDynamic;
         [HideInInspector] public bool HasReference;
@@ -11,7 +11,7 @@ namespace UnityEssentials
         [HideInInspector] public string Name;
         public string Reference;
 
-        public static T Initialize<T>(string name = null, string uniqueName = null, bool hasReference = true) where T : UIMenuTypeBase
+        public static T Initialize<T>(string name = null, string uniqueName = null, bool hasReference = true) where T : UIMenuTypeDataBase
         {
             var generatorType = CreateInstance<T>();
             generatorType.HasReference = hasReference;

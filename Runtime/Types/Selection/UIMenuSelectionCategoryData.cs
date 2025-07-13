@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionCategoryData : UIMenuTypeBase
+    public class UIMenuSelectionCategoryData : UIMenuTypeDataBase
     {
         public ScriptableObject[] Data;
 

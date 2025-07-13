@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuInputData : UIMenuTypeBase
+    public class UIMenuInputData : UIMenuTypeDataBase
     {
         [Space]
         public string Default;

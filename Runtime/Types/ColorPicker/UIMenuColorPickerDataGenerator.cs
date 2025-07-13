@@ -4,10 +4,10 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorPickerDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorPickerData>, IDisposable
+    public class UIMenuColorPickerDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuColorPickerData>, IDisposable
     {
         public static readonly string ResourcePath = Path + "ColorPicker_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorPickerData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuColorPickerData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -15,7 +15,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var hueSlider = element.Q<SliderInt>("HueSlider");
             var satSlider = element.Q<SliderInt>("SaturationSlider");
@@ -36,7 +36,7 @@ namespace UnityEssentials
             colorElement.SetBackgroundColor(color);
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var presetButtons = element.Query<Button>(name: "ColorPresetButton").ToList();
             var hueSlider = element.Q<SliderInt>("HueSlider");

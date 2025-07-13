@@ -23,7 +23,7 @@ namespace UnityEssentials
         public UIMenuSelectionDataElement[] Data;
     }
 
-    public class UIMenuSelectionGroupData : UIMenuTypeBase
+    public class UIMenuSelectionGroupData : UIMenuTypeDataBase
     {
         [Space]
         public bool Reverse;

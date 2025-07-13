@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
-    public partial class UIMenuDataProfileSerializer : MonoBehaviour
+    public partial class UIMenuProfileSerializer : MonoBehaviour
     {
         public static void SerializeData<T>(
             T data,

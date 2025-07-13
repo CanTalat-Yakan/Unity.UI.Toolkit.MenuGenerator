@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorPickerButtonDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorPickerData>, IDisposable
+    public class UIMenuColorPickerButtonDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuColorPickerData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuColorPickerData colorPickerData)
                     return;
@@ -18,7 +18,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "ColorPickerButton_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorPickerData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuColorPickerData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -26,7 +26,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Name.ToUpper();
@@ -36,7 +36,7 @@ namespace UnityEssentials
             colorElement.SetBackgroundColor(color);
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorPickerData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var colorElement = element.Q<VisualElement>("Color");
             var button = element.Q<Button>("Button");

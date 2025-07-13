@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSliderDataGenerator : UIMenuGeneratorTypeBase<UIMenuSliderData>, IDisposable
+    public class UIMenuSliderDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuSliderData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuSliderData sliderData)
                     return;
@@ -19,7 +19,7 @@ namespace UnityEssentials
 
         public static readonly string SliderResourcePath = Path + "Slider_UXML";
         public static readonly string SliderIntResourcePath = Path + "SliderInt_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuSliderData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuSliderData data)
         {
             var resourcePath = data.IsFloat ? SliderResourcePath : SliderIntResourcePath;
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
@@ -28,7 +28,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuSliderData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -54,7 +54,7 @@ namespace UnityEssentials
             }
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuSliderData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuSliderData data)
         {
             if (data.IsFloat)
             {

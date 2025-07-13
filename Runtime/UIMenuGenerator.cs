@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace UnityEssentials
 {
     [RequireComponent(typeof(UIMenu))]
-    public partial class UIMenuDataGenerator : MonoBehaviour
+    public partial class UIMenuGenerator : MonoBehaviour
     {
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;
@@ -18,7 +18,7 @@ namespace UnityEssentials
         private UIMenuBreadcrumbDataGenerator _breadcrumbDataGenerator = new();
 
         [HideInInspector] public UIMenu Menu { get; private set; }
-        [HideInInspector] public UIMenuDataProfile Profile => Menu.Profile;
+        [HideInInspector] public UIMenuProfile Profile => Menu.Profile;
 
         public void OnEnable() =>
             Menu = GetComponent<UIMenu>();
@@ -126,7 +126,7 @@ namespace UnityEssentials
                     ProcessDataItem(item);
         }
 
-        public static Action<UIMenuDataGenerator, ScriptableObject> RegisterTypeFactory;
+        public static Action<UIMenuGenerator, ScriptableObject> RegisterTypeFactory;
         private void ProcessDataItem(ScriptableObject data) =>
             RegisterTypeFactory?.Invoke(this, data);
     }

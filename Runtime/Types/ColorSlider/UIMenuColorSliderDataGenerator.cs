@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorSliderDataGenerator : UIMenuGeneratorTypeBase<UIMenuColorSliderData>, IDisposable
+    public class UIMenuColorSliderDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuColorSliderData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Factory() =>
-            UIMenuDataGenerator.RegisterTypeFactory += (generator, data) =>
+            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
             {
                 if (data is not UIMenuColorSliderData colorSliderData)
                     return;
@@ -18,7 +18,7 @@ namespace UnityEssentials
             };
 
         public static readonly string ResourcePath = Path + "ColorSlider_UXML";
-        public override VisualElement CreateElement(UIMenuDataGenerator menu, UIMenuColorSliderData data)
+        public override VisualElement CreateElement(UIMenuGenerator menu, UIMenuColorSliderData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -26,7 +26,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(UIMenuDataGenerator menu, VisualElement element, UIMenuColorSliderData data)
+        public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuColorSliderData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
@@ -42,7 +42,7 @@ namespace UnityEssentials
             slider.value = (int)value;
         }
 
-        public override void ConfigureInteraction(UIMenuDataGenerator menu, VisualElement element, UIMenuColorSliderData data)
+        public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorSliderData data)
         {
             var icon = element.Q<VisualElement>("Icon");
             var slider = element.Q<SliderInt>();

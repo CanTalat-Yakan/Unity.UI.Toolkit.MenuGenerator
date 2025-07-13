@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorSliderData : UIMenuTypeBase
+    public class UIMenuColorSliderData : UIMenuTypeDataBase
     {
         [Space]
         public Gradient Gradient;
