@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuSpacerData typedData)
                     using (var generator = new UIMenuSpacerDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Spacer_UXML";

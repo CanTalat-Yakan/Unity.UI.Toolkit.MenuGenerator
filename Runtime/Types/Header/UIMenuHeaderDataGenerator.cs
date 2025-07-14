@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuHeaderData typedData)
                     using (var generator = new UIMenuHeaderDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Header_UXML";

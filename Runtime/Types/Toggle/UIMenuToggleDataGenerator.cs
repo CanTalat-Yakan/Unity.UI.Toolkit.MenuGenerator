@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuToggleData typedData)
                     using (var generator = new UIMenuToggleDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Toggle_UXML";

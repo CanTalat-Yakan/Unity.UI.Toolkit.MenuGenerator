@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuColorPickerData typedData)
                     using (var generator = new UIMenuColorPickerButtonDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "ColorPickerButton_UXML";
@@ -43,7 +43,7 @@ namespace UnityEssentials
                 menu.Populate(false, data.Name, null, () =>
                 {
                     using (var colorPickerGenerator = new UIMenuColorPickerDataGenerator())
-                        menu.AddElementToScrollView(colorPickerGenerator.CreateElement(menu, data));
+                        menu.AddToScrollView(colorPickerGenerator.CreateElement(menu, data));
                 });
             };
         }

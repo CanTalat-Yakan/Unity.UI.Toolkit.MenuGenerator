@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuSliderData typedData)
                     using (var generator = new UIMenuSliderDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string SliderResourcePath = Path + "Slider_UXML";

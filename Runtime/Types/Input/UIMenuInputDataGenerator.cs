@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuInputData typedData)
                     using (var generator = new UIMenuInputDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Input_UXML";

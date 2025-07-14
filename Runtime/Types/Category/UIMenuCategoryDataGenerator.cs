@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuCategoryData typedData)
                     using (var generator = new UIMenuCategoryDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Category_UXML";

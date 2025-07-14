@@ -88,7 +88,7 @@ namespace UnityEssentials
                 scrollView.Clear();
         }
 
-        public void AddElementToScrollView(VisualElement element)
+        public void AddToScrollView(VisualElement element)
         {
             if (element == null)
                 return;
@@ -97,7 +97,7 @@ namespace UnityEssentials
                 scrollView.Add(element);
         }
 
-        public void AddElementToRoot(VisualElement element)
+        public void AddToRoot(VisualElement element)
         {
             if (element == null)
                 return;

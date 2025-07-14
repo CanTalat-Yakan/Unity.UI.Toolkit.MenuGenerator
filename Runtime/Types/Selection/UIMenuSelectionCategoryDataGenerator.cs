@@ -13,7 +13,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuSelectionCategoryData typedData)
                     using (var generator = new UIMenuSelectionCategoryDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "SelectionCategory_UXML";
@@ -72,7 +72,7 @@ namespace UnityEssentials
                         }
 
                     foreach (var element in elements)
-                        menu.AddElementToScrollView(element);
+                        menu.AddToScrollView(element);
                 });
             };
         }

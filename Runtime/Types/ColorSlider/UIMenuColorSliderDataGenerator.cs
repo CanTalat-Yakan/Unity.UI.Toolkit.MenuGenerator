@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuColorSliderData typedData)
                     using (var generator = new UIMenuColorSliderDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "ColorSlider_UXML";

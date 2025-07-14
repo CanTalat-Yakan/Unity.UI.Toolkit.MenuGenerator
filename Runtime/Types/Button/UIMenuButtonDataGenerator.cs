@@ -12,7 +12,7 @@ namespace UnityEssentials
             {
                 if (data is UIMenuButtonData typedData)
                     using (var generator = new UIMenuButtonDataGenerator())
-                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
+                        menu.AddToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Button_UXML";
