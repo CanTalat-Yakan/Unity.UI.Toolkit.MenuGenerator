@@ -18,10 +18,10 @@ namespace UnityEssentials
             if (menu.Data?.GetData(Reference, out _data) ?? false)
             {
                 Data.IsDynamic = true;
-                ApplyDataValues();
+                ApplyDynamicConfiguration();
             }
         }
 
-        public abstract void ApplyDataValues();
+        public abstract void ApplyDynamicConfiguration();
     }
 }

@@ -26,7 +26,11 @@ namespace UnityEssentials
 
         public override object GetDefault() => Default;
 
-        public override void ApplyDynamicReset() =>
+        public override void ApplyDynamicReset()
+        {
+            Reverse = false;
             Options = Array.Empty<string>();
+            Default = 0;
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace UnityEssentials
         [Space]
         public int Default;
 
-        public override void ApplyDataValues()
+        public override void ApplyDynamicConfiguration()
         {
             Data.Reverse = Reverse;
             Data.Options = Options;

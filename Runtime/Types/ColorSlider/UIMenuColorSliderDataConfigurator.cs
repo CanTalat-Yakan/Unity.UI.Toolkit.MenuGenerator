@@ -11,7 +11,7 @@ namespace UnityEssentials
         [Range(0, 100)]
         public float Default;
 
-        public override void ApplyDataValues()
+        public override void ApplyDynamicConfiguration()
         {
             Data.Gradient = Gradient;
             Data.Default = Default;

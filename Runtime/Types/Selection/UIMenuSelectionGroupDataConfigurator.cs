@@ -8,7 +8,7 @@ namespace UnityEssentials
         public bool Reverse;
         public UIMenuSelectionData Selections;
 
-        public override void ApplyDataValues()
+        public override void ApplyDynamicConfiguration()
         {
             Data.Reverse = Reverse;
             Data.Selections = Selections;

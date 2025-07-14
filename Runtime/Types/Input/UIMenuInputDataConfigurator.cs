@@ -7,7 +7,7 @@ namespace UnityEssentials
         [Space]
         public string Default;
 
-        public override void ApplyDataValues() =>
+        public override void ApplyDynamicConfiguration() =>
             Data.Default = Default;
     }
 }

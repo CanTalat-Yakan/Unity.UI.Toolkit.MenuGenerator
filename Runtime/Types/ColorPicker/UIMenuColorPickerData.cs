@@ -14,8 +14,8 @@ namespace UnityEssentials
 
         public override void ApplyDynamicReset()
         {
-            Default = Color.black;
             HasAlpha = false;
+            Default = default;
         }
     }
 }

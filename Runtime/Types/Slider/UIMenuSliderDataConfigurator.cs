@@ -12,7 +12,7 @@ namespace UnityEssentials
         [Space]
         public float Default;
 
-        public override void ApplyDataValues()
+        public override void ApplyDynamicConfiguration()
         {
             Data.IsFloat = IsFloat;
             Data.MinRange = MinRange;

@@ -12,7 +12,10 @@ namespace UnityEssentials
 
         public override object GetDefault() => Default;
 
-        public override void ApplyDynamicReset() =>
+        public override void ApplyDynamicReset()
+        {
             Gradient = null;
+            Default = 0f;
+        }
     }
 }

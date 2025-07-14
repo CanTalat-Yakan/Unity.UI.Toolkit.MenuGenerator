@@ -7,7 +7,7 @@ namespace UnityEssentials
         [Space]
         public int Height = 20;
 
-        public override void ApplyDataValues() =>
+        public override void ApplyDynamicConfiguration() =>
             Data.Height = Height;
     }
 }
