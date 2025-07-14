@@ -33,7 +33,7 @@ namespace UnityEssentials
         [Button]
         public void Show()
         {
-            FetchReferences();
+            Fetch();
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
             Root?.SetDisplayEnabled(true);
             PopulateRoot?.Invoke();
@@ -42,12 +42,12 @@ namespace UnityEssentials
         [Button]
         public void Close()
         {
-            FetchReferences();
+            Fetch();
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
             Root?.SetDisplayEnabled(false);
         }
 
-        public void FetchReferences()
+        public void Fetch()
         {
             Document ??= GetComponentInChildren<UIDocument>();
 
