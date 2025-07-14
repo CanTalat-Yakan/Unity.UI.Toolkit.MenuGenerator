@@ -55,7 +55,7 @@ namespace UnityEssentials
 
                 colorElement.SetBackgroundColor(newColor);
 
-                menu.Profile.OnColorPickerValueChanged(data.Reference, newColor);
+                menu.Profile.SetData(data.Reference, newColor);
             };
 
             hueSlider.RegisterValueChangedCallback(_ => updateColor());
@@ -80,7 +80,7 @@ namespace UnityEssentials
                         valSlider.value / 100f);
                     updatedColor.a = alphaSlider.value / 100f;
 
-                    menu.Profile.OnColorPickerValueChanged(data.Reference, updatedColor);
+                    menu.Profile.SetData(data.Reference, updatedColor);
                 };
         }
 

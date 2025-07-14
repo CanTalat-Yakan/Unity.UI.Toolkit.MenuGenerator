@@ -50,7 +50,7 @@ namespace UnityEssentials
         [Info]
         [SerializeField]
         private string _info =
-        "UIMenuProfileProvider automatically fetches data and manages the loading, saving, and switching of profiles.\n" +
+        "UIMenuProfileProvider automatically fetches the UIMenuData and manages the loading, saving, and switching of UIMenuProfile.\n" +
         "It handles profile persistence, default values, and runtime changes, " +
         "allowing menu data to be saved and restored across sessions.";
 
@@ -79,7 +79,7 @@ namespace UnityEssentials
                 Data = menu.Data;
 
             LoadProfile();
-            Profile.OnValueChanged += SaveProfile;
+            Profile.OnValueChanged += (_) => SaveProfile();
         }
 
         private static Dictionary<string, UIMenuProfile> _profileCache = new();
@@ -96,9 +96,9 @@ namespace UnityEssentials
             if (profile == null)
                 return;
 
-            Profile.OnValueChanged -= SaveProfile;
+            Profile.OnValueChanged -= (_) => SaveProfile();
             Profile = profile;
-            Profile.OnValueChanged += SaveProfile;
+            Profile.OnValueChanged += (_) => SaveProfile();
 
             _profileCache[Name] = profile;
             OnProfileChanged?.Invoke();

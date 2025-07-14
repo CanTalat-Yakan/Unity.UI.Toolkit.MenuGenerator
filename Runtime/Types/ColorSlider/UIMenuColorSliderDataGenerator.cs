@@ -44,12 +44,12 @@ namespace UnityEssentials
         {
             var icon = element.Q<VisualElement>("Icon");
             var slider = element.Q<SliderInt>();
-            slider.RegisterValueChangedCallback((evt) =>
+            slider.RegisterValueChangedCallback((EventCallback<ChangeEvent<int>>)((evt) =>
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(evt.newValue / 100f));
 
-                menu.Profile.OnColorSliderValueChanged(data.Reference, evt.newValue);
-            });
+                menu.Profile.SetData(data.Reference, evt.newValue);
+            }));
         }
 
         public void Dispose() { }

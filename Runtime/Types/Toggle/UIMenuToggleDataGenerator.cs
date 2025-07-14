@@ -40,7 +40,7 @@ namespace UnityEssentials
             var toggle = element.Q<Toggle>("Toggle");
             toggle.RegisterValueChangedCallback((evt) =>
             {
-                menu.Profile.OnToggleValueChanged(data.Reference, evt.newValue);
+                menu.Profile.SetData(data.Reference, evt.newValue);
             });
         }
 

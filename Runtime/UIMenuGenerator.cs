@@ -46,13 +46,13 @@ namespace UnityEssentials
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
         }
 
-        public void Populate(bool isRoot, string category, ScriptableObject[] data, Action customDataDrawCall = null)
+        public void Populate(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall = null)
         {
             ClearScrollView();
 
-            ConfigureRedraw(isRoot, category, data, customDataDrawCall);
+            ConfigureRedraw(isRoot, label, data, customDataDrawCall);
 
-            BreadcrumbDataGenerator.AddBreadcrumb(this, isRoot, category, data, Redraw);
+            BreadcrumbDataGenerator.AddBreadcrumb(this, isRoot, label, Redraw);
 
             if (data != null && data.Length != 0)
                 foreach (var typeData in data)
@@ -101,12 +101,12 @@ namespace UnityEssentials
             }
         }
 
-        private void ConfigureRedraw(bool isRoot, string category, ScriptableObject[] data, Action customDataDrawCall)
+        private void ConfigureRedraw(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall)
         {
             Redraw = () =>
             {
                 UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, Breadcrumbs.LinkedElement.childCount);
-                Populate(isRoot, category, data, customDataDrawCall);
+                Populate(isRoot, label, data, customDataDrawCall);
             };
         }
     }

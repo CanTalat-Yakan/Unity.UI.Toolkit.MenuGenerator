@@ -43,7 +43,7 @@ namespace UnityEssentials
         {
             var textField = element.Q<TextField>("Input");
             textField.RegisterValueChangedCallback((evt) =>
-                menu.Profile.OnInputValueChanged(data.Reference, evt.newValue));
+                menu.Profile.SetData(data.Reference, evt.newValue));
         }
 
         public void Dispose() { }

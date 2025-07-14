@@ -58,13 +58,13 @@ namespace UnityEssentials
             {
                 var slider = element.Q<Slider>("Slider");
                 slider.RegisterValueChangedCallback((evt) =>
-                    menu.Profile.OnSliderValueChanged(data.Reference, evt.newValue));
+                    menu.Profile.SetData(data.Reference, evt.newValue));
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
                 sliderInt.RegisterValueChangedCallback((evt) =>
-                    menu.Profile.OnSliderValueChanged(data.Reference, evt.newValue));
+                    menu.Profile.SetData(data.Reference, (float)evt.newValue));
             }
         }
 
