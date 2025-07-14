@@ -22,6 +22,9 @@ namespace UnityEssentials
             UIMenuSelectionGroupData groupData)
         {
             var selections = groupData.GetSelections();
+            if(selections == null || selections.Data == null || selections.Data.Length == 0)
+                yield break;
+
             for (int i = 0; i < selections.Data.Length; i++)
             {
                 var selectionDataElement = selections.Data[i];
