@@ -23,16 +23,14 @@ namespace UnityEssentials
         public Action PopulateRoot;
         public Action Redraw;
 
-        private UIMenuBreadcrumbDataGenerator _breadcrumbDataGenerator = new();
-
-        [HideInInspector] public UIMenu Menu { get; private set; }
-        [HideInInspector] public UIMenuProfile Profile => Menu.Profile;
+        public UIMenuBreadcrumbDataGenerator BreadcrumbDataGenerator = new();
 
         public string CurrentCategory { get; private set; }
-        public string PreviousCategory { get; private set; }
 
-        public void OnEnable() =>
-            Menu = GetComponent<UIMenu>();
+        [HideInInspector] public UIMenu Menu => _menu ??= this.GetOrAddComponent<UIMenu>();
+        [NonSerialized] private UIMenu _menu;
+
+        [HideInInspector] public UIMenuProfile Profile => Menu.Profile;
 
         [Button]
         public void Show()
@@ -45,68 +43,21 @@ namespace UnityEssentials
         public void Close() =>
             Root?.SetDisplayEnabled(false);
 
-        public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action customDataRedraw = null)
+        public void Populate(bool isRoot, string category, ScriptableObject[] data, Action customDataRedraw = null)
         {
             FetchReferences();
-
             ClearScrollView();
+            //ResetCategory(!isRoot);
 
-            if (isRoot)
-                ResetCategory();
+            ConfigureRedraw(isRoot, category, data, customDataRedraw);
 
-            if (data != null && data.Length > 0)
-                ConfigureRedraw(categoryName, !isRoot, data);
-            else
-            {
-                Redraw = customDataRedraw;
-                Redraw?.Invoke();
-            }
+            CurrentCategory = category;
 
-            _breadcrumbDataGenerator.AddBreadcrumb(this, categoryName, isRoot, data, customDataRedraw);
+            BreadcrumbDataGenerator.AddBreadcrumb(this, category, isRoot, data, customDataRedraw);
 
-            UpdateCategoryHistory(categoryName);
             if (data != null && data.Length != 0)
-                foreach (var item in data)
-                    ProcessDataItem(item);
-        }
-
-        private void ProcessDataItem(ScriptableObject data) =>
-            RegisterTypeFactory?.Invoke(this, data);
-
-        public void FetchReferences()
-        {
-            Document ??= GetComponentInChildren<UIDocument>();
-
-            Root ??= Document?.rootVisualElement;
-
-            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
-            Breadcrumbs ??= Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
-
-            if (Back == null)
-            {
-                Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
-                if (Back?.LinkedElement is Button backButton)
-                    backButton.clicked += () => _breadcrumbDataGenerator.GoBackOneBreadcrumb(this);
-            }
-        }
-
-        private void ConfigureRedraw(string label, bool prefix, ScriptableObject[] data) =>
-            Redraw = () =>
-            {
-                _breadcrumbDataGenerator.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
-                Populate(prefix, label, data);
-            };
-
-        private void UpdateCategoryHistory(string newCategory)
-        {
-            PreviousCategory = CurrentCategory;
-            CurrentCategory = newCategory;
-        }
-
-        public void ResetCategory()
-        {
-            CurrentCategory = null;
-            _breadcrumbDataGenerator.ClearBreadcrumbsFromIndex(this);
+                foreach (var typeData in data)
+                    RegisterTypeFactory?.Invoke(this, typeData);
         }
 
         public void ClearScrollView()
@@ -130,6 +81,40 @@ namespace UnityEssentials
                 return;
 
             Root.Add(element);
+        }
+
+        private void FetchReferences()
+        {
+            Document ??= GetComponentInChildren<UIDocument>();
+
+            Root ??= Document?.rootVisualElement;
+
+            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
+            Breadcrumbs ??= Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
+
+            if (Back == null)
+            {
+                Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
+                if (Back?.LinkedElement is Button backButton)
+                    backButton.clicked += () => BreadcrumbDataGenerator.GoBackOneBreadcrumb(this);
+            }
+        }
+
+        private void ConfigureRedraw(bool isRoot, string category, ScriptableObject[] data, Action customDataRedraw)
+        {
+            if (data != null && data.Length > 0)
+            {
+                Redraw = () =>
+                {
+                    BreadcrumbDataGenerator.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                    Populate(isRoot, category, data);
+                };
+            }
+            else if(customDataRedraw != null)
+            {
+                Redraw = customDataRedraw;
+                Redraw?.Invoke();
+            }
         }
     }
 }

@@ -46,17 +46,14 @@ namespace UnityEssentials
                 provider.Name = Name;
         }
 
-        public UIMenuProfile Profile => Provider.Profile;
-        public UIMenuProfile DefaultProfile => Provider.Default;
-
         [HideInInspector] public UIMenuGenerator Generator => _generator ??= this.GetOrAddComponent<UIMenuGenerator>();
-        private UIMenuGenerator _generator;
+        [NonSerialized] private UIMenuGenerator _generator;
 
         [HideInInspector] public UIMenuProfileProvider Provider => _provider ??= this.GetOrAddComponent<UIMenuProfileProvider>();
-        private UIMenuProfileProvider _provider;
+        [NonSerialized] private UIMenuProfileProvider _provider;
 
-        public static Action<UIMenu> ShowEditor { get; set; }
-        public Action<UIMenuData> SetData { get; private set; }
+        public UIMenuProfile Profile => Provider.Profile;
+        public UIMenuProfile DefaultProfile => Provider.Default;
 
         public void OnEnable()
         {
@@ -88,6 +85,9 @@ namespace UnityEssentials
                         dataTemplate.IsDynamic = false;
                     }
         }
+
+        public static Action<UIMenu> ShowEditor { get; set; }
+        public Action<UIMenuData> SetData { get; private set; }
 
         [Button()]
         public void OpenMenuBuilder()

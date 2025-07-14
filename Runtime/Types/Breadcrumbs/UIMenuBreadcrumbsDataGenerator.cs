@@ -66,7 +66,7 @@ namespace UnityEssentials
             };
         }
 
-        public void ClearBreadcrumbsFromIndex(UIMenuGenerator menu, int startIndex = 0)
+        public void ClearBreadcrumbsFromIndex(UIMenuGenerator menu, int startIndex)
         {
             if (menu.Breadcrumbs.LinkedElement is GroupBox container)
                 while (container.childCount > startIndex)
