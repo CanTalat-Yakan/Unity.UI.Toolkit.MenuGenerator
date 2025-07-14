@@ -22,6 +22,14 @@ namespace UnityEssentials
     {
         public static Dictionary<string, UIMenu> Instances { get; private set; } = new();
 
+        public static bool TryGetValue<T>(string menuName, string dataReference, out T outputData) where T : UIMenuTypeDataBase
+        {
+            outputData = default;
+            if (!Instances.TryGetValue(menuName, out var menu) || menu.Data is null)
+                return false;
+            return menu.Data.TryGetValue(dataReference, out outputData);
+        }
+
         [Space]
         public UIMenuType Type;
         [OnValueChanged("Type")] public void OnTypeValueChanged() => Initialize();

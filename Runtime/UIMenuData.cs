@@ -8,12 +8,12 @@ namespace UnityEssentials
         [HideInInspector] public string Name = "Menu";
         [HideInInspector] public ScriptableObject[] Root = { };
 
-        public bool GetData<T>(string reference, out T outputData) where T : ScriptableObject
+        public bool TryGetValue<T>(string dataReference, out T outputData) where T : ScriptableObject
         {
             outputData = null;
             foreach (var data in EnumerateAllData())
                 if (data is UIMenuTypeDataBase dataTemplate)
-                    if (dataTemplate.Reference == reference)
+                    if (dataTemplate.Reference == dataReference)
                         if (data is T typedData)
                         {
                             outputData = typedData;

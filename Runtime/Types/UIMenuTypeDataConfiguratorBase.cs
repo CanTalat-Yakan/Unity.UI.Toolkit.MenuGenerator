@@ -12,10 +12,7 @@ namespace UnityEssentials
 
         public void Awake()
         {
-            if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
-                return;
-
-            if (menu.Data?.GetData(Reference, out _data) ?? false)
+            if (UIMenu.TryGetValue(MenuName, Reference, out _data))
             {
                 Data.IsDynamic = true;
                 ApplyDynamicConfiguration();
