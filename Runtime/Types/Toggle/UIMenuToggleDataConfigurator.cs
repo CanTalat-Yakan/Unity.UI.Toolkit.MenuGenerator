@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionCategoryDataConfigurator : UIMenuTypeDataConfiguratorBase<UIMenuSelectionCategoryData>
+    public class UIMenuToggleDataConfigurator : UIMenuTypeDataConfiguratorBase<UIMenuToggleData>
     {
         [Space]
-        public int Default;
+        public bool Default;
 
         public override void ApplyDataValues() =>
             Data.Default = Default;

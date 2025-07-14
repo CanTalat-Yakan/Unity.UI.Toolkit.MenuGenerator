@@ -2,27 +2,12 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuInputDataConfigurator : MonoBehaviour
+    public class UIMenuInputDataConfigurator : UIMenuTypeDataConfiguratorBase<UIMenuInputData>
     {
-        public string MenuName;
-        public string Reference;
-
         [Space]
         public string Default;
 
-        private UIMenuInputData _inputData;
-        [HideInInspector] public UIMenuInputData InputData => _inputData;
-
-        public void Awake()
-        {
-            if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
-                return;
-
-            if (menu.Data?.GetData(Reference, out _inputData) ?? false)
-            {
-                InputData.IsDynamic = true;
-                InputData.Default = Default;
-            }
-        }
+        public override void ApplyDataValues() =>
+            Data.Default = Default;
     }
 }

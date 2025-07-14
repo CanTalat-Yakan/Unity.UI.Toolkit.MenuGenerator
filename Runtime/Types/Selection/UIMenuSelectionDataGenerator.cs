@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionGeneratorData : UIMenuTypeDataBase
+    public class UIMenuSelectionGeneratorData : IUIMenuTypeData
     {
         public UIMenuSelectionCategoryData CategoryData;
-        public UIMenuSelectionDataElement ElementData;
+        public UIMenuSelectionDataElement SelectionDataElement;
 
         [Space]
         public int Index;
@@ -24,14 +24,14 @@ namespace UnityEssentials
             var selections = groupData.GetSelections();
             for (int i = 0; i < selections.Data.Length; i++)
             {
-                var selectionElement = selections.Data[i];
-                if (selectionElement == null)
+                var selectionDataElement = selections.Data[i];
+                if (selectionDataElement == null)
                     continue;
 
                 var selectionGeneratorData = new UIMenuSelectionGeneratorData
                 {
                     CategoryData = categoryData,
-                    ElementData = selectionElement,
+                    SelectionDataElement = selectionDataElement,
                     Index = selections.StartIndexID + i
                 };
 
@@ -51,10 +51,10 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.ElementData.Name;
+            label.text = data.SelectionDataElement.Name;
 
             var image = element.Q<VisualElement>("Image");
-            image.SetBackgroundImage(data.ElementData.Texture);
+            image.SetBackgroundImage(data.SelectionDataElement.Texture);
         }
 
         public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)

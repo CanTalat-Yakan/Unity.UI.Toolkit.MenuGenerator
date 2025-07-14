@@ -2,9 +2,9 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public abstract class UIMenuTypeDataGeneratorBase<T> where T : UIMenuTypeDataBase
+    public abstract class UIMenuTypeDataGeneratorBase<T> where T : IUIMenuTypeData
     {
-        public const string Path = "UIToolkit/UXML/Templates_Types_UI_";
+        public static readonly string Path = "UIToolkit/UXML/Templates_Types_UI_";
 
         public abstract VisualElement CreateElement(UIMenuGenerator menu, T data);
         public abstract void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, T data);

@@ -7,14 +7,12 @@ namespace UnityEssentials
     public class UIMenuHeaderDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuHeaderData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory() =>
-            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
+        public static void RegisterFactory() =>
+            UIMenuGenerator.RegisterTypeFactory += (menu, data) =>
             {
-                if (data is not UIMenuHeaderData headerData)
-                    return;
-
-                using (var headerDataGenerator = new UIMenuHeaderDataGenerator())
-                    generator.AddElementToScrollView(headerDataGenerator.CreateElement(generator, headerData));
+                if (data is UIMenuHeaderData typedData)
+                    using (var generator = new UIMenuHeaderDataGenerator())
+                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Header_UXML";

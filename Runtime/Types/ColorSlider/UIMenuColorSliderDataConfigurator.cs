@@ -2,11 +2,8 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuColorSliderDataConfigurator : MonoBehaviour
+    public class UIMenuColorSliderDataConfigurator : UIMenuTypeDataConfiguratorBase<UIMenuColorSliderData>
     {
-        public string MenuName;
-        public string Reference;
-
         [Space]
         public Gradient Gradient;
 
@@ -14,20 +11,10 @@ namespace UnityEssentials
         [Range(0, 100)]
         public float Default;
 
-        private UIMenuColorSliderData _colorSliderData;
-        [HideInInspector] public UIMenuColorSliderData ColorSliderData => _colorSliderData;
-
-        public void Awake()
+        public override void ApplyDataValues()
         {
-            if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
-                return;
-
-            if (menu.Data?.GetData(Reference, out _colorSliderData) ?? false)
-            {
-                ColorSliderData.IsDynamic = true;
-                ColorSliderData.Gradient = Gradient;
-                ColorSliderData.Default = Default;
-            }
+            Data.Gradient = Gradient;
+            Data.Default = Default;
         }
     }
 }

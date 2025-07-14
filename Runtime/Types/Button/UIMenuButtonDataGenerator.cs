@@ -7,14 +7,12 @@ namespace UnityEssentials
     public class UIMenuButtonDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuButtonData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory() =>
-            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
+        public static void RegisterFactory() =>
+            UIMenuGenerator.RegisterTypeFactory += (menu, data) =>
             {
-                if (data is not UIMenuButtonData buttonData)
-                    return;
-
-                using (var buttonDataGenerator = new UIMenuButtonDataGenerator())
-                    generator.AddElementToScrollView(buttonDataGenerator.CreateElement(generator, buttonData));
+                if (data is UIMenuButtonData typedData)
+                    using (var generator = new UIMenuButtonDataGenerator())
+                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Button_UXML";

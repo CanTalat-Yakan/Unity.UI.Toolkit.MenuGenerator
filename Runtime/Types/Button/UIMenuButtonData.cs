@@ -17,5 +17,13 @@ namespace UnityEssentials
 
         public void InvokeAltEvent() =>
             AltEvent?.Invoke();
+
+        public override object GetDefault() => null;
+
+        public override void ApplyDynamicReset()
+        {
+            Event = null;
+            AltEvent = null;
+        }
     }
 }

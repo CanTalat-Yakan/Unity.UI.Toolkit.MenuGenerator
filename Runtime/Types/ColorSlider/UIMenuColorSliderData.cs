@@ -11,5 +11,8 @@ namespace UnityEssentials
         public float Default;
 
         public override object GetDefault() => Default;
+
+        public override void ApplyDynamicReset() =>
+            Gradient = null;
     }
 }

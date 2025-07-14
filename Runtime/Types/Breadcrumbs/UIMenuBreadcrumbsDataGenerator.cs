@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuBreadcrumbGeneratorData : UIMenuTypeDataBase
+    public class UIMenuBreadcrumbGeneratorData : IUIMenuTypeData
     {
         public ScriptableObject[] Data;
         public Action Redraw;

@@ -1,23 +1,23 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="Styles/Default_UI_Template_USS.uss" />
+    <Style src="project://database/Assets/UnityEssentials/UI/UnityUIMenuGenerator/Resources/UIToolkit/UXML/Styles/Default_UI_Template_USS.uss?fileID=7433441132597879392&amp;guid=0fba8d249946f55479ddb7e31b6afd1f&amp;type=3#Default_UI_Template_USS" />
     <engine:GroupBox style="width: 100%; height: 100%; flex-direction: column; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 30px; margin-left: 0;">
         <engine:GroupBox name="SlidersGroupBox" style="flex-direction: row; justify-content: space-evenly; background-color: rgba(0, 0, 0, 0.5); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; height: 165px; max-width: none; min-width: 550px; flex-wrap: wrap; overflow: hidden; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); width: 0; align-items: center;">
             <engine:GroupBox style="width: 95%; height: 100%; flex-wrap: wrap; align-content: center;">
                 <engine:GroupBox>
                     <engine:Label text="Hue" class="unity-button--primary" style="position: relative; top: 0; font-size: 18px; width: 80px; margin-right: 20px; margin-left: 20px;" />
-                    <engine:SliderInt value="0" high-value="360" show-input-field="true" low-value="0" name="HueSlider" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
+                    <engine:SliderInt value="0" high-value="360" show-input-field="true" low-value="0" name="HueSlider" fill="true" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
                 </engine:GroupBox>
                 <engine:GroupBox>
                     <engine:Label text="Saturation" class="unity-button--primary" style="position: relative; top: 0; font-size: 18px; margin-right: 20px; margin-left: 20px; width: 80px;" />
-                    <engine:SliderInt value="0" high-value="100" show-input-field="true" low-value="0" name="SaturationSlider" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
+                    <engine:SliderInt value="0" high-value="100" show-input-field="true" low-value="0" name="SaturationSlider" fill="true" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
                 </engine:GroupBox>
                 <engine:GroupBox>
                     <engine:Label text="Value" class="unity-button--primary" style="position: relative; top: 0; font-size: 18px; width: 80px; margin-right: 20px; margin-left: 20px;" />
-                    <engine:SliderInt value="0" high-value="100" show-input-field="true" low-value="0" name="ValueSlider" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
+                    <engine:SliderInt value="0" high-value="100" show-input-field="true" low-value="0" name="ValueSlider" fill="true" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
                 </engine:GroupBox>
                 <engine:GroupBox name="Alpha" style="display: flex;">
                     <engine:Label text="Alpha" class="unity-button--primary" style="position: relative; top: 0; font-size: 18px; margin-right: 20px; margin-left: 20px; width: 80px;" />
-                    <engine:SliderInt value="100" high-value="100" show-input-field="true" low-value="0" name="AlphaSlider" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
+                    <engine:SliderInt value="100" high-value="100" show-input-field="true" low-value="0" name="AlphaSlider" fill="true" class="unity-slider" style="min-height: auto; width: 400px; height: 40px;" />
                 </engine:GroupBox>
             </engine:GroupBox>
             <engine:VisualElement name="Color" style="flex-grow: 1; width: 100%; height: 100%; background-color: rgb(255, 255, 255);" />

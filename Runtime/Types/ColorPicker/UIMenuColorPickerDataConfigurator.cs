@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionCategoryDataConfigurator : UIMenuTypeDataConfiguratorBase<UIMenuSelectionCategoryData>
+    public class UIMenuColorPickerDataConfigurator : UIMenuTypeDataConfiguratorBase<UIMenuColorPickerData>
     {
         [Space]
-        public int Default;
+        public Color Default;
 
         public override void ApplyDataValues() =>
             Data.Default = Default;

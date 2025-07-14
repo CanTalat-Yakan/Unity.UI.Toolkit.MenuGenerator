@@ -7,5 +7,9 @@ namespace UnityEssentials
         public Texture2D Texture;
 
         public ScriptableObject[] Data;
+
+        public override object GetDefault() => null;
+
+        public override void ApplyDynamicReset() { }
     }
 }

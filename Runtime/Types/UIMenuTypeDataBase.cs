@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public class UIMenuTypeDataBase : ScriptableObject
+    public interface IUIMenuTypeData { }
+
+    public abstract class UIMenuTypeDataBase : ScriptableObject, IUIMenuTypeData
     {
         [HideInInspector] public bool IsDynamic;
         [HideInInspector] public bool HasReference;
@@ -32,7 +34,8 @@ namespace UnityEssentials
 #endif
         }
 
-        public virtual object GetDefault() => null;
-        public virtual void ApplyDynamicReset() { }
+        public abstract object GetDefault();
+
+        public abstract void ApplyDynamicReset();
     }
 }

@@ -7,14 +7,12 @@ namespace UnityEssentials
     public class UIMenuToggleDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuToggleData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory() =>
-            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
+        public static void RegisterFactory() =>
+            UIMenuGenerator.RegisterTypeFactory += (menu, data) =>
             {
-                if (data is not UIMenuToggleData toggleData)
-                    return;
-
-                using (var toggleDataGenerator = new UIMenuToggleDataGenerator())
-                    generator.AddElementToScrollView(toggleDataGenerator.CreateElement(generator, toggleData));
+                if (data is UIMenuToggleData typedData)
+                    using (var generator = new UIMenuToggleDataGenerator())
+                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Toggle_UXML";

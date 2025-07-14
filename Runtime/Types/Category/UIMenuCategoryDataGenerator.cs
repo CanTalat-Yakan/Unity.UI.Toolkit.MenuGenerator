@@ -7,14 +7,12 @@ namespace UnityEssentials
     public class UIMenuCategoryDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuCategoryData>, IDisposable
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void Factory() =>
-            UIMenuGenerator.RegisterTypeFactory += (generator, data) =>
+        public static void RegisterFactory() =>
+            UIMenuGenerator.RegisterTypeFactory += (menu, data) =>
             {
-                if (data is not UIMenuCategoryData categoryData)
-                    return;
-
-                using (var categoryDataGenerator = new UIMenuCategoryDataGenerator())
-                    generator.AddElementToScrollView(categoryDataGenerator.CreateElement(generator, categoryData));
+                if (data is UIMenuCategoryData typedData)
+                    using (var generator = new UIMenuCategoryDataGenerator())
+                        menu.AddElementToScrollView(generator.CreateElement(menu, typedData));
             };
 
         public static readonly string ResourcePath = Path + "Category_UXML";

@@ -14,7 +14,7 @@ namespace UnityEssentials
                 if (scriptableObject is UIMenuSelectionGroupData group)
                 {
                     var selections = group.GetSelections();
-                    if(selections == null || selections.Data == null)
+                    if (selections == null || selections.Data == null)
                         continue;
 
                     for (int i = 0; i < selections.Data.Length; i++)
@@ -26,5 +26,8 @@ namespace UnityEssentials
         }
 
         public override object GetDefault() => Default;
+
+        public override void ApplyDynamicReset() =>
+            Default = 0;
     }
 }
