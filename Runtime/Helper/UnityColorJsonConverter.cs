@@ -28,23 +28,23 @@ namespace UnityEssentials
 
         public static T DeserializeColor<T>(object value, T defaultValue)
         {
-            if (value is string s)
+            if (value is string colorString)
             {
                 try
                 {
-                    var color = JsonConvert.DeserializeObject<Color>(s, new UnityColorJsonConverter());
+                    var color = JsonConvert.DeserializeObject<Color>(colorString, new UnityColorJsonConverter());
                     return (T)(object)color;
                 }
                 catch { return defaultValue; }
             }
-            if (value is JArray array && array.Count == 4)
+            if (value is JArray colorArray && colorArray.Count == 4)
             {
                 try
                 {
-                    float r = array[0].ToObject<float>();
-                    float g = array[1].ToObject<float>();
-                    float b = array[2].ToObject<float>();
-                    float a = array[3].ToObject<float>();
+                    float r = colorArray[0].ToObject<float>();
+                    float g = colorArray[1].ToObject<float>();
+                    float b = colorArray[2].ToObject<float>();
+                    float a = colorArray[3].ToObject<float>();
                     return (T)(object)new Color(r, g, b, a);
                 }
                 catch { return defaultValue; }

@@ -34,16 +34,34 @@ namespace UnityEssentials
         public void Show()
         {
             FetchReferences();
-            Root?.SetDisplayEnabled(true);
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
+            Root?.SetDisplayEnabled(true);
             PopulateRoot?.Invoke();
         }
 
         [Button]
         public void Close()
         {
-            Root?.SetDisplayEnabled(false);
+            FetchReferences();
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
+            Root?.SetDisplayEnabled(false);
+        }
+
+        public void FetchReferences()
+        {
+            Document ??= GetComponentInChildren<UIDocument>();
+
+            Root ??= Document?.rootVisualElement;
+
+            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
+            Breadcrumbs ??= Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
+
+            if (Back == null)
+            {
+                Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
+                if (Back?.LinkedElement is Button backButton)
+                    backButton.clicked += () => UIMenuBreadcrumbDataGenerator.NavigateBack(this);
+            }
         }
 
         public void Populate(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall = null)
@@ -84,30 +102,11 @@ namespace UnityEssentials
             Root.Add(element);
         }
 
-        private void FetchReferences()
-        {
-            Document ??= GetComponentInChildren<UIDocument>();
-
-            Root ??= Document?.rootVisualElement;
-
-            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
-            Breadcrumbs ??= Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
-
-            if (Back == null)
-            {
-                Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
-                if (Back?.LinkedElement is Button backButton)
-                    backButton.clicked += () => UIMenuBreadcrumbDataGenerator.NavigateBack(this);
-            }
-        }
-
-        private void ConfigureRedraw(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall)
-        {
+        private void ConfigureRedraw(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall) =>
             Redraw = () =>
             {
                 UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, Breadcrumbs.LinkedElement.childCount);
                 Populate(isRoot, label, data, customDataDrawCall);
             };
-        }
     }
 }
