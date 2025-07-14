@@ -10,8 +10,8 @@ namespace UnityEssentials
         [SerializeField]
         private string _info =
             "UIMenuGenerator is responsible for dynamically building and managing UI menus using Unity UI Toolkit. " +
-            "It handles the instantiation, population, and navigation of menu elements, including categories, breadcrumbs, and scrollable content. " +
-            "Attach this component to a GameObject with a UIMenu to enable flexible, data-driven menu creation and runtime updates.";
+            "It handles the instantiation, population, and navigation of menu elements, " +
+            "to enable flexible, data-driven menu creation and runtime updates.";
 
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;
@@ -19,17 +19,57 @@ namespace UnityEssentials
         [HideInInspector] public UIElementLink Breadcrumbs;
         [HideInInspector] public UIElementLink ScrollView;
 
+        public static Action<UIMenuGenerator, ScriptableObject> RegisterTypeFactory;
         public Action PopulateRoot;
+        public Action Redraw;
 
         private UIMenuBreadcrumbDataGenerator _breadcrumbDataGenerator = new();
 
         [HideInInspector] public UIMenu Menu { get; private set; }
         [HideInInspector] public UIMenuProfile Profile => Menu.Profile;
 
+        public string CurrentCategory { get; private set; }
+        public string PreviousCategory { get; private set; }
+
         public void OnEnable() =>
             Menu = GetComponent<UIMenu>();
 
-        [ContextMenu("Fetch")]
+        [Button]
+        public void Show() =>
+            Root?.SetDisplayEnabled(true);
+
+        [Button]
+        public void Close() =>
+            Root?.SetDisplayEnabled(false);
+
+        public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action customDataRedraw = null)
+        {
+            FetchReferences();
+
+            ClearScrollView();
+
+            if (isRoot)
+                ResetCategory();
+
+            if (data != null && data.Length > 0)
+                ConfigureRedraw(categoryName, !isRoot, data);
+            else
+            {
+                Redraw = customDataRedraw;
+                Redraw?.Invoke();
+            }
+
+            _breadcrumbDataGenerator.AddBreadcrumb(this, categoryName, isRoot, data, customDataRedraw);
+
+            UpdateCategoryHistory(categoryName);
+            if (data != null && data.Length != 0)
+                foreach (var item in data)
+                    ProcessDataItem(item);
+        }
+
+        private void ProcessDataItem(ScriptableObject data) =>
+            RegisterTypeFactory?.Invoke(this, data);
+
         public void FetchReferences()
         {
             Document ??= GetComponentInChildren<UIDocument>();
@@ -47,7 +87,6 @@ namespace UnityEssentials
             }
         }
 
-        public Action Redraw;
         private void ConfigureRedraw(string label, bool prefix, ScriptableObject[] data) =>
             Redraw = () =>
             {
@@ -55,21 +94,6 @@ namespace UnityEssentials
                 Populate(prefix, label, data);
             };
 
-        [Button]
-        public void Show()
-        {
-            Root?.SetDisplayEnabled(true);
-            PopulateRoot?.Invoke();
-        }
-
-        [Button]
-        public void Close()
-        {
-            Root?.SetDisplayEnabled(false);
-        }
-
-        public string CurrentCategory { get; private set; }
-        public string PreviousCategory { get; private set; }
         private void UpdateCategoryHistory(string newCategory)
         {
             PreviousCategory = CurrentCategory;
@@ -104,34 +128,5 @@ namespace UnityEssentials
 
             Root.Add(element);
         }
-
-        public void Populate(bool isRoot, string categoryName, ScriptableObject[] data, Action customDataRedraw = null)
-        {
-            FetchReferences();
-
-            ClearScrollView();
-
-            if (isRoot)
-                ResetCategory();
-
-            if (data != null && data.Length > 0)
-                ConfigureRedraw(categoryName, !isRoot, data);
-            else
-            {
-                Redraw = customDataRedraw;
-                Redraw?.Invoke();
-            }
-
-            _breadcrumbDataGenerator.AddBreadcrumb(this, categoryName, isRoot, data, customDataRedraw);
-
-            UpdateCategoryHistory(categoryName);
-            if (data != null && data.Length != 0)
-                foreach (var item in data)
-                    ProcessDataItem(item);
-        }
-
-        public static Action<UIMenuGenerator, ScriptableObject> RegisterTypeFactory;
-        private void ProcessDataItem(ScriptableObject data) =>
-            RegisterTypeFactory?.Invoke(this, data);
     }
 }

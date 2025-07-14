@@ -9,7 +9,9 @@ namespace UnityEssentials
     {
         [Info]
         [SerializeField]
-        private string _info;
+        private string _info =
+            "A save file will be created outside the Assets/Build_Data folder, " +
+            "within the automatically created directory called Resources.";
 
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
         public bool SaveOnChange = true;
@@ -45,11 +47,24 @@ namespace UnityEssentials
         public UIMenuProfileProviderSettings Settings = new();
 
         [Space]
+        [Info]
+        [SerializeField]
+        private string _info =
+        "UIMenuProfileProvider automatically fetches data and manages the loading, saving, and switching of profiles.\n" +
+        "It handles profile persistence, default values, and runtime changes, " +
+        "allowing menu data to be saved and restored across sessions.";
+
+        [Space]
         public string Name = "Menu";
         public UIMenuData Data;
 
         [OnValueChanged("Name")]
-        public void OnNameValueChanged() => GetComponent<UIMenu>().Name = Name;
+        public void OnNameValueChanged()
+        {
+            var menu = GetComponent<UIMenu>();
+            if (menu != null)
+                menu.Name = Name;
+        }
 
         [Space]
         public UIMenuProfile Profile;
@@ -60,7 +75,7 @@ namespace UnityEssentials
         public void OnEnable()
         {
             var menu = GetComponent<UIMenu>();
-            if(menu != null )
+            if (menu != null)
                 Data = menu.Data;
 
             LoadProfile();
