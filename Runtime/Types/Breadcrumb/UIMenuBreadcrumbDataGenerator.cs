@@ -58,7 +58,7 @@ namespace UnityEssentials
             var button = element.Q<Button>();
             button.clicked += () =>
             {
-                ClearBreadcrumbsFromIndex(menu, data.Index);
+                ClearFromIndex(menu, data.Index);
                 if (data != null && data.Data.Length > 0)
                     menu.Populate(data.IsRoot, data.Label, data.Data, null);
                 else
@@ -66,14 +66,14 @@ namespace UnityEssentials
             };
         }
 
-        public void ClearBreadcrumbsFromIndex(UIMenuGenerator menu, int startIndex)
+        public void ClearFromIndex(UIMenuGenerator menu, int startIndex)
         {
             if (menu.Breadcrumbs.LinkedElement is GroupBox container)
                 while (container.childCount > startIndex)
                     container.RemoveAt(container.childCount - 1);
         }
 
-        public void GoBackOneBreadcrumb(UIMenuGenerator menu)
+        public void GoBackOne(UIMenuGenerator menu)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;

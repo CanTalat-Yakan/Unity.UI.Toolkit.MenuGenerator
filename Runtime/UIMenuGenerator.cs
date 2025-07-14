@@ -40,8 +40,11 @@ namespace UnityEssentials
         }
 
         [Button]
-        public void Close() =>
+        public void Close()
+        {
             Root?.SetDisplayEnabled(false);
+            BreadcrumbDataGenerator.ClearFromIndex(this, 0);
+        }
 
         public void Populate(bool isRoot, string category, ScriptableObject[] data, Action customDataRedraw = null)
         {
@@ -96,7 +99,7 @@ namespace UnityEssentials
             {
                 Back ??= Document?.transform.Find("Button (Back)")?.GetComponent<UIElementLink>();
                 if (Back?.LinkedElement is Button backButton)
-                    backButton.clicked += () => BreadcrumbDataGenerator.GoBackOneBreadcrumb(this);
+                    backButton.clicked += () => BreadcrumbDataGenerator.GoBackOne(this);
             }
         }
 
@@ -106,7 +109,7 @@ namespace UnityEssentials
             {
                 Redraw = () =>
                 {
-                    BreadcrumbDataGenerator.ClearBreadcrumbsFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                    BreadcrumbDataGenerator.ClearFromIndex(this, Breadcrumbs.LinkedElement.childCount);
                     Populate(isRoot, category, data);
                 };
             }
