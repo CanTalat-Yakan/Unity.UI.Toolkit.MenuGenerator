@@ -35,8 +35,11 @@ namespace UnityEssentials
             Menu = GetComponent<UIMenu>();
 
         [Button]
-        public void Show() =>
+        public void Show()
+        {
             Root?.SetDisplayEnabled(true);
+            PopulateRoot?.Invoke();
+        }
 
         [Button]
         public void Close() =>
