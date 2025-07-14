@@ -25,8 +25,6 @@ namespace UnityEssentials
 
         public UIMenuBreadcrumbDataGenerator BreadcrumbDataGenerator = new();
 
-        public string CurrentCategory { get; private set; }
-
         [HideInInspector] public UIMenu Menu => _menu ??= this.GetOrAddComponent<UIMenu>();
         [NonSerialized] private UIMenu _menu;
 
@@ -53,8 +51,6 @@ namespace UnityEssentials
             ClearScrollView();
 
             ConfigureRedraw(isRoot, category, data, customDataRedraw);
-
-            CurrentCategory = category;
 
             BreadcrumbDataGenerator.AddBreadcrumb(this, category, isRoot, data, customDataRedraw);
 
