@@ -2,7 +2,6 @@
     "name": "UnityEssentials.UIMenuGenerator",
     "rootNamespace": "UnityEssentials",
     "references": [
-        "GUID:6e0673ce8d7371149ac9c15f75f1b48d",
         "GUID:fd1e7b63e0e7d634db53519cc860fe3a",
         "GUID:026550602975f2c43ab20d00c9b1328b",
         "GUID:3274dc8bfffe62c4191ff7300b9071c8",
