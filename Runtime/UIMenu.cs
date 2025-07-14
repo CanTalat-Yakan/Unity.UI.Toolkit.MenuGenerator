@@ -39,7 +39,12 @@ namespace UnityEssentials
         public UIMenuData Data;
 
         [OnValueChanged("Name")]
-        public void OnNameValueChanged() => GetComponent<UIMenuProfileProvider>().Name = Name;
+        public void OnNameValueChanged()
+        {
+            var provider = GetComponent<UIMenuProfileProvider>();
+            if (provider != null)
+                provider.Name = Name;
+        }
 
         public UIMenuProfile Profile => Provider.Profile;
         public UIMenuProfile DefaultProfile => Provider.Default;
@@ -83,12 +88,10 @@ namespace UnityEssentials
                         dataTemplate.IsDynamic = false;
                     }
         }
-#endif
 
         [Button()]
         public void OpenMenuBuilder()
         {
-#if UNITY_EDITOR
             if (Data == null || Data.Equals(null))
                 Data = CreateDefault();
 
@@ -102,12 +105,13 @@ namespace UnityEssentials
             };
 
             ShowEditor?.Invoke(this);
-#endif
         }
+#endif
 
         public void Initialize()
         {
-            DestroyAllChildren();
+            this.DestroyAllChildren();
+
             InstantiateMenu();
         }
 
@@ -118,14 +122,6 @@ namespace UnityEssentials
             data.Name = "Menu";
             data.Root = Array.Empty<ScriptableObject>();
             return data;
-        }
-
-        private void DestroyAllChildren()
-        {
-            while (transform.childCount > 0)
-                if (Application.isEditor)
-                    DestroyImmediate(transform.GetChild(0).gameObject);
-                else Destroy(transform.GetChild(0).gameObject);
         }
 
         private void InstantiateMenu()
