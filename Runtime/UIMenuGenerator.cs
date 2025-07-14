@@ -51,7 +51,6 @@ namespace UnityEssentials
         {
             FetchReferences();
             ClearScrollView();
-            //ResetCategory(!isRoot);
 
             ConfigureRedraw(isRoot, category, data, customDataRedraw);
 
