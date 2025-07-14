@@ -34,7 +34,7 @@ namespace UnityEssentials
         public void Show()
         {
             Fetch();
-            UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
+            ClearBreadcrumbs();
             Root?.SetDisplayEnabled(true);
             PopulateRoot?.Invoke();
         }
@@ -43,7 +43,7 @@ namespace UnityEssentials
         public void Close()
         {
             Fetch();
-            UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
+            ClearBreadcrumbs();
             Root?.SetDisplayEnabled(false);
         }
 
@@ -78,6 +78,9 @@ namespace UnityEssentials
 
             customDataDrawCall?.Invoke();
         }
+
+        public void ClearBreadcrumbs() =>
+            UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
 
         public void ClearScrollView()
         {
