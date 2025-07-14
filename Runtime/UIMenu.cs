@@ -18,6 +18,7 @@ namespace UnityEssentials
         Tabbed,
     }
 
+    [RequireComponent(typeof(UIMenuGenerator))]
     public class UIMenu : MonoBehaviour
     {
         public static Dictionary<string, UIMenu> Instances { get; private set; } = new();

@@ -40,7 +40,6 @@ namespace UnityEssentials
         }
     }
 
-    [RequireComponent(typeof(UIMenu))]
     public class UIMenuProfileProvider : MonoBehaviour
     {
         public UIMenuProfileProviderSettings Settings = new();
