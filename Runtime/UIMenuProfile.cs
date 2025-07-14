@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
@@ -22,12 +23,16 @@ namespace UnityEssentials
         public T GetData<T>(string reference, T defaultValue = default)
         {
             if (Data.TryGetValue(reference, out var value))
-                if(value is T typedValue)
+            {
+                if (value is T typedValue)
                     return typedValue;
-            else if (value is IConvertible convertibleValue)
-                return (T)Convert.ChangeType(convertibleValue, typeof(T));
-            else if (value is Enum enumValue && typeof(T).IsEnum)
-                return (T)(object)enumValue;
+                if (typeof(T) == typeof(Color))
+                    return UnityColorJsonConverter.DeserializeColor(value, defaultValue);
+                if (value is IConvertible convertibleValue)
+                    return (T)Convert.ChangeType(convertibleValue, typeof(T));
+                if (value is Enum enumValue && typeof(T).IsEnum)
+                    return (T)(object)enumValue;
+            }
             return defaultValue;
         }
     }

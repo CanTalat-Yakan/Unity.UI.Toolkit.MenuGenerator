@@ -1,6 +1,7 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine;
-using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
@@ -14,20 +15,41 @@ namespace UnityEssentials
 
         public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            float r = 0, g = 0, b = 0, a = 1;
+            float[] values = { 0, 0, 0, 1 };
             if (reader.TokenType == JsonToken.StartArray)
             {
-                reader.Read();
-                r = Convert.ToSingle(reader.Value);
-                reader.Read();
-                g = Convert.ToSingle(reader.Value);
-                reader.Read();
-                b = Convert.ToSingle(reader.Value);
-                reader.Read();
-                a = Convert.ToSingle(reader.Value);
-                reader.Read();
+                int i = 0;
+                while (reader.Read() && reader.TokenType != JsonToken.EndArray && i < 4)
+                    if (reader.Value != null && float.TryParse(reader.Value.ToString(), out float value))
+                        values[i++] = value;
             }
-            return new Color(r, g, b, a);
+            return new Color(values[0], values[1], values[2], values[3]);
+        }
+
+        public static T DeserializeColor<T>(object value, T defaultValue)
+        {
+            if (value is string s)
+            {
+                try
+                {
+                    var color = JsonConvert.DeserializeObject<Color>(s, new UnityColorJsonConverter());
+                    return (T)(object)color;
+                }
+                catch { return defaultValue; }
+            }
+            if (value is JArray array && array.Count == 4)
+            {
+                try
+                {
+                    float r = array[0].ToObject<float>();
+                    float g = array[1].ToObject<float>();
+                    float b = array[2].ToObject<float>();
+                    float a = array[3].ToObject<float>();
+                    return (T)(object)new Color(r, g, b, a);
+                }
+                catch { return defaultValue; }
+            }
+            return defaultValue;
         }
     }
 }
