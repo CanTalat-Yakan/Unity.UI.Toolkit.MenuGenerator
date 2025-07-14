@@ -66,14 +66,14 @@ namespace UnityEssentials
             };
         }
 
-        public void ClearFromIndex(UIMenuGenerator menu, int startIndex)
+        public static void ClearFromIndex(UIMenuGenerator menu, int startIndex)
         {
             if (menu.Breadcrumbs.LinkedElement is GroupBox container)
                 while (container.childCount > startIndex)
                     container.RemoveAt(container.childCount - 1);
         }
 
-        public void GoBackOne(UIMenuGenerator menu)
+        public static void NavigateBack(UIMenuGenerator menu)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;
