@@ -18,7 +18,7 @@ namespace UnityEssentials
             if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
                 return;
 
-            if (menu.Data?.GetDataByReference(Reference, out _colorPickerData) ?? false)
+            if (menu.Data?.GetData(Reference, out _colorPickerData) ?? false)
             {
                 ColorPickerData.IsDynamic = true;
                 ColorPickerData.Default = Default;

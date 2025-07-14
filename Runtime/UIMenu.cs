@@ -67,8 +67,8 @@ namespace UnityEssentials
 
         private void OnExitPlayMode()
         {
-            foreach (var item in Data.GetDataItems())
-                if (item is UIMenuTypeDataBase dataTemplate)
+            foreach (var data in Data.EnumerateAllData())
+                if (data is UIMenuTypeDataBase dataTemplate)
                     if (dataTemplate.IsDynamic)
                     {
                         dataTemplate.ApplyDynamicReset();

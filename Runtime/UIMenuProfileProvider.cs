@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UnityEssentials
 {
     [Serializable]
-    public class UIMenuSettings
+    public class UIMenuProfileProviderSettings
     {
         [Info]
         [SerializeField]
@@ -43,7 +43,7 @@ namespace UnityEssentials
     [RequireComponent(typeof(UIMenu))]
     public class UIMenuProfileProvider : MonoBehaviour
     {
-        public UIMenuSettings Settings = new();
+        public UIMenuProfileProviderSettings Settings = new();
 
         [Space]
         public string Name = "Menu";
@@ -98,7 +98,7 @@ namespace UnityEssentials
             Default ??= CreateProfileInstance("Default");
             Profile ??= CreateProfileInstance("Profile");
 
-            foreach (var data in Data.GetDataItems())
+            foreach (var data in Data.EnumerateAllData())
                 if (data is UIMenuTypeDataBase dataTemplate)
                     Default.AddData(dataTemplate.Reference, dataTemplate.GetDefault());
 

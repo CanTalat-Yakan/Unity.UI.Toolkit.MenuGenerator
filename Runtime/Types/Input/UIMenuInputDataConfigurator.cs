@@ -18,7 +18,7 @@ namespace UnityEssentials
             if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
                 return;
 
-            if (menu.Data?.GetDataByReference(Reference, out _inputData) ?? false)
+            if (menu.Data?.GetData(Reference, out _inputData) ?? false)
             {
                 InputData.IsDynamic = true;
                 InputData.Default = Default;

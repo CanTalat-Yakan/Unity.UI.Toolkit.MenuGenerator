@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Newtonsoft.Json;
 
 namespace UnityEssentials
 {
@@ -8,7 +7,6 @@ namespace UnityEssentials
     {
         [HideInInspector] public SerializedDictionary<string, object> Data = new();
 
-        [JsonIgnore]
         public Action OnValueChanged;
 
         public void AddData(string reference, object value)
@@ -31,7 +29,6 @@ namespace UnityEssentials
             return defaultValue;
         }
 
-        [JsonIgnore]
         public Action<string, bool> OnToggleValueChangedEvent;
         public virtual void OnToggleValueChanged(string reference, bool value)
         {
@@ -40,7 +37,6 @@ namespace UnityEssentials
             OnValueChanged?.Invoke();
         }
 
-        [JsonIgnore]
         public Action<string, string> OnInputValueChangedEvent;
         public virtual void OnInputValueChanged(string reference, string input)
         {
@@ -49,7 +45,6 @@ namespace UnityEssentials
             OnValueChanged?.Invoke();
         }
 
-        [JsonIgnore]
         public Action<string, int> OnOptionsValueChangedEvent;
         public virtual void OnOptionsValueChanged(string reference, int index)
         {
@@ -58,7 +53,6 @@ namespace UnityEssentials
             OnValueChanged?.Invoke();
         }
 
-        [JsonIgnore]
         public Action<string, float> OnSliderValueChangedEvent;
         public virtual void OnSliderValueChanged(string reference, float value)
         {
@@ -67,7 +61,6 @@ namespace UnityEssentials
             OnValueChanged?.Invoke();
         }
 
-        [JsonIgnore]
         public Action<string, int> OnSelectionValueChangedEvent;
         public virtual void OnSelectionValueChanged(string reference, int index)
         {
@@ -76,7 +69,6 @@ namespace UnityEssentials
             OnValueChanged?.Invoke();
         }
 
-        [JsonIgnore]
         public Action<string, Color> OnColorPickerValueChangedEvent;
         public virtual void OnColorPickerValueChanged(string reference, Color color)
         {
@@ -85,7 +77,6 @@ namespace UnityEssentials
             OnValueChanged?.Invoke();
         }
 
-        [JsonIgnore]
         public Action<string, int> OnColorSliderValueChangedEvent;
         public virtual void OnColorSliderValueChanged(string reference, int value)
         {

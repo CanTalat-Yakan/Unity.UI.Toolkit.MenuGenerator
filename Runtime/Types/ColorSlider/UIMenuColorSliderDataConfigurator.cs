@@ -22,7 +22,7 @@ namespace UnityEssentials
             if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
                 return;
 
-            if (menu.Data?.GetDataByReference(Reference, out _colorSliderData) ?? false)
+            if (menu.Data?.GetData(Reference, out _colorSliderData) ?? false)
             {
                 ColorSliderData.IsDynamic = true;
                 ColorSliderData.Gradient = Gradient;

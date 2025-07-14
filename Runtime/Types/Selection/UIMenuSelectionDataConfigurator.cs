@@ -11,15 +11,15 @@ namespace UnityEssentials
         public bool Reverse;
         public UIMenuSelectionData Selections;
 
-        private UIMenuSelectionGroupData _selectionGroup;
-        [HideInInspector] public UIMenuSelectionGroupData SelectionGroup => _selectionGroup;
+        private UIMenuSelectionGroupData _selectionGroupData;
+        [HideInInspector] public UIMenuSelectionGroupData SelectionGroup => _selectionGroupData;
 
         public void Awake()
         {
             if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
                 return;
 
-            if (menu.Data?.GetDataByReference(Reference, out _selectionGroup) ?? false)
+            if (menu.Data?.GetData(Reference, out _selectionGroupData) ?? false)
             {
                 SelectionGroup.IsDynamic = true;
                 SelectionGroup.Reverse = Reverse;

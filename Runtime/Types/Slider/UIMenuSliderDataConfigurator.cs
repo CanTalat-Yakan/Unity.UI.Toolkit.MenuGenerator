@@ -23,7 +23,7 @@ namespace UnityEssentials
                 if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
                     return;
 
-            if (menu.Data?.GetDataByReference(Reference, out _sliderData) ?? false)
+            if (menu.Data?.GetData(Reference, out _sliderData) ?? false)
             {
                 SliderData.IsDynamic = true;
                 SliderData.IsFloat = IsFloat;

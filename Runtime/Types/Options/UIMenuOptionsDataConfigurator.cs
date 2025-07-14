@@ -22,7 +22,7 @@ namespace UnityEssentials
             if (!UIMenu.Instances.TryGetValue(MenuName, out var menu))
                 return;
 
-            if (menu.Data?.GetDataByReference(Reference, out _optionsData) ?? false)
+            if (menu.Data?.GetData(Reference, out _optionsData) ?? false)
             {
                 OptionsData.IsDynamic = true;
                 OptionsData.Reverse = Reverse;
