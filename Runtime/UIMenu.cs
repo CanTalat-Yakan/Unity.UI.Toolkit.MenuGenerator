@@ -18,7 +18,6 @@ namespace UnityEssentials
         Tabbed,
     }
 
-    [RequireComponent(typeof(UIMenuGenerator))]
     public class UIMenu : MonoBehaviour
     {
         public static Dictionary<string, UIMenu> Instances { get; private set; } = new();
@@ -37,10 +36,10 @@ namespace UnityEssentials
         public UIMenuProfile Profile => Provider.Profile;
         public UIMenuProfile DefaultProfile => Provider.Default;
 
-        [HideInInspector] public UIMenuGenerator Generator => _generator ??= GetComponent<UIMenuGenerator>();
+        [HideInInspector] public UIMenuGenerator Generator => _generator ??= this.GetOrAddComponent<UIMenuGenerator>();
         private UIMenuGenerator _generator;
 
-        [HideInInspector] public UIMenuProfileProvider Provider => _provider ??= GetComponent<UIMenuProfileProvider>();
+        [HideInInspector] public UIMenuProfileProvider Provider => _provider ??= this.GetOrAddComponent<UIMenuProfileProvider>();
         private UIMenuProfileProvider _provider;
 
         public static Action<UIMenu> ShowEditor { get; set; }

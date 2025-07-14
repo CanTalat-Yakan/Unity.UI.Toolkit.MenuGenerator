@@ -4,9 +4,15 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    [RequireComponent(typeof(UIMenu))]
     public partial class UIMenuGenerator : MonoBehaviour
     {
+        [Info]
+        [SerializeField]
+        private string _info =
+            "UIMenuGenerator is responsible for dynamically building and managing UI menus using Unity UI Toolkit. " +
+            "It handles the instantiation, population, and navigation of menu elements, including categories, breadcrumbs, and scrollable content. " +
+            "Attach this component to a GameObject with a UIMenu to enable flexible, data-driven menu creation and runtime updates.";
+
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;
         [HideInInspector] public UIElementLink Back;
@@ -49,7 +55,6 @@ namespace UnityEssentials
                 Populate(prefix, label, data);
             };
 
-        [ContextMenu("Show")]
         [Button]
         public void Show()
         {
@@ -57,7 +62,6 @@ namespace UnityEssentials
             PopulateRoot?.Invoke();
         }
 
-        [ContextMenu("Close")]
         [Button]
         public void Close()
         {
