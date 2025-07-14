@@ -50,7 +50,7 @@ namespace UnityEssentials
             {
                 menu.Populate(false, data.Name, null, () =>
                 {
-                    List<VisualElement> elements = new();
+                    var elements = new List<VisualElement>();
                     foreach (var scriptableObject in data.Data)
                         switch (scriptableObject)
                         {

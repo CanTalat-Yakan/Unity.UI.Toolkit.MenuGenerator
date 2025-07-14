@@ -33,6 +33,7 @@ namespace UnityEssentials
         [Button]
         public void Show()
         {
+            FetchReferences();
             Root?.SetDisplayEnabled(true);
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
             PopulateRoot?.Invoke();
@@ -45,18 +46,19 @@ namespace UnityEssentials
             UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, 0);
         }
 
-        public void Populate(bool isRoot, string category, ScriptableObject[] data, Action customDataRedraw = null)
+        public void Populate(bool isRoot, string category, ScriptableObject[] data, Action customDataDrawCall = null)
         {
-            FetchReferences();
             ClearScrollView();
 
-            ConfigureRedraw(isRoot, category, data, customDataRedraw);
+            ConfigureRedraw(isRoot, category, data, customDataDrawCall);
 
-            BreadcrumbDataGenerator.AddBreadcrumb(this, category, isRoot, data, customDataRedraw);
+            BreadcrumbDataGenerator.AddBreadcrumb(this, isRoot, category, data, Redraw);
 
             if (data != null && data.Length != 0)
                 foreach (var typeData in data)
                     RegisterTypeFactory?.Invoke(this, typeData);
+
+            customDataDrawCall?.Invoke();
         }
 
         public void ClearScrollView()
@@ -99,21 +101,13 @@ namespace UnityEssentials
             }
         }
 
-        private void ConfigureRedraw(bool isRoot, string category, ScriptableObject[] data, Action customDataRedraw)
+        private void ConfigureRedraw(bool isRoot, string category, ScriptableObject[] data, Action customDataDrawCall)
         {
-            if (data != null && data.Length > 0)
+            Redraw = () =>
             {
-                Redraw = () =>
-                {
-                    UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, Breadcrumbs.LinkedElement.childCount);
-                    Populate(isRoot, category, data);
-                };
-            }
-            else if(customDataRedraw != null)
-            {
-                Redraw = customDataRedraw;
-                Redraw?.Invoke();
-            }
+                UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                Populate(isRoot, category, data, customDataDrawCall);
+            };
         }
     }
 }

@@ -10,22 +10,22 @@ namespace UnityEssentials
         public Action Redraw;
 
         [Space]
-        public string Label;
+        public string category;
         public bool IsRoot;
         public int Index;
     }
 
     public class UIMenuBreadcrumbDataGenerator : UIMenuTypeDataGeneratorBase<UIMenuBreadcrumbGeneratorData>
     {
-        public void AddBreadcrumb(UIMenuGenerator menu, string label, bool isRoot, ScriptableObject[] data, Action redraw)
+        public void AddBreadcrumb(UIMenuGenerator menu,bool isRoot, string category, ScriptableObject[] data, Action redraw)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;
 
             var breadcrumbData = new UIMenuBreadcrumbGeneratorData
             {
-                Label = label,
                 IsRoot = isRoot,
+                category = category,
                 Data = data,
                 Redraw = redraw,
                 Index = container.childCount
@@ -47,7 +47,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
         {
             var button = element.Q<Button>("Button");
-            button.text = data.Label.ToUpper();
+            button.text = data.category;
 
             if (data.IsRoot)
                 button.iconImage = null;
@@ -60,9 +60,9 @@ namespace UnityEssentials
             {
                 ClearFromIndex(menu, data.Index);
                 if (data != null && data.Data.Length > 0)
-                    menu.Populate(data.IsRoot, data.Label, data.Data, null);
+                    menu.Populate(data.IsRoot, data.category, data.Data, null);
                 else
-                    menu.Populate(data.IsRoot, data.Label, null, data.Redraw);
+                    menu.Populate(data.IsRoot, data.category, null, data.Redraw);
             };
         }
 
