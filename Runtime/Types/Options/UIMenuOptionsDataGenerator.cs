@@ -23,7 +23,7 @@ namespace UnityEssentials
             ConfigureInteraction(menu, element, data);
             return element;
         }
-
+         
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var label = element.Q<Label>("Label");
@@ -43,17 +43,15 @@ namespace UnityEssentials
         public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var dropdown = element.Q<DropdownField>("Options");
-            dropdown.RegisterValueChangedCallback(e =>
+            dropdown.RegisterValueChangedCallback(evt =>
                 menu.Profile.SetData(data.Reference, dropdown.index));
 
             var buttonLeft = element.Q<Button>("Left");
             buttonLeft.clicked += () =>
             {
-                var length = data.Options.Length;
-
                 var index = menu.Profile.GetData(data.Reference, data.Default);
 
-                index = ProcessIndex(index - 1, length);
+                index = ProcessIndex(index - 1, data.Options.Length);
                 menu.Profile.SetData(data.Reference, index);
 
                 dropdown.index = index;
@@ -62,11 +60,9 @@ namespace UnityEssentials
             var buttonRight = element.Q<Button>("Right");
             buttonRight.clicked += () =>
             {
-                var length = data.Options.Length;
-
                 var index = menu.Profile.GetData(data.Reference, data.Default);
 
-                index = ProcessIndex(index + 1, length);
+                index = ProcessIndex(index + 1, data.Options.Length);
                 menu.Profile.SetData(data.Reference, index);
 
                 dropdown.index = index;

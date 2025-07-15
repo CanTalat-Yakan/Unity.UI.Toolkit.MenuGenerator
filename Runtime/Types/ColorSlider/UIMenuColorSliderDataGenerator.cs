@@ -34,17 +34,17 @@ namespace UnityEssentials
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
 
-            var slider = element.Q<SliderInt>();
-            slider.lowValue = 0;
-            slider.highValue = 100;
-            slider.value = (int)value;
+            var sliderInt = element.Q<SliderInt>();
+            sliderInt.lowValue = 0;
+            sliderInt.highValue = 100;
+            sliderInt.value = (int)value;
         }
 
         public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorSliderData data)
         {
             var icon = element.Q<VisualElement>("Icon");
-            var slider = element.Q<SliderInt>();
-            slider.RegisterValueChangedCallback((EventCallback<ChangeEvent<int>>)((evt) =>
+            var sliderInt = element.Q<SliderInt>();
+            sliderInt.RegisterValueChangedCallback((EventCallback<ChangeEvent<int>>)((evt) =>
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(evt.newValue / 100f));
 

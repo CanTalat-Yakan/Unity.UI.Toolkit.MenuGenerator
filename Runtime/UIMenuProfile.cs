@@ -9,6 +9,7 @@ namespace UnityEssentials
         [HideInInspector] public SerializedDictionary<string, object> Data = new();
 
         public Action<string> OnValueChanged;
+
         public void SetData<T>(string reference, T value) =>
             AddData(reference, value);
 
