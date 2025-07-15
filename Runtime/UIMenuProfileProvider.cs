@@ -16,7 +16,7 @@ namespace UnityEssentials
         public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
         public bool SaveOnChange = true;
 
-        [OnValueChanged("SaveFileMode")]
+        [OnValueChanged(nameof(SaveFileMode))]
         public void OnSaveFileModeValueChanged()
         {
             switch (SaveFileMode)
@@ -58,7 +58,7 @@ namespace UnityEssentials
         public string Name = "Menu";
         public UIMenuData Data;
 
-        [OnValueChanged("Name")]
+        [OnValueChanged(nameof(Name))]
         public void OnNameValueChanged()
         {
             var menu = GetComponent<UIMenu>();

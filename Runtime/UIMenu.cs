@@ -32,13 +32,13 @@ namespace UnityEssentials
 
         [Space]
         public UIMenuType Type;
-        [OnValueChanged("Type")] public void OnTypeValueChanged() => Initialize();
+        [OnValueChanged(nameof(Type))] public void OnTypeValueChanged() => Initialize();
 
         [Space]
         public string Name = "Menu";
         public UIMenuData Data;
 
-        [OnValueChanged("Name")]
+        [OnValueChanged(nameof(Name))]
         public void OnNameValueChanged()
         {
             var provider = GetComponent<UIMenuProfileProvider>();
