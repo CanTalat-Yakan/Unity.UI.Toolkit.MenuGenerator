@@ -5,14 +5,14 @@ namespace UnityEssentials
     public abstract class UIMenuTypeDataConfiguratorBase<T> : MonoBehaviour where T : UIMenuTypeDataBase
     {
         public string MenuName;
-        public string Reference;
+        public string DataReference;
 
         private T _data;
         [HideInInspector] public T Data => _data;
 
         public void Awake()
         {
-            if (UIMenu.TryGetValue(MenuName, Reference, out _data))
+            if (UIMenu.TryGetValue(MenuName, DataReference, out _data))
             {
                 Data.IsDynamic = true;
                 ApplyDynamicConfiguration();

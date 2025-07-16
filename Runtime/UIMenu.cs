@@ -20,12 +20,12 @@ namespace UnityEssentials
 
     public class UIMenu : MonoBehaviour
     {
-        public static Dictionary<string, UIMenu> Instances { get; private set; } = new();
+        public static Dictionary<string, UIMenu> RegisteredMenus { get; private set; } = new();
 
         public static bool TryGetValue<T>(string menuName, string dataReference, out T outputData) where T : UIMenuTypeDataBase
         {
             outputData = default;
-            if (!Instances.TryGetValue(menuName, out var menu) || menu.Data is null)
+            if (!RegisteredMenus.TryGetValue(menuName, out var menu) || menu.Data is null)
                 return false;
             return menu.Data.TryGetValue(dataReference, out outputData);
         }
@@ -60,7 +60,7 @@ namespace UnityEssentials
             if (Data == null)
                 return;
 
-            Instances.Add(Name, this);
+            RegisteredMenus.Add(Name, this);
 
             Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
