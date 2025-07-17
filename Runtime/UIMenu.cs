@@ -22,14 +22,6 @@ namespace UnityEssentials
     {
         public static Dictionary<string, UIMenu> RegisteredMenus { get; private set; } = new();
 
-        public static bool TryGetValue<T>(string menuName, string dataReference, out T outputData) where T : UIMenuTypeDataBase
-        {
-            outputData = default;
-            if (!RegisteredMenus.TryGetValue(menuName, out var menu) || menu.Data is null)
-                return false;
-            return menu.Data.TryGetValue(dataReference, out outputData);
-        }
-
         [Space]
         public UIMenuType Type;
         [OnValueChanged(nameof(Type))] public void OnTypeValueChanged() => Initialize();
@@ -75,17 +67,6 @@ namespace UnityEssentials
                 OnExitPlayMode();
         }
 
-        private void OnExitPlayMode()
-        {
-            foreach (var data in Data.EnumerateAllData())
-                if (data is UIMenuTypeDataBase dataTemplate)
-                    if (dataTemplate.IsDynamic)
-                    {
-                        dataTemplate.ApplyDynamicReset();
-                        dataTemplate.IsDynamic = false;
-                    }
-        }
-
         public static Action<UIMenu> ShowEditor { get; set; }
         public Action<UIMenuData> SetData { get; private set; }
 
@@ -107,6 +88,17 @@ namespace UnityEssentials
             ShowEditor?.Invoke(this);
         }
 #endif
+
+        public static bool TryGetProfile(string name, out UIMenuProfile profile) =>
+            UIMenuProfileProvider.TryGetProfile(name, out profile);
+
+        public static bool TryGetData<T>(string menuName, string dataReference, out T outputData) where T : UIMenuTypeDataBase
+        {
+            outputData = default;
+            if (RegisteredMenus.TryGetValue(menuName, out var menu) || menu.Data is null)
+                return menu.Data.TryGetValue(dataReference, out outputData);
+            return false;
+        }
 
         public void Initialize()
         {
@@ -138,6 +130,17 @@ namespace UnityEssentials
                 return;
 
             ResourceLoader.InstantiatePrefab(prefab, name, transform);
+        }
+
+        private void OnExitPlayMode()
+        {
+            foreach (var data in Data.EnumerateAllData())
+                if (data is UIMenuTypeDataBase dataTemplate)
+                    if (dataTemplate.IsDynamic)
+                    {
+                        dataTemplate.ApplyDynamicReset();
+                        dataTemplate.IsDynamic = false;
+                    }
         }
     }
 }

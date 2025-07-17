@@ -44,6 +44,8 @@ namespace UnityEssentials
 
     public class UIMenuProfileProvider : MonoBehaviour
     {
+        public static Dictionary<string, UIMenuProfile> RegisteredProfiles { get; private set; } = new();
+
         public UIMenuProfileProviderSettings Settings = new();
 
         [Space]
@@ -82,14 +84,8 @@ namespace UnityEssentials
             Profile.OnValueChanged += (_) => SaveProfile();
         }
 
-        private static Dictionary<string, UIMenuProfile> _profileCache = new();
-        public static UIMenuProfile GetProfile(string name)
-        {
-            if (!_profileCache.TryGetValue(name, out var profile))
-                return null;
-
-            return profile;
-        }
+        public static bool TryGetProfile(string name, out UIMenuProfile outputProfile) =>
+            RegisteredProfiles.TryGetValue(name, out outputProfile);
 
         public void SetProfile(UIMenuProfile profile)
         {
@@ -100,7 +96,7 @@ namespace UnityEssentials
             Profile = profile;
             Profile.OnValueChanged += (_) => SaveProfile();
 
-            _profileCache[Name] = profile;
+            RegisteredProfiles[Name] = profile;
             OnProfileChanged?.Invoke();
         }
 
@@ -114,7 +110,7 @@ namespace UnityEssentials
 
             foreach (var data in Data.EnumerateAllData())
                 if (data is UIMenuTypeDataBase dataTemplate)
-                    Default.AddData(dataTemplate.Reference, dataTemplate.GetDefault());
+                    Default.Add(dataTemplate.Reference, dataTemplate.GetDefault());
 
             if (Settings.SaveFileMode != UIProfileSaveMode.None)
             {

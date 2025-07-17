@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
@@ -10,10 +9,10 @@ namespace UnityEssentials
 
         public Action<string> OnValueChanged;
 
-        public void SetData<T>(string reference, T value) =>
-            AddData(reference, value);
+        public void Set<T>(string reference, T value) =>
+            Add(reference, value);
 
-        public void AddData(string reference, object value)
+        public void Add(string reference, object value)
         {
             if (value == null)
                 return;
@@ -21,7 +20,10 @@ namespace UnityEssentials
             OnValueChanged?.Invoke(reference);
         }
 
-        public T GetData<T>(string reference, T defaultValue = default)
+        public T Get<T>(UIMenuTypeDataBase type) =>
+            Get(type.Reference, (T)type.GetDefault());
+
+        public T Get<T>(string reference, T defaultValue = default)
         {
             if (Data.TryGetValue(reference, out var value))
             {
@@ -36,5 +38,8 @@ namespace UnityEssentials
             }
             return defaultValue;
         }
+
+        public static bool TryGetProfile(string name, out UIMenuProfile profile) =>
+            UIMenuProfileProvider.TryGetProfile(name, out profile);
     }
 }

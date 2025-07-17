@@ -31,7 +31,7 @@ namespace UnityEssentials
 
             var inputField = element.Q<TextField>("Input");
 
-            var input = menu.Profile.GetData(data.Reference, data.Default);
+            var input = menu.Profile.Get<string>(data);
 
             if (string.IsNullOrEmpty(input))
                 input = string.Empty;
@@ -43,7 +43,7 @@ namespace UnityEssentials
         {
             var textField = element.Q<TextField>("Input");
             textField.RegisterValueChangedCallback((evt) =>
-                menu.Profile.SetData(data.Reference, evt.newValue));
+                menu.Profile.Set(data.Reference, evt.newValue));
         }
 
         public void Dispose() { }

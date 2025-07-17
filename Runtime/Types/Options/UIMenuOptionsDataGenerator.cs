@@ -34,7 +34,7 @@ namespace UnityEssentials
             if (data.Options == null || data.Options.Length == 0)
                 return;
 
-            var index = menu.Profile.GetData(data.Reference, data.Default);
+            var index = menu.Profile.Get<int>(data);
 
             dropdown.choices = data.GetChoices();
             dropdown.index = index;
@@ -44,15 +44,15 @@ namespace UnityEssentials
         {
             var dropdown = element.Q<DropdownField>("Options");
             dropdown.RegisterValueChangedCallback(evt =>
-                menu.Profile.SetData(data.Reference, dropdown.index));
+                menu.Profile.Set(data.Reference, dropdown.index));
 
             var buttonLeft = element.Q<Button>("Left");
             buttonLeft.clicked += () =>
             {
-                var index = menu.Profile.GetData(data.Reference, data.Default);
+                var index = menu.Profile.Get<int>(data);
 
                 index = ProcessIndex(index - 1, data.Options.Length);
-                menu.Profile.SetData(data.Reference, index);
+                menu.Profile.Set(data.Reference, index);
 
                 dropdown.index = index;
             };
@@ -60,10 +60,10 @@ namespace UnityEssentials
             var buttonRight = element.Q<Button>("Right");
             buttonRight.clicked += () =>
             {
-                var index = menu.Profile.GetData(data.Reference, data.Default);
+                var index = menu.Profile.Get<int>(data);
 
                 index = ProcessIndex(index + 1, data.Options.Length);
-                menu.Profile.SetData(data.Reference, index);
+                menu.Profile.Set(data.Reference, index);
 
                 dropdown.index = index;
             };

@@ -29,7 +29,7 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name.ToUpper();
 
-            var value = menu.Profile.GetData(data.Reference, data.Default);
+            var value = menu.Profile.Get<int>(data);
 
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
@@ -37,7 +37,7 @@ namespace UnityEssentials
             var sliderInt = element.Q<SliderInt>();
             sliderInt.lowValue = 0;
             sliderInt.highValue = 100;
-            sliderInt.value = (int)value;
+            sliderInt.value = value;
         }
 
         public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuColorSliderData data)
@@ -48,7 +48,7 @@ namespace UnityEssentials
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(evt.newValue / 100f));
 
-                menu.Profile.SetData(data.Reference, evt.newValue);
+                menu.Profile.Set(data.Reference, evt.newValue);
             }));
         }
 

@@ -33,7 +33,7 @@ namespace UnityEssentials
             var image = element.Q<VisualElement>("Image");
             var label = element.Q<Label>("Label");
 
-            var index = menu.Profile.GetData(data.Reference, data.Default);
+            var index = menu.Profile.Get<int>(data);
 
             var selectionData = data.GetSelection(index);
             if (selectionData == null)
