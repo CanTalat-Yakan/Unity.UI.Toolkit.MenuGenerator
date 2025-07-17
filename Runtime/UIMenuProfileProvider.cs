@@ -58,6 +58,8 @@ namespace UnityEssentials
 
         [Space]
         public string Name = "Menu";
+
+        [Header("[Automatically Provided]")]
         public UIMenuData Data;
 
         [OnValueChanged(nameof(Name))]
