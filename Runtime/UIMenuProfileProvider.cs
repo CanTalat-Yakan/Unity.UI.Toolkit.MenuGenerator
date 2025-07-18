@@ -125,7 +125,7 @@ namespace UnityEssentials
             }
 
             Profile ??= Default;
-            OnProfileChanged?.Invoke();
+            SetProfile(Profile);
             return Profile;
         }
 

@@ -95,7 +95,7 @@ namespace UnityEssentials
         public static bool TryGetData<T>(string menuName, string dataReference, out T outputData) where T : UIMenuTypeDataBase
         {
             outputData = default;
-            if (RegisteredMenus.TryGetValue(menuName, out var menu) || menu.Data is null)
+            if (RegisteredMenus.TryGetValue(menuName, out var menu) && menu.Data is not null)
                 return menu.Data.TryGetValue(dataReference, out outputData);
             return false;
         }
