@@ -58,8 +58,6 @@ namespace UnityEssentials
 
         [Space]
         public string Name = "Menu";
-
-        [Header("Optional")]
         public UIMenuData Data;
 
         [OnValueChanged(nameof(Name))]
@@ -70,6 +68,14 @@ namespace UnityEssentials
                 menu.Name = Name;
         }
 
+        [OnValueChanged(nameof(Data))]
+        public void OnDataValueChanged()
+        {
+            var menu = GetComponent<UIMenu>();
+            if (menu != null)
+                menu.Data = Data;
+        }
+
         [HideInInspector] public UIMenuProfile Profile;
         [HideInInspector] public UIMenuProfile Default;
 
@@ -77,10 +83,6 @@ namespace UnityEssentials
 
         public void OnEnable()
         {
-            var menu = GetComponent<UIMenu>();
-            if (menu != null)
-                Data = menu.Data;
-
             LoadProfile();
             Profile.OnValueChanged += (_) => SaveProfile();
         }

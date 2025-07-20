@@ -39,6 +39,14 @@ namespace UnityEssentials
                 provider.Name = Name;
         }
 
+        [OnValueChanged(nameof(Data))]
+        public void OnDataValueChanged()
+        {
+            var provider = GetComponent<UIMenuProfileProvider>();
+            if (provider != null)
+                provider.Data = Data;
+        }
+
         [HideInInspector] public UIMenuGenerator Generator => _generator ??= this.GetOrAddComponent<UIMenuGenerator>();
         [NonSerialized] private UIMenuGenerator _generator;
 
