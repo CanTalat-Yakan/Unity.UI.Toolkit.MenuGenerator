@@ -59,7 +59,7 @@ namespace UnityEssentials
         [Space]
         public string Name = "Menu";
 
-        [Header("[Automatically Provided]")]
+        [Header("Optional")]
         public UIMenuData Data;
 
         [OnValueChanged(nameof(Name))]
@@ -70,9 +70,8 @@ namespace UnityEssentials
                 menu.Name = Name;
         }
 
-        [Space]
-        public UIMenuProfile Profile;
-        public UIMenuProfile Default;
+        [HideInInspector] public UIMenuProfile Profile;
+        [HideInInspector] public UIMenuProfile Default;
 
         public Action OnProfileChanged;
 
