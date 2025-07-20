@@ -8,7 +8,8 @@ namespace UnityEssentials
     public class UIMenuProfileProviderSettings
     {
         [Info]
-        [SerializeField] private string _info =
+        [SerializeField]
+        private string _info =
             "A save file will be created outside the Assets/Build_Data folder, " +
             "within the automatically created directory called Resources.";
 
@@ -49,7 +50,8 @@ namespace UnityEssentials
 
         [Space]
         [Info]
-        [SerializeField] private string _info =
+        [SerializeField]
+        private string _info =
         "UIMenuProfileProvider automatically fetches the UIMenuData and manages the loading, saving, and switching of UIMenuProfile.\n" +
         "It handles profile persistence, default values, and runtime changes, " +
         "allowing menu data to be saved and restored across sessions.";
