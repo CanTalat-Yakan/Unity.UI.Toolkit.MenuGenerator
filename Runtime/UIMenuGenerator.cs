@@ -7,8 +7,7 @@ namespace UnityEssentials
     public partial class UIMenuGenerator : MonoBehaviour
     {
         [Info]
-        [SerializeField]
-        private string _info =
+        [SerializeField] private string _info =
             "UIMenuGenerator is responsible for dynamically building and managing UI menus using Unity UI Toolkit. " +
             "It handles the instantiation, population, and navigation of menu elements, " +
             "to enable flexible, data-driven menu creation and runtime updates.";

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -47,18 +48,21 @@ namespace UnityEssentials
         public UIMenuProfile Profile => Provider.Profile;
         public UIMenuProfile DefaultProfile => Provider.Default;
 
-        public void OnEnable()
+        public void Awake()
         {
             if (Data == null)
                 return;
 
             RegisteredMenus.Add(Name, this);
-
             Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
 
-        public void Start() =>
+        public IEnumerator Start()
+        {
+            yield return new WaitForEndOfFrame();
             Generator.Show();
+            yield return null;
+        }
 
 #if UNITY_EDITOR
         private void OnDisable()

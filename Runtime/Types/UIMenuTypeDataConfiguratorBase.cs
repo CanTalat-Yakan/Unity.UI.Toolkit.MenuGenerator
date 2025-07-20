@@ -10,7 +10,7 @@ namespace UnityEssentials
         private T _data;
         [HideInInspector] public T Data => _data;
 
-        public void Awake()
+        public void Start()
         {
             if (UIMenu.TryGetData(MenuName, DataReference, out _data))
             {

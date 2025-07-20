@@ -19,7 +19,6 @@ namespace UnityEssentials
                             outputData = typedData;
                             return true;
                         }
-
             return false;
         }
 
