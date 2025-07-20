@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -13,6 +14,12 @@ namespace UnityEssentials
         {
             if (property == null || !property.isArray || property.propertyType == SerializedPropertyType.String)
                 return;
+
+            var targetType = serializedObject.targetObject.GetType();
+            var fieldInfo = targetType.GetField(property.name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var spaceAttribute = fieldInfo?.GetCustomAttribute<SpaceAttribute>();
+            if (spaceAttribute != null)
+                EditorGUILayout.Space(spaceAttribute.height);
 
             string cacheKey = property.serializedObject.targetObject.GetInstanceID().ToString() + property.propertyPath;
 

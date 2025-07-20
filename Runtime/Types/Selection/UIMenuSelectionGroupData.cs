@@ -6,25 +6,14 @@ namespace UnityEssentials
     public class UIMenuSelectionGroupData : UIMenuTypeDataBase
     {
         [Space]
-        public bool Reverse;
         public UIMenuSelectionData Selections;
 
-        public UIMenuSelectionData GetSelections()
-        {
-            if (!Reverse)
-                return Selections;
-
-            var list = Selections.Data.ToList();
-            list.Reverse();
-            return new() { StartIndexID = Selections.StartIndexID, Data = list.ToArray() };
-        }
+        public UIMenuSelectionData GetSelections() =>
+            Selections;
 
         public override object GetDefault() => null;
 
-        public override void ApplyDynamicReset()
-        {
-            Reverse = false;
+        public override void ApplyDynamicReset() =>
             Selections = null;
-        }
     }
 }
