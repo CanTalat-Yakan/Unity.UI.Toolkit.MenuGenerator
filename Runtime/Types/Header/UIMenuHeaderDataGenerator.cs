@@ -26,7 +26,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuHeaderData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.Name.ToUpper();
+            label.text = data.Name;
             label.style.marginTop = data.MarginTop;
         }
 

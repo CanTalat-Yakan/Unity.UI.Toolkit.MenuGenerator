@@ -27,7 +27,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuColorPickerData data)
         {
             var button = element.Q<Button>("Button");
-            button.text = data.Name.ToUpper();
+            button.text = data.Name;
 
             var color = menu.Profile.Get<Color>(data);
             var colorElement = element.Q<VisualElement>("Color");

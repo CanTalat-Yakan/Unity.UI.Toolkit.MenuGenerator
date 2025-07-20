@@ -27,7 +27,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuInputData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.Name.ToUpper();
+            label.text = data.Name;
 
             var inputField = element.Q<TextField>("Input");
 

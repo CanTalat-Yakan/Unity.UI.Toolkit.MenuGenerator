@@ -28,7 +28,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuSelectionCategoryData data)
         {
             var button = element.Q<Button>("Button");
-            button.text = data.Name.ToUpper();
+            button.text = data.Name;
 
             var image = element.Q<VisualElement>("Image");
             var label = element.Q<Label>("Label");

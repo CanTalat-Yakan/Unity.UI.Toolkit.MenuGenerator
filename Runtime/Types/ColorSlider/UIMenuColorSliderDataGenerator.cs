@@ -27,7 +27,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuColorSliderData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.Name.ToUpper();
+            label.text = data.Name;
 
             var value = menu.Profile.Get<int>(data);
 

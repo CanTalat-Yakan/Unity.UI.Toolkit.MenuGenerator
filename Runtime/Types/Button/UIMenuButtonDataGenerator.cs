@@ -27,7 +27,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuButtonData data)
         {
             var button = element.Q<Button>("Button");
-            button.text = data.Name.ToUpper();
+            button.text = data.Name;
 
             if (data.Texture != null)
                 element.Q<VisualElement>("Icon").SetBackgroundImage(data.Texture);

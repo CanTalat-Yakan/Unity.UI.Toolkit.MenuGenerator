@@ -29,7 +29,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuSliderData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.Name.ToUpper();
+            label.text = data.Name;
 
             var defaultValue = Mathf.Clamp(data.Default, data.MinRange, data.MaxRange);
             defaultValue = data.IsFloat ? defaultValue : (int)defaultValue;

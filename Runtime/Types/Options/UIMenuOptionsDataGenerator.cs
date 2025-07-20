@@ -27,7 +27,7 @@ namespace UnityEssentials
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var label = element.Q<Label>("Label");
-            label.text = data.Name.ToUpper();
+            label.text = data.Name;
 
             var dropdown = element.Q<DropdownField>("Options");
 
