@@ -113,8 +113,8 @@ namespace UnityEssentials
             if (item?.UserData is ScriptableObject scriptableObject)
                 SaveScriptableObject(scriptableObject, directory, fileName);
 
-            foreach (var child in item.Children)
-                SaveTreeViewDataRecursively(child, Path.Combine(directory, fileName));
+            for (int i = 0; i < item.Children.Count; i++)
+                SaveTreeViewDataRecursively(item.Children[i], Path.Combine(directory, GetUniqueName(item)));
         }
 
         private static void SaveScriptableObject<T>(T instance, string directory, string fileName) where T : ScriptableObject
@@ -166,10 +166,15 @@ namespace UnityEssentials
 
                 string childDirectory = Path.Combine(directory, data.name);
                 if (!Directory.Exists(childDirectory))
-                    return;
+                    continue;
+
+                // Get all child asset files, order by file name (which starts with index)
+                var childFiles = Directory.GetFiles(childDirectory, "*.asset")
+                                      .OrderBy(fileName => Path.GetFileName(fileName))
+                                      .ToArray();
 
                 var assets = new List<ScriptableObject>();
-                foreach (var childFile in Directory.GetFiles(childDirectory, "*.asset"))
+                foreach (var childFile in childFiles)
                     assets.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(NormalizeAssetPath(childFile)));
 
                 data.GetType().GetField("Data")?.SetValue(data, assets.ToArray());
@@ -196,7 +201,7 @@ namespace UnityEssentials
                 if (!treePaths.Contains(assetPath))
                     AssetDatabase.DeleteAsset(NormalizeAssetPath(assetPath));
 
-            foreach (var directoryPath in allDirectories.OrderByDescending(d => d.Length))
+            foreach (var directoryPath in allDirectories.OrderByDescending(directory => directory.Length))
                 if (!treePaths.Contains(directoryPath))
                     DeleteDirectory(directoryPath);
         }
@@ -214,16 +219,21 @@ namespace UnityEssentials
 
         private static string GetUniqueName(SimpleTreeViewItem item)
         {
-            string name = "Asset ";
-
+            string name = "Asset_";
             if (!string.IsNullOrEmpty(item.Name))
-                name = item.UniqueName + " ";
+                name = item.UniqueName + "_";
 
             var itemData = item.UserData as ScriptableObject;
             if (itemData != null)
             {
                 name += (itemData as UIMenuTypeDataBase).ID;
                 itemData.name = name;
+            }
+
+            if (item.Parent != null)
+            {
+                var index = item.Parent.Children.IndexOf(item);
+                name = $"{index:D4}_{name}";
             }
 
             return name;
