@@ -4,6 +4,7 @@ namespace UnityEssentials
 {
     public class UIMenuCategoryData : UIMenuTypeDataBase
     {
+        [Space]
         public Texture2D Texture;
 
         public ScriptableObject[] Data;

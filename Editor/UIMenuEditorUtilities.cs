@@ -145,7 +145,7 @@ namespace UnityEssentials
                 .SetIcon(FolderIcon)
                 .SetContextMenu(GetGenericMenu(treeView))
                 .SetUserTag(UIMenuDataTypes.Category.ToString())
-                .SetUserData(UIMenuTypeDataBase.Initialize<UIMenuCategoryData>(name, uniqueName, hasReference: false));
+                .SetUserData(UIMenuTypeDataBase.Initialize<UIMenuCategoryData>(name, uniqueName));
 
         public static void AddHeader(SimpleTreeView treeView, int? parent = null) =>
             treeView.AddItem(CreateHeader(treeView), parent, false);

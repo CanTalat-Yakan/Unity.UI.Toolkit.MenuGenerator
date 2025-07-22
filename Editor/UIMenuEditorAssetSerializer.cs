@@ -221,19 +221,19 @@ namespace UnityEssentials
         {
             string name = "Asset_";
             if (!string.IsNullOrEmpty(item.Name))
-                name = item.UniqueName + "_";
+                name = $"{item.UniqueName.Replace(" ", "-")}_";
+
+            if (item.Parent != null)
+            {
+                var index = item.Parent.Children.IndexOf(item);
+                name = $"{index:D4}_{name}";
+            }
 
             var itemData = item.UserData as ScriptableObject;
             if (itemData != null)
             {
                 name += (itemData as UIMenuTypeDataBase).ID;
                 itemData.name = name;
-            }
-
-            if (item.Parent != null)
-            {
-                var index = item.Parent.Children.IndexOf(item);
-                name = $"{index:D4}_{name}";
             }
 
             return name;
