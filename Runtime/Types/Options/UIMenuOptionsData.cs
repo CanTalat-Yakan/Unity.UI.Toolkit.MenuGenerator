@@ -8,6 +8,7 @@ namespace UnityEssentials
     public class UIMenuOptionsData : UIMenuTypeDataBase
     {
         [Space]
+        public bool Reverse;
         public string[] Options;
 
         [Space]
@@ -16,8 +17,14 @@ namespace UnityEssentials
         public string GetOption(int index) =>
             GetChoices()[index] ?? string.Empty;
 
-        public List<string> GetChoices() => 
-            Options?.ToList() ?? new List<string>() { "NA" };
+        public List<string> GetChoices()
+        {
+            if(Options == null || Options.Length == 0)
+                return new List<string>() { "NA" };
+            if (Reverse)
+                return Options?.Reverse().ToList();
+            return Options?.ToList();
+        } 
 
         public override object GetDefault() => Default;
 

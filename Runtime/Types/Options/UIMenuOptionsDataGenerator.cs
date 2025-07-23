@@ -23,7 +23,7 @@ namespace UnityEssentials
             ConfigureInteraction(menu, element, data);
             return element;
         }
-         
+
         public override void ConfigureVisuals(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var label = element.Q<Label>("Label");
@@ -35,6 +35,8 @@ namespace UnityEssentials
                 return;
 
             var index = menu.Profile.Get<int>(data);
+            if (data.Reverse)
+                index = (data.Options.Length - 1) - index;
 
             dropdown.choices = data.GetChoices();
             dropdown.index = index;
@@ -43,17 +45,23 @@ namespace UnityEssentials
         public override void ConfigureInteraction(UIMenuGenerator menu, VisualElement element, UIMenuOptionsData data)
         {
             var dropdown = element.Q<DropdownField>("Options");
-            dropdown.RegisterValueChangedCallback(evt =>
-                menu.Profile.Set(data.Reference, dropdown.index));
+            dropdown.RegisterValueChangedCallback((evt) =>
+            {
+                var index = dropdown.index;
+                if (data.Reverse)
+                    index = (data.Options.Length - 1) - index;
+
+                menu.Profile.Set(data.Reference, index);
+            });
 
             var buttonLeft = element.Q<Button>("Left");
             buttonLeft.clicked += () =>
             {
                 var index = menu.Profile.Get<int>(data);
+                if (data.Reverse)
+                    index = (data.Options.Length - 1) - index;
 
                 index = ProcessIndex(index - 1, data.Options.Length);
-                menu.Profile.Set(data.Reference, index);
-
                 dropdown.index = index;
             };
 
@@ -61,10 +69,10 @@ namespace UnityEssentials
             buttonRight.clicked += () =>
             {
                 var index = menu.Profile.Get<int>(data);
+                if (data.Reverse)
+                    index = (data.Options.Length - 1) - index;
 
                 index = ProcessIndex(index + 1, data.Options.Length);
-                menu.Profile.Set(data.Reference, index);
-
                 dropdown.index = index;
             };
         }
