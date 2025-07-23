@@ -81,9 +81,10 @@ namespace UnityEssentials
 
         public Action OnProfileChanged;
 
-        public void OnEnable()
+        public void Start()
         {
             LoadProfile();
+            SaveProfile();
             Profile.OnValueChanged += (_) => SaveProfile();
         }
 
@@ -95,9 +96,13 @@ namespace UnityEssentials
             if (profile == null)
                 return;
 
-            Profile.OnValueChanged -= (_) => SaveProfile();
+            if (Settings.SaveOnChange)
+                Profile.OnValueChanged -= (_) => SaveProfile();
+
             Profile = profile;
-            Profile.OnValueChanged += (_) => SaveProfile();
+
+            if (Settings.SaveOnChange)
+                Profile.OnValueChanged += (_) => SaveProfile();
 
             RegisteredProfiles[Name] = profile;
             OnProfileChanged?.Invoke();
@@ -121,11 +126,10 @@ namespace UnityEssentials
                 var serializedData = (SerializedDictionary<string, object>)default;
                 UIMenuProfileSerializer.DeserializeData(out serializedData, Name, parentDirectory);
                 Profile.Data.CopyFrom(serializedData);
-                Profile.Data.AddFrom(Default.Data);
                 Profile.name = Name + " Serialized";
             }
 
-            Profile ??= Default;
+            Profile.Data.AddFrom(Default.Data);
             SetProfile(Profile);
             return Profile;
         }

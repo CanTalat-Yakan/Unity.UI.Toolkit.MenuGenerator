@@ -28,9 +28,8 @@ namespace UnityEssentials
             {
                 yield return data;
 
-                if (data is ScriptableObject scriptableObject)
-                    foreach (var child in IterateData(scriptableObject))
-                        yield return child;
+                foreach (var child in IterateData(data))
+                    yield return child;
             }
         }
 

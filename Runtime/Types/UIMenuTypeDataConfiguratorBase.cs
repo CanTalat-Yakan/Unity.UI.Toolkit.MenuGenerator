@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
+    [DefaultExecutionOrder(1001)]
     public abstract class UIMenuTypeDataConfiguratorBase<T> : MonoBehaviour where T : UIMenuTypeDataBase
     {
         public string MenuName;
@@ -10,7 +11,7 @@ namespace UnityEssentials
         private T _data;
         [HideInInspector] public T Data => _data;
 
-        public void Start()
+        public void Awake()
         {
             if (UIMenu.TryGetData(MenuName, DataReference, out _data))
             {

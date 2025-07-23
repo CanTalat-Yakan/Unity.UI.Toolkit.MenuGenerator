@@ -9,7 +9,7 @@ namespace UnityEssentials
 
         public ScriptableObject[] Data;
 
-        public override object GetDefault() => Data;
+        public override object GetDefault() => null;
 
         public override void ApplyDynamicReset() =>
             Data = null;
