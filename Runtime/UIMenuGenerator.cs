@@ -15,9 +15,10 @@ namespace UnityEssentials
 
         [HideInInspector] public UIDocument Document;
         [HideInInspector] public VisualElement Root;
-        [HideInInspector] public UIElementLink Back;
+        [HideInInspector] public UIElementLink Overlay;
         [HideInInspector] public UIElementLink Breadcrumbs;
         [HideInInspector] public UIElementLink ScrollView;
+        [HideInInspector] public UIElementLink Back;
 
         public static Action<UIMenuGenerator, ScriptableObject> RegisterTypeFactory;
         public Action PopulateRoot;
@@ -36,6 +37,7 @@ namespace UnityEssentials
             Fetch();
             ClearBreadcrumbs();
             Root?.SetDisplayEnabled(true);
+            Overlay?.LinkedElement?.SetVisibility(true);
             PopulateRoot?.Invoke();
         }
 
@@ -45,6 +47,7 @@ namespace UnityEssentials
             Fetch();
             ClearBreadcrumbs();
             Root?.SetDisplayEnabled(false);
+            Overlay?.LinkedElement?.SetVisibility(false);
         }
 
         public void Fetch()
@@ -52,9 +55,9 @@ namespace UnityEssentials
             Document ??= GetComponentInChildren<UIDocument>();
 
             Root ??= Document?.rootVisualElement;
-
-            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
+            Overlay ??= Document?.transform.Find("GroupBox (Overlay)")?.GetComponent<UIElementLink>();
             Breadcrumbs ??= Document?.transform.Find("GroupBox (Breadcrumbs)")?.GetComponent<UIElementLink>();
+            ScrollView ??= Document?.transform.Find("ScrollView (ScrollView)")?.GetComponent<UIElementLink>();
 
             if (Back == null)
             {

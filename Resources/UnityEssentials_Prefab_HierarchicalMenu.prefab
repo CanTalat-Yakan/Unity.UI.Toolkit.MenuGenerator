@@ -44,8 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56eae073688fa274c813e739dfe6da19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _info: Linked Element #ScrollView of type ScrollView in Default UI Hierarchical
-    Menu UXML
+  _info: Linked Element #ScrollView of type ScrollView in Default_UI_Menu_Hierarchical_UXML
   Data:
     Path:
     - Name: Overlay
@@ -91,10 +90,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6927371303945837539}
-  - {fileID: 7204546997952917636}
-  - {fileID: 8441028629609634430}
   - {fileID: 1694908426627014960}
+  - {fileID: 8441028629609634430}
+  - {fileID: 7204546997952917636}
+  - {fileID: 6927371303945837539}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2784166298675270081
@@ -160,8 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56eae073688fa274c813e739dfe6da19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _info: Linked Element #Overlay of type GroupBox in Default UI Hierarchical Menu
-    UXML
+  _info: Linked Element #Overlay of type GroupBox in Default_UI_Menu_Hierarchical_UXML
   Data:
     Path:
     - Name: Overlay
@@ -213,8 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56eae073688fa274c813e739dfe6da19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _info: Linked Element #Breadcrumbs of type GroupBox in Default UI Hierarchical
-    Menu UXML
+  _info: Linked Element #Breadcrumbs of type GroupBox in Default_UI_Menu_Hierarchical_UXML
   Data:
     Path:
     - Name: Overlay
@@ -278,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56eae073688fa274c813e739dfe6da19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _info: Linked Element #Back of type Button in Default UI Hierarchical Menu UXML
+  _info: Linked Element #Back of type Button in Default_UI_Menu_Hierarchical_UXML
   Data:
     Path:
     - Name: Overlay
