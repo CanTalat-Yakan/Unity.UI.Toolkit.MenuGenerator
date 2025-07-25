@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
@@ -115,7 +116,7 @@ namespace UnityEssentials
 
         public void Initialize()
         {
-            this.DestroyAllChildren();
+            this.DestroyAllChildren<UIDocument>();
 
             InstantiateMenu();
         }
@@ -131,7 +132,7 @@ namespace UnityEssentials
 
         private void InstantiateMenu()
         {
-            var name = Type.ToString() + " Menu UI Document";
+            var name = Type + " Menu UI Document";
             var prefab = Type switch
             {
                 UIMenuType.Hierarchical => "UnityEssentials_Prefab_HierarchicalMenu",
@@ -142,7 +143,8 @@ namespace UnityEssentials
             if (prefab == null)
                 return;
 
-            ResourceLoader.InstantiatePrefab(prefab, name, transform);
+            var menu = ResourceLoader.InstantiatePrefab(prefab, name, transform);
+            menu.transform.SetSiblingIndex(0);
         }
 
         private void OnExitPlayMode()
