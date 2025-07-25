@@ -81,7 +81,7 @@ namespace UnityEssentials
 
         public Action OnProfileChanged;
 
-        public void Start()
+        public void Awake()
         {
             LoadProfile();
             SaveProfile();
