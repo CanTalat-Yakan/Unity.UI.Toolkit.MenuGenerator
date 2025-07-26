@@ -20,7 +20,7 @@ namespace UnityEssentials
         Tabbed,
     }
 
-    [DefaultExecutionOrder(-1001)]
+    [DefaultExecutionOrder(-1010)]
     public class UIMenu : MonoBehaviour
     {
         public static Dictionary<string, UIMenu> RegisteredMenus { get; private set; } = new();

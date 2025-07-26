@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    [DefaultExecutionOrder(1001)]
+    [DefaultExecutionOrder(-1000)]
     public abstract class UIMenuTypeDataConfiguratorBase<T> : MonoBehaviour where T : UIMenuTypeDataBase
     {
         public string MenuName;

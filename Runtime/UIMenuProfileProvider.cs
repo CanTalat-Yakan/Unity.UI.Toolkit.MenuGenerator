@@ -42,6 +42,7 @@ namespace UnityEssentials
         }
     }
 
+    [DefaultExecutionOrder(-999)]
     public class UIMenuProfileProvider : MonoBehaviour
     {
         public static Dictionary<string, UIMenuProfile> RegisteredProfiles { get; private set; } = new();
