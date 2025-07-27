@@ -6,19 +6,19 @@ namespace UnityEssentials
     {
         [Space]
         public bool IsFloat;
-        public float MinRange = 0;
-        public float MaxRange = 100;
+        public float MinValue = 0;
+        public float MaxValue = 100;
 
         [Space]
         public float Default;
 
-        public override object GetDefault() => Mathf.Clamp(Default, MinRange, MaxRange);
+        public override object GetDefault() => Mathf.Clamp(Default, MinValue, MaxValue);
 
         public override void ApplyDynamicReset()
         {
             IsFloat = false;
-            MinRange = 0;
-            MaxRange = 100;
+            MinValue = 0;
+            MaxValue = 100;
             Default = 0;
         }
     }

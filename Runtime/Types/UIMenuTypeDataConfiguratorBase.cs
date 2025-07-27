@@ -13,6 +13,14 @@ namespace UnityEssentials
 
         public void Awake()
         {
+            if (string.IsNullOrEmpty(MenuName) || string.IsNullOrEmpty(DataReference))
+                return;
+
+            ConfigureMenuData();
+        }
+
+        public void ConfigureMenuData()
+        {
             if (UIMenu.TryGetData(MenuName, DataReference, out _data))
             {
                 Data.IsDynamic = true;

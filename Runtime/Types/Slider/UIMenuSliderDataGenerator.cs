@@ -31,7 +31,7 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name;
 
-            var defaultValue = Mathf.Clamp(data.Default, data.MinRange, data.MaxRange);
+            var defaultValue = Mathf.Clamp(data.Default, data.MinValue, data.MaxValue);
             defaultValue = data.IsFloat ? defaultValue : (int)defaultValue;
 
             var value = menu.Profile.Get(data.Reference, defaultValue);
@@ -39,15 +39,15 @@ namespace UnityEssentials
             if (data.IsFloat)
             {
                 var slider = element.Q<Slider>("Slider");
-                slider.lowValue = data.MinRange;
-                slider.highValue = data.MaxRange;
+                slider.lowValue = data.MinValue;
+                slider.highValue = data.MaxValue;
                 slider.value = value;
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
-                sliderInt.lowValue = (int)data.MinRange;
-                sliderInt.highValue = (int)data.MaxRange;
+                sliderInt.lowValue = (int)data.MinValue;
+                sliderInt.highValue = (int)data.MaxValue;
                 sliderInt.value = (int)value;
             }
         }
