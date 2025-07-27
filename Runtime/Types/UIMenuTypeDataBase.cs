@@ -35,7 +35,6 @@ namespace UnityEssentials
         }
 
         public abstract object GetDefault();
-
         public abstract void ApplyDynamicReset();
     }
 }
