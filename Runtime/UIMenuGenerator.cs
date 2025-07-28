@@ -108,11 +108,14 @@ namespace UnityEssentials
             Root.Add(element);
         }
 
-        private void ConfigureRedraw(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall) =>
+        private void ConfigureRedraw(bool isRoot, string label, ScriptableObject[] data, Action customDataDrawCall)
+        {
+            var breadcrumbCount = Breadcrumbs.LinkedElement.childCount;
             Redraw = () =>
             {
-                UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, Breadcrumbs.LinkedElement.childCount);
+                UIMenuBreadcrumbDataGenerator.ClearFromIndex(this, breadcrumbCount);
                 Populate(isRoot, label, data, customDataDrawCall);
             };
+        }
     }
 }
