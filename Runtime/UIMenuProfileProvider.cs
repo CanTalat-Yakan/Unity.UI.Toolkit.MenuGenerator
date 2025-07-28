@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -45,7 +46,7 @@ namespace UnityEssentials
     [DefaultExecutionOrder(-999)]
     public class UIMenuProfileProvider : MonoBehaviour
     {
-        public static Dictionary<string, UIMenuProfile> RegisteredProfiles { get; private set; } = new();
+        [HideInInspector] public static Dictionary<string, UIMenuProfile> RegisteredProfiles { get; private set; } = new();
 
         public UIMenuProfileProviderSettings Settings = new();
 
@@ -89,6 +90,20 @@ namespace UnityEssentials
             Profile.OnValueChanged += (_) => SaveProfile();
         }
 
+#if UNITY_EDITOR
+        [InitializeOnLoadMethod()]
+        public static void ClearRegisteredProfiles() =>
+            RegisteredProfiles.Clear();
+
+        private void OnDisable()
+        {
+            if (Application.isPlaying)
+            {
+                ClearRegisteredProfiles();
+            }
+        }
+#endif
+
         public static bool TryGetProfile(string name, out UIMenuProfile outputProfile) =>
             RegisteredProfiles.TryGetValue(name, out outputProfile);
 
@@ -116,6 +131,9 @@ namespace UnityEssentials
         {
             Default ??= CreateProfileInstance("Default");
             Profile ??= CreateProfileInstance("Profile");
+
+            if (Data == null)
+                return Profile;
 
             foreach (var data in Data.EnumerateAllData())
                 if (data is UIMenuTypeDataBase dataTemplate)

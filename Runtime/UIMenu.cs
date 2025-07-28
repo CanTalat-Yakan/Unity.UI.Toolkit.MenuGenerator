@@ -23,7 +23,7 @@ namespace UnityEssentials
     [DefaultExecutionOrder(-1010)]
     public class UIMenu : MonoBehaviour
     {
-        public static Dictionary<string, UIMenu> RegisteredMenus { get; private set; } = new();
+        [HideInInspector] public static Dictionary<string, UIMenu> RegisteredMenus { get; private set; } = new();
 
         [Space]
         public UIMenuType Type;
@@ -60,28 +60,35 @@ namespace UnityEssentials
 
         public void Awake()
         {
-            if (Data == null)
-                return;
-
             RegisteredMenus.Add(Name, this);
-            Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
+
+            if (Data != null)
+                Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
 
         public IEnumerator Start()
         {
             yield return new WaitForEndOfFrame();
-            Generator.Show();
+            if (Data != null)
+                Generator.Show();
             yield return null;
         }
 
 #if UNITY_EDITOR
+        [InitializeOnLoadMethod()]
+        public static void ClearRegisteredMenus() =>
+            RegisteredMenus.Clear();
+
         private void OnDisable()
         {
             if (Application.isPlaying)
+            {
+                ClearRegisteredMenus();
                 OnExitPlayMode();
+            } 
         }
 
-        public static Action<UIMenu> ShowEditor { get; set; }
+        [HideInInspector] public static Action<UIMenu> ShowEditor { get; set; }
         public Action<UIMenuData> SetData { get; private set; }
 
         [Button()]
@@ -149,6 +156,9 @@ namespace UnityEssentials
 
         private void OnExitPlayMode()
         {
+            if (Data == null)
+                return;
+
             foreach (var data in Data.EnumerateAllData())
                 if (data is UIMenuTypeDataBase dataTemplate)
                     if (dataTemplate.IsDynamic)
