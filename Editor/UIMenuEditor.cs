@@ -38,7 +38,9 @@ namespace UnityEssentials
             editor._treeView?.SetSelectedItems(0);
             editor._treeView?.BeginRename(0);
 
-            editor.Window ??= new EditorWindowDrawer("UI Menu Builder", new(300, 400), new(600, 800)).ShowUtility();
+            editor.Window ??= EditorWindowDrawer
+                .CreateInstance("UI Menu Builder", new(300, 400), new(600, 800))
+                .ShowAsUtility();
             editor.Window
                 .SetPreProcess(editor._treeView.PreProcess)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)

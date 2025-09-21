@@ -5,8 +5,17 @@ namespace UnityEssentials
 {
     public class UIMenuData : ScriptableObject
     {
-        [HideInInspector] public string Name = "Menu";
-        [HideInInspector] public ScriptableObject[] Root = { };
+        public string Name = "Menu";
+        public ScriptableObject[] Root = { };
+
+        public void AddRoot(params ScriptableObject[] data)
+        {
+            if (Root == null || Root.Length == 0)
+                Root = new ScriptableObject[0];
+            var rootList = new List<ScriptableObject>(Root);
+            rootList.AddRange(data);
+            Root = rootList.ToArray();
+        }
 
         public bool TryGetValue<T>(string dataReference, out T outputData) where T : ScriptableObject
         {

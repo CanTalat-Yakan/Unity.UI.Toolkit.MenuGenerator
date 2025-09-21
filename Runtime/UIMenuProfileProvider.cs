@@ -85,6 +85,7 @@ namespace UnityEssentials
 
         public void Awake()
         {
+            Data ??= GetComponent<UIMenu>().Data;
             LoadProfile();
             SaveProfile();
             Profile.OnValueChanged += (_) => SaveProfile();

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityEssentials
@@ -8,6 +9,13 @@ namespace UnityEssentials
         public Texture2D Texture;
 
         public ScriptableObject[] Data;
+
+        public void AddData(params ScriptableObject[] data)
+        {
+            var dataList = new List<ScriptableObject>(Data);
+            dataList.AddRange(data);
+            Data = dataList.ToArray();
+        }
 
         public override object GetDefault() => null;
 

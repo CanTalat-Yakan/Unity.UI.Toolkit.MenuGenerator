@@ -60,17 +60,16 @@ namespace UnityEssentials
 
         public void Awake()
         {
+            ValidateMenuData();
             RegisteredMenus.Add(Name, this);
-
-            if (Data != null)
-                Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
+            Generator.PopulateRoot = () => Generator.Populate(true, Data.Name, Data.Root);
         }
 
         public IEnumerator Start()
         {
             yield return new WaitForEndOfFrame();
-            if (Data != null)
-                Generator.Show();
+            ValidateMenuData();
+            Generator.Show();
             yield return null;
         }
 
@@ -85,7 +84,7 @@ namespace UnityEssentials
             {
                 ClearRegisteredMenus();
                 OnExitPlayMode();
-            } 
+            }
         }
 
         [HideInInspector] public static Action<UIMenu> ShowEditor { get; set; }
@@ -94,9 +93,7 @@ namespace UnityEssentials
         [Button()]
         public void OpenMenuBuilder()
         {
-            if (Data == null || Data.Equals(null))
-                Data = CreateDefault();
-
+            ValidateMenuData();
             SetData = (data) =>
             {
                 if (this == null)
@@ -105,7 +102,6 @@ namespace UnityEssentials
                 Data = data;
                 Selection.activeGameObject = gameObject;
             };
-
             ShowEditor?.Invoke(this);
         }
 #endif
@@ -128,11 +124,17 @@ namespace UnityEssentials
             InstantiateMenu();
         }
 
+        private void ValidateMenuData()
+        {
+            if (Data == null || Data.Equals(null))
+                Data = CreateDefault();
+        }
+
         private UIMenuData CreateDefault()
         {
             var data = ScriptableObject.CreateInstance<UIMenuData>();
             data.name = "Menu Data AutoCreated";
-            data.Name = "Menu";
+            data.Name = Name;
             data.Root = Array.Empty<ScriptableObject>();
             return data;
         }
