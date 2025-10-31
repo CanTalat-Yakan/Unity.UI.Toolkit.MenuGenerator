@@ -1,7 +1,7 @@
 {
-  "name": "com.unityessentials.uimenugenerator",
+  "name": "com.unityessentials.uitoolkitmenugenerator",
   "version": "1.0.0",
-  "displayName": "Unity UI MenuGenerator",
+  "displayName": "Unity UI Toolkit MenuGenerator",
   "description": "This is a part of the UnityEssentials Ecosystem",
   "unity": "6000.0",
   "unityRelease": null,

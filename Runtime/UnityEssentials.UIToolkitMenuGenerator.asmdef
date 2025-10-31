@@ -1,5 +1,5 @@
 {
-    "name": "UnityEssentials.UIMenuGenerator",
+    "name": "UnityEssentials.UIToolkitMenuGenerator",
     "rootNamespace": "UnityEssentials",
     "references": [
         "GUID:fd1e7b63e0e7d634db53519cc860fe3a",
@@ -11,7 +11,8 @@
         "GUID:aa09701d312bf8847977605b156e47cc",
         "GUID:3b3bf7f107ee18f49a6853ce8ac97a3d",
         "GUID:882b7c953099bf44b8175faa8bfec00a",
-        "GUID:e652dc2b5a5451045a50f217499425ea"
+        "GUID:e652dc2b5a5451045a50f217499425ea",
+        "GUID:23d88515503fc844cabb0e2fd918af85"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
