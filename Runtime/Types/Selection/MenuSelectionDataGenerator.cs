@@ -5,16 +5,16 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuSelectionGeneratorData : IUIMenuTypeData
+    public class MenuSelectionGeneratorData : IMenuTypeData
     {
         public MenuSelectionCategoryData CategoryData;
-        public UIMenuSelectionDataElement SelectionDataElement;
+        public MenuSelectionDataElement SelectionDataElement;
 
         [Space]
         public int Index;
     }
 
-    public class MenuSelectionDataGenerator : MenuTypeDataGeneratorBase<UIMenuSelectionGeneratorData>, IDisposable
+    public class MenuSelectionDataGenerator : MenuTypeDataGeneratorBase<MenuSelectionGeneratorData>, IDisposable
     {
         public IEnumerable<VisualElement> CreateElements(
             MenuGenerator menu,
@@ -31,7 +31,7 @@ namespace UnityEssentials
                 if (selectionDataElement == null)
                     continue;
 
-                var selectionGeneratorData = new UIMenuSelectionGeneratorData
+                var selectionGeneratorData = new MenuSelectionGeneratorData
                 {
                     CategoryData = categoryData,
                     SelectionDataElement = selectionDataElement,
@@ -43,7 +43,7 @@ namespace UnityEssentials
         }
 
         public static readonly string ResourcePath = Path + "Selection_UXML";
-        public override VisualElement CreateElement(MenuGenerator menu, UIMenuSelectionGeneratorData data)
+        public override VisualElement CreateElement(MenuGenerator menu, MenuSelectionGeneratorData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -51,7 +51,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(MenuGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
+        public override void ConfigureVisuals(MenuGenerator menu, VisualElement element, MenuSelectionGeneratorData data)
         {
             var label = element.Q<Label>("Label");
             label.text = data.SelectionDataElement.Name;
@@ -60,7 +60,7 @@ namespace UnityEssentials
             image.SetBackgroundImage(data.SelectionDataElement.Texture);
         }
 
-        public override void ConfigureInteraction(MenuGenerator menu, VisualElement element, UIMenuSelectionGeneratorData data)
+        public override void ConfigureInteraction(MenuGenerator menu, VisualElement element, MenuSelectionGeneratorData data)
         {
             var button = element.Q<Button>("Button");
             button.clicked += () => menu.Profile.Set(data.CategoryData.Reference, data.Index);

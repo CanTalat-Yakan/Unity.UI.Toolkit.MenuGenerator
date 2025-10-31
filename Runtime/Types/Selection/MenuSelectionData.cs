@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UnityEssentials
 {
     [Serializable]
-    public class UIMenuSelectionDataElement
+    public class MenuSelectionDataElement
     {
         public string Name;
 
@@ -19,6 +19,6 @@ namespace UnityEssentials
         [Tooltip("The starting index is added to the element's index to determine the final Selection ID")]
         public int StartIndexID;
 
-        public UIMenuSelectionDataElement[] Data;
+        public MenuSelectionDataElement[] Data;
     }
 }

@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public interface IUIMenuTypeData { }
+    public interface IMenuTypeData { }
 
-    public abstract class MenuTypeDataBase : ScriptableObject, IUIMenuTypeData
+    public abstract class MenuTypeDataBase : ScriptableObject, IMenuTypeData
     {
         [HideInInspector] public bool IsDynamic;
         [HideInInspector] public bool HasReference;

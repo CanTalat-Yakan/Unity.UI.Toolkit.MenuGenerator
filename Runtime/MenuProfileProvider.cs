@@ -14,7 +14,7 @@ namespace UnityEssentials
             "A save file will be created outside the Assets/Build_Data folder, " +
             "within the automatically created directory called Resources.";
 
-        public UIProfileSaveMode SaveFileMode = UIProfileSaveMode.Outside;
+        public MenuProfileSaveMode SaveFileMode = MenuProfileSaveMode.Outside;
         public bool SaveOnChange = true;
 
         [OnValueChanged(nameof(SaveFileMode))]
@@ -22,17 +22,17 @@ namespace UnityEssentials
         {
             switch (SaveFileMode)
             {
-                case UIProfileSaveMode.None:
+                case MenuProfileSaveMode.None:
                     _info =
                         "No save file will be created. " +
                         "The profile will not persist between sessions and will not be saved to disk.";
                     break;
-                case UIProfileSaveMode.Outside:
+                case MenuProfileSaveMode.Outside:
                     _info =
                         "A save file will be created outside the Assets/Build_Data folder, " +
                         "within the automatically created directory called Resources.";
                     break;
-                case UIProfileSaveMode.Inside:
+                case MenuProfileSaveMode.Inside:
                     _info =
                         "A save file will be created inside the Assets/Build_Data folder, " +
                         "within the automatically created directory called Resources.";
@@ -140,9 +140,9 @@ namespace UnityEssentials
                 if (data is MenuTypeDataBase dataTemplate)
                     Default.Add(dataTemplate.Reference, dataTemplate.GetDefault());
 
-            if (Settings.SaveFileMode != UIProfileSaveMode.None)
+            if (Settings.SaveFileMode != MenuProfileSaveMode.None)
             {
-                var parentDirectory = Settings.SaveFileMode == UIProfileSaveMode.Outside;
+                var parentDirectory = Settings.SaveFileMode == MenuProfileSaveMode.Outside;
                 var serializedData = (SerializedDictionary<string, object>)default;
                 MenuProfileSerializer.DeserializeData(out serializedData, Name, parentDirectory);
                 Profile.Data.CopyFrom(serializedData);
@@ -156,10 +156,10 @@ namespace UnityEssentials
 
         public void SaveProfile()
         {
-            if (Settings.SaveFileMode != UIProfileSaveMode.None)
+            if (Settings.SaveFileMode != MenuProfileSaveMode.None)
             {
                 var fileName = Name;
-                var parentDirectory = Settings.SaveFileMode == UIProfileSaveMode.Outside;
+                var parentDirectory = Settings.SaveFileMode == MenuProfileSaveMode.Outside;
 
                 MenuProfileSerializer.SerializeData(Profile.Data, fileName, parentDirectory);
             }

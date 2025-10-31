@@ -7,14 +7,14 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public enum UIProfileSaveMode
+    public enum MenuProfileSaveMode
     {
         None,
         Outside,
         Inside,
     }
 
-    public enum UIMenuType
+    public enum MenuType
     {
         Hierarchical,
         Tabbed,
@@ -26,7 +26,7 @@ namespace UnityEssentials
         public static Dictionary<string, Menu> RegisteredMenus { get; private set; } = new();
 
         [Space]
-        public UIMenuType Type;
+        public MenuType Type;
         [OnValueChanged(nameof(Type))] public void OnTypeValueChanged() => Initialize();
 
         [Space]
@@ -144,8 +144,8 @@ namespace UnityEssentials
             var instanceName = Type + " Menu UI Document";
             var prefab = Type switch
             {
-                UIMenuType.Hierarchical => "UnityEssentials_Prefab_HierarchicalMenu",
-                UIMenuType.Tabbed => "UnityEssentials_Prefab_TabbedMenu",
+                MenuType.Hierarchical => "UnityEssentials_Prefab_HierarchicalMenu",
+                MenuType.Tabbed => "UnityEssentials_Prefab_TabbedMenu",
                 _ => null
             };
 

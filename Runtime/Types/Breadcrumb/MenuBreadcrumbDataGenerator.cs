@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace UnityEssentials
 {
-    public class UIMenuBreadcrumbGeneratorData : IUIMenuTypeData
+    public class MenuBreadcrumbGeneratorData : IMenuTypeData
     {
         public Action Redraw;
 
@@ -14,14 +14,14 @@ namespace UnityEssentials
         public int Index;
     }
 
-    public class MenuBreadcrumbDataGenerator : MenuTypeDataGeneratorBase<UIMenuBreadcrumbGeneratorData>
+    public class MenuBreadcrumbDataGenerator : MenuTypeDataGeneratorBase<MenuBreadcrumbGeneratorData>
     {
         public void AddBreadcrumb(MenuGenerator menu,bool isRoot, string label,  Action redraw)
         {
             if (menu.Breadcrumbs.LinkedElement is not GroupBox container)
                 return;
 
-            var breadcrumbData = new UIMenuBreadcrumbGeneratorData
+            var breadcrumbData = new MenuBreadcrumbGeneratorData
             {
                 IsRoot = isRoot,
                 Label = label,
@@ -34,7 +34,7 @@ namespace UnityEssentials
         }
 
         public static readonly string ResourcePath = Path + "Breadcrumb_UXML";
-        public override VisualElement CreateElement(MenuGenerator menu, UIMenuBreadcrumbGeneratorData data)
+        public override VisualElement CreateElement(MenuGenerator menu, MenuBreadcrumbGeneratorData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
@@ -42,7 +42,7 @@ namespace UnityEssentials
             return element;
         }
 
-        public override void ConfigureVisuals(MenuGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
+        public override void ConfigureVisuals(MenuGenerator menu, VisualElement element, MenuBreadcrumbGeneratorData data)
         {
             var button = element.Q<Button>("Button");
             button.text = data.Label;
@@ -51,7 +51,7 @@ namespace UnityEssentials
                 button.iconImage = null;
         }
 
-        public override void ConfigureInteraction(MenuGenerator menu, VisualElement element, UIMenuBreadcrumbGeneratorData data)
+        public override void ConfigureInteraction(MenuGenerator menu, VisualElement element, MenuBreadcrumbGeneratorData data)
         {
             var button = element.Q<Button>();
             button.clicked += () =>

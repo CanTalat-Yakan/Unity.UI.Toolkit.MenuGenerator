@@ -8,7 +8,7 @@ namespace UnityEssentials
 
         public int Default;
 
-        public UIMenuSelectionDataElement GetSelection(int index)
+        public MenuSelectionDataElement GetSelection(int index)
         {
             foreach (var scriptableObject in Data)
                 if (scriptableObject is MenuSelectionGroupData group)
