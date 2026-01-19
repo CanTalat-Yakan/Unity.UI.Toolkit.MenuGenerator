@@ -33,33 +33,11 @@ namespace UnityEssentials
         public string Name = "Menu";
         public MenuData Data;
 
-        [OnValueChanged(nameof(Name))]
-        public void OnNameValueChanged()
-        {
-            var provider = GetComponent<UIMenuProfileProvider>();
-            if (provider != null)
-                provider.Name = Name;
-        }
-
-        [OnValueChanged(nameof(Data))]
-        public void OnDataValueChanged()
-        {
-            var provider = GetComponent<UIMenuProfileProvider>();
-            if (provider != null)
-                provider.Data = Data;
-        }
-
         public MenuGenerator Generator => _generator ??= this.GetOrAddComponent<MenuGenerator>();
         [NonSerialized] private MenuGenerator _generator;
 
-        public UIMenuProfileProvider Provider => _provider ??= this.GetOrAddComponent<UIMenuProfileProvider>();
-        [NonSerialized] private UIMenuProfileProvider _provider;
-
         public SettingsProfileManager ProfileManager = SettingsProfileFactory.CreateManager("MenuProfileManager");
         
-        public MenuProfile Profile => Provider.Profile;
-        public MenuProfile DefaultProfile => Provider.Default;
-
         public void Awake()
         {
             ValidateMenuData();
@@ -107,9 +85,6 @@ namespace UnityEssentials
             ShowEditor?.Invoke(this);
         }
 #endif
-
-        public static bool TryGetProfile(string name, out MenuProfile profile) =>
-            UIMenuProfileProvider.TryGetProfile(name, out profile);
 
         public static bool TryGetData<T>(string menuName, string dataReference, out T outputData) where T : MenuTypeDataBase
         {
