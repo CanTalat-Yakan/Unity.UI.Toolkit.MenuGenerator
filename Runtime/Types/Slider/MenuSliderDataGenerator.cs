@@ -34,7 +34,7 @@ namespace UnityEssentials
             var defaultValue = Mathf.Clamp(data.Default, data.MinValue, data.MaxValue);
             defaultValue = data.IsFloat ? defaultValue : (int)defaultValue;
 
-            var value = menu.Profile2.Value.Get(data.Reference, defaultValue);
+            var value = menu.Profile.Value.Get(data.Reference, defaultValue);
 
             if (data.IsFloat)
             {
@@ -58,13 +58,13 @@ namespace UnityEssentials
             {
                 var slider = element.Q<Slider>("Slider");
                 slider.RegisterValueChangedCallback((evt) =>
-                    menu.Profile2.Value.Set(data.Reference, evt.newValue));
+                    menu.Profile.Value.Set(data.Reference, evt.newValue));
             }
             else
             {
                 var sliderInt = element.Q<SliderInt>("Slider");
                 sliderInt.RegisterValueChangedCallback((evt) =>
-                    menu.Profile2.Value.Set(data.Reference, (float)evt.newValue));
+                    menu.Profile.Value.Set(data.Reference, (float)evt.newValue));
             }
         }
 

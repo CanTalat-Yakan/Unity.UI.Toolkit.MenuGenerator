@@ -26,7 +26,7 @@ namespace UnityEssentials
 
             element.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
-            var color = menu.Profile2.Value.Get(data.Reference, data.Default);
+            var color = menu.Profile.Value.Get(data.Reference, data.Default);
 
             Color.RGBToHSV(color, out var h, out var s, out var v);
             hueSlider.value = (int)(h * 360);
@@ -56,7 +56,7 @@ namespace UnityEssentials
 
                 colorElement.SetBackgroundColor(newColor);
 
-                menu.Profile2.Value.Set(data.Reference, data.Default);
+                menu.Profile.Value.Set(data.Reference, data.Default);
             };
 
             hueSlider.RegisterValueChangedCallback(_ => updateColor());
@@ -81,7 +81,7 @@ namespace UnityEssentials
                         valSlider.value / 100f);
                     updatedColor.a = alphaSlider.value / 100f;
 
-                    menu.Profile2.Value.Set(data.Reference, data.Default);
+                    menu.Profile.Value.Set(data.Reference, data.Default);
                 };
         }
 

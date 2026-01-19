@@ -34,7 +34,7 @@ namespace UnityEssentials
             if (data.Options == null || data.Options.Length == 0)
                 return;
 
-            var index = menu.Profile2.Value.Get(data.Reference, data.Default);
+            var index = menu.Profile.Value.Get(data.Reference, data.Default);
             if (data.Reverse)
                 index = (data.Options.Length - 1) - index;
 
@@ -51,13 +51,13 @@ namespace UnityEssentials
                 if (data.Reverse)
                     index = (data.Options.Length - 1) - index;
 
-                menu.Profile2.Value.Set(data.Reference, index);
+                menu.Profile.Value.Set(data.Reference, index);
             });
 
             var buttonLeft = element.Q<Button>("Left");
             buttonLeft.clicked += () =>
             {
-                var index = menu.Profile2.Value.Get(data.Reference, data.Default);
+                var index = menu.Profile.Value.Get(data.Reference, data.Default);
                 if (data.Reverse)
                     index = (data.Options.Length - 1) - index;
 
@@ -68,7 +68,7 @@ namespace UnityEssentials
             var buttonRight = element.Q<Button>("Right");
             buttonRight.clicked += () =>
             {
-                var index = menu.Profile2.Value.Get(data.Reference, data.Default);
+                var index = menu.Profile.Value.Get(data.Reference, data.Default);
                 if (data.Reverse)
                     index = (data.Options.Length - 1) - index;
 

@@ -29,7 +29,7 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name;
 
-            var value = menu.Profile2.Value.Get(data.Reference, data.Default);
+            var value = menu.Profile.Value.Get(data.Reference, data.Default);
 
             var icon = element.Q<VisualElement>("Icon");
             icon.SetBackgroundColor(data.Gradient.Evaluate(value / 100f));
@@ -48,7 +48,7 @@ namespace UnityEssentials
             {
                 icon.SetBackgroundColor(data.Gradient.Evaluate(evt.newValue / 100f));
 
-                menu.Profile2.Value.Set(data.Reference, evt.newValue);
+                menu.Profile.Value.Set(data.Reference, evt.newValue);
             }));
         }
 

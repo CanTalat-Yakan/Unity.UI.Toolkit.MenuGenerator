@@ -29,7 +29,7 @@ namespace UnityEssentials
             var button = element.Q<Button>("Button");
             button.text = data.Name;
 
-            var color = menu.Profile2.Value.Get(data.Reference, data.Default);
+            var color = menu.Profile.Value.Get(data.Reference, data.Default);
             var colorElement = element.Q<VisualElement>("Color");
             colorElement.SetBackgroundColor(color);
         }

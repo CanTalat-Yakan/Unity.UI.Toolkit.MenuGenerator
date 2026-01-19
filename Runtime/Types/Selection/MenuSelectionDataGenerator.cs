@@ -63,7 +63,7 @@ namespace UnityEssentials
         public override void ConfigureInteraction(MenuGenerator menu, VisualElement element, MenuSelectionGeneratorData data)
         {
             var button = element.Q<Button>("Button");
-            button.clicked += () => menu.Profile2.Value.Set(data.CategoryData.Reference, data.Index);
+            button.clicked += () => menu.Profile.Value.Set(data.CategoryData.Reference, data.Index);
         }
 
         public void Dispose() { }
