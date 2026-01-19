@@ -55,6 +55,8 @@ namespace UnityEssentials
         public UIMenuProfileProvider Provider => _provider ??= this.GetOrAddComponent<UIMenuProfileProvider>();
         [NonSerialized] private UIMenuProfileProvider _provider;
 
+        public SettingsProfileManager ProfileManager = SettingsProfileFactory.CreateManager("MenuProfileManager");
+        
         public MenuProfile Profile => Provider.Profile;
         public MenuProfile DefaultProfile => Provider.Default;
 

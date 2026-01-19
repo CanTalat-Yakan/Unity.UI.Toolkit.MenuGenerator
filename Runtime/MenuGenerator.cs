@@ -29,7 +29,7 @@ namespace UnityEssentials
         [HideInInspector] public Menu Menu => _menu ??= this.GetOrAddComponent<Menu>();
         [NonSerialized] private Menu _menu;
 
-        [HideInInspector] public MenuProfile Profile => Menu.Profile;
+        [HideInInspector] public SettingsProfile Profile2 => Menu.ProfileManager.GetCurrentProfile();
 
         [Button]
         public void Show()

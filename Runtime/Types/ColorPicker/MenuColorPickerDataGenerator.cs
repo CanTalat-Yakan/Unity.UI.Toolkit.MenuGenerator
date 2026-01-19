@@ -7,6 +7,7 @@ namespace UnityEssentials
     public class MenuColorPickerDataGenerator : MenuTypeDataGeneratorBase<MenuColorPickerData>, IDisposable
     {
         public static readonly string ResourcePath = Path + "ColorPicker_UXML";
+
         public override VisualElement CreateElement(MenuGenerator menu, MenuColorPickerData data)
         {
             var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
@@ -25,7 +26,7 @@ namespace UnityEssentials
 
             element.Q<GroupBox>("Alpha").SetDisplayEnabled(data.HasAlpha);
 
-            var color = menu.Profile.Get<Color>(data);
+            var color = menu.Profile2.Value.Get(data.Reference, data.Default);
 
             Color.RGBToHSV(color, out var h, out var s, out var v);
             hueSlider.value = (int)(h * 360);
@@ -55,7 +56,7 @@ namespace UnityEssentials
 
                 colorElement.SetBackgroundColor(newColor);
 
-                menu.Profile.Set(data.Reference, newColor);
+                menu.Profile2.Value.Set(data.Reference, data.Default);
             };
 
             hueSlider.RegisterValueChangedCallback(_ => updateColor());
@@ -80,10 +81,12 @@ namespace UnityEssentials
                         valSlider.value / 100f);
                     updatedColor.a = alphaSlider.value / 100f;
 
-                    menu.Profile.Set(data.Reference, updatedColor);
+                    menu.Profile2.Value.Set(data.Reference, data.Default);
                 };
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+        }
     }
 }

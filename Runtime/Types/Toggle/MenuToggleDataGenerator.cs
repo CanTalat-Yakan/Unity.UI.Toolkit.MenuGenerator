@@ -29,7 +29,7 @@ namespace UnityEssentials
             var label = element.Q<Label>("Label");
             label.text = data.Name;
 
-            var value = menu.Profile.Get<bool>(data);
+            var value = menu.Profile2.Value.Get(data.Reference, data.Default);
 
             var toggle = element.Q<Toggle>("Toggle");
             toggle.value = value;
@@ -40,7 +40,7 @@ namespace UnityEssentials
             var toggle = element.Q<Toggle>("Toggle");
             toggle.RegisterValueChangedCallback((evt) =>
             {
-                menu.Profile.Set(data.Reference, evt.newValue);
+                menu.Profile2.Value.Set(data.Reference, evt.newValue);
             });
         }
 
