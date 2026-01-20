@@ -129,7 +129,7 @@ namespace UnityEssentials
             if (prefab == null)
                 return;
 
-            var menu = ResourceLoader.InstantiatePrefab(prefab, instanceName, transform);
+            var menu = AssetResolver.InstantiatePrefab(prefab, instanceName, transform);
             menu.transform.SetSiblingIndex(0);
         }
 

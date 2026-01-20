@@ -18,7 +18,7 @@ namespace UnityEssentials
         public static readonly string ResourcePath = Path + "Options_UXML";
         public override VisualElement CreateElement(MenuGenerator menu, MenuOptionsData data)
         {
-            var element = ResourceLoader.TryGet<VisualTreeAsset>(ResourcePath).CloneTree();
+            var element = AssetResolver.TryGet<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;
