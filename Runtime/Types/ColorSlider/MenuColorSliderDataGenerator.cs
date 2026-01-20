@@ -18,7 +18,7 @@ namespace UnityEssentials
         public static readonly string ResourcePath = Path + "ColorSlider_UXML";
         public override VisualElement CreateElement(MenuGenerator menu, MenuColorSliderData data)
         {
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
+            var element = ResourceLoader.TryGet<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;

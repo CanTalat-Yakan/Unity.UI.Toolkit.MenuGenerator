@@ -10,7 +10,7 @@ namespace UnityEssentials
 
         public override VisualElement CreateElement(MenuGenerator menu, MenuColorPickerData data)
         {
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(ResourcePath).CloneTree();
+            var element = ResourceLoader.TryGet<VisualTreeAsset>(ResourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;

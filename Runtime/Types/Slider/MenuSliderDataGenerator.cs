@@ -20,7 +20,7 @@ namespace UnityEssentials
         public override VisualElement CreateElement(MenuGenerator menu, MenuSliderData data)
         {
             var resourcePath = data.IsFloat ? SliderResourcePath : SliderIntResourcePath;
-            var element = ResourceLoader.LoadResource<VisualTreeAsset>(resourcePath).CloneTree();
+            var element = ResourceLoader.TryGet<VisualTreeAsset>(resourcePath).CloneTree();
             ConfigureVisuals(menu, element, data);
             ConfigureInteraction(menu, element, data);
             return element;
