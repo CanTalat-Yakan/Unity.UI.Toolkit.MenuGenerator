@@ -36,7 +36,7 @@ namespace UnityEssentials
         public MenuGenerator Generator => _generator ??= this.GetOrAddComponent<MenuGenerator>();
         [NonSerialized] private MenuGenerator _generator;
 
-        public SettingsProfileManager ProfileManager = SettingsProfileFactory.CreateManager("MenuProfileManager");
+        public SettingsProfileManager ProfileManager = SettingsProfileManager.GetOrCreate("MenuProfileManager");
         
         public void Awake()
         {
