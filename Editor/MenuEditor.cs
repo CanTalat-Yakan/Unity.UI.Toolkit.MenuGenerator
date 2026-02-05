@@ -8,7 +8,7 @@ namespace UnityEssentials
 {
     public class MenuEditor
     {
-        public EditorWindowDrawer Window;
+        public EditorWindowBuilder Window;
         public Action Repaint;
         public Action Close;
 
@@ -38,7 +38,7 @@ namespace UnityEssentials
             editor._treeView?.SetSelectedItems(0);
             editor._treeView?.BeginRename(0);
 
-            editor.Window ??= EditorWindowDrawer
+            editor.Window ??= EditorWindowBuilder
                 .CreateInstance("UI Menu Builder", new(300, 400), new(600, 800))
                 .ShowAsUtility();
             editor.Window
