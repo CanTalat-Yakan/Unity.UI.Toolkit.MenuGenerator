@@ -80,7 +80,7 @@ namespace UnityEssentials
         private static VisualElement WrapInGroupBox(IEnumerable<VisualElement> elements)
         {
             var groupBox = new GroupBox();
-            groupBox.SetWidth(100f);
+            groupBox.SetWidthPercentage(100f);
             groupBox.style.flexWrap = Wrap.Wrap;
 
             foreach (var element in elements)
