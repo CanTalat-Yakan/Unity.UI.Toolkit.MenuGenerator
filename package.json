@@ -6,7 +6,23 @@
   "unity": "6000.0",
   "unityRelease": "",
   "dependencies": {
-    "com.unity.vectorgraphics": "2.0.0-preview.25"
+    "com.unityessentials.editor.attributes.button": "2.0.0",
+    "com.unityessentials.editor.attributes.info": "2.0.0",
+    "com.unityessentials.editor.attributes.onvaluechanged": "2.0.0",
+    "com.unityessentials.editor.drawer.reorderablelist": "2.0.0",
+    "com.unityessentials.editor.drawer.serializeddictionary": "2.0.0",
+    "com.unityessentials.editor.drawer.simpletreeview": "2.0.0",
+    "com.unityessentials.editor.drawer.windowbuilder": "2.0.0",
+    "com.unityessentials.editor.fetcher.mouseinput": "2.0.0",
+    "com.unityessentials.editor.hooks.uibuilder": "2.0.0",
+    "com.unityessentials.editor.tools.editoricons": "2.0.0",
+    "com.unityessentials.systems.assetresolver": "2.0.0",
+    "com.unityessentials.systems.serializer": "2.0.0",
+    "com.unityessentials.systems.settingsprofile": "2.0.0",
+    "com.unityessentials.systems.utilityextensions": "2.0.0",
+    "com.unityessentials.ui.toolkit.elementlinker": "2.0.0",
+    "com.unityessentials.ui.toolkit.extensions": "2.0.0",
+    "com.unityessentials.ui.toolkit.marqueelabel": "2.0.0"
   },
   "keywords": [],
   "author": {
