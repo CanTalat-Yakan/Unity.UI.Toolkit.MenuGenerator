@@ -2,7 +2,6 @@
     "name": "UnityEssentials.UI.Toolkit.MenuGenerator.Editor",
     "rootNamespace": "UnityEssentials",
     "references": [
-        "GUID:23d88515503fc844cabb0e2fd918af85",
         "GUID:0383f1d3ce7e06706b4a0a19fe636598",
         "GUID:0c677762363426746abd6799d82d40b8",
         "GUID:fd1e7b63e0e7d634db53519cc860fe3a",
